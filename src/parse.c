@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/15 11:13:23 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/15 19:50:43 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	store_command(char *str)
 	}
 }
 
-void		parse_line(char *input)
+void		parse_line(char *input, t_index *index)
 {
 	if (ft_strchr(input, '#'))
 		store_command(input);

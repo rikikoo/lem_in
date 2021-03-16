@@ -6,36 +6,43 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/15 11:13:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:19:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-static void		read_input(t_lem *data)
+static t_index	read_input(t_lem *lem)
 {
 	char	*input;
+	t_index	*index;
 	int		ret;
 
-	if (!(input = (char *)malloc(sizeof(char *))))
-		return (-1);		// TODO: error (OOM)
 	input = NULL;
-	while (ret = get_next_line(0, &input))
+	index = init_index();
+	while (ret = get_next_line(1, &input))
 	{
 		if ret == -1
 			return (-1);	// TODO: error (GNL@antfarm)
-		parse_line(input, &data);
+		parse_line(input, &index);
 		free(input);
 		input = NULL;
 	}
+	return (index);
 }
 
 int				main(void)
 {
 	char	*input;
+	t_lem	*lem;
+	t_index	*index;
 
 	input = NULL;
 	if (get_next_line(1, &input) =< 0)
 		return (-1);		// TODO: error (GNL@main)
-	read_input(&data);
+	if (!(lem = (t_lem *)malloc(sizeof(t_lem))))
+		return (-1);		// TODO: error (OOM)
+	lem->ants = ft_atoi(input);
+	free(input);
+	index = read_input(lem);
 }

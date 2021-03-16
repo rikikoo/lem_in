@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/15 15:41:08 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/16 13:47:25 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,40 @@
 
 t_index			*init_index(void)
 {
-	t_index			*iptr;
-	unsigned int	i;
+	t_index	*index;
+	int		i;
 
-	if (!(iptr = (t_index *)malloc(sizeof(t_index))))
+	if (!(index = (t_index *)malloc(sizeof(t_index))))
 		return (NULL);
-	if (!(iptr->kw = (t_pair **)malloc(sizeof(t_pair *) * SIZE)))
+	if (!(index->rooms = (t_room **)malloc(sizeof(t_room *) * SIZE)))
 		return (NULL);
 	i = 0;
 	while (i < SIZE)
 	{
-		iptr->kw[i] = NULL;
+		index->rooms[i] = NULL;
 		i++;
 	}
-	return (iptr);
+	return (index);
 }
 
-unsigned int	hashof(const char *key)
+static t_room	*new_room(const char *key, const char *val)
 {
-	unsigned int	val;
-	unsigned int	i;
+	t_room	*room;
+
+	if (!(room = (t_room *)malloc(sizeof(t_room))))
+		return (NULL);
+	room->name = ft_strdup(key);
+	room->xy = ft_strdup(val);
+	room->checked = 0;
+	room->occupied = 0;
+	room->next = NULL;
+	return (ptr);
+}
+
+static int		hashof(const char *key)
+{
+	int	val;
+	int	i;
 
 	val = 0;
 	i = 0;
@@ -45,26 +59,42 @@ unsigned int	hashof(const char *key)
 	return (val % SIZE);
 }
 
-t_pair			*set_pair(const char *key, char *val)
+char			*valueof(t_index *index, const char *key)
 {
-	t_pair	*ptr;
-
-	if (!(ptr = (t_pair *)malloc(sizeof(t_pair))))
-		return (NULL);
-	ptr->room = ft_strdup(key);
-	ptr->xy = ft_strdup(val);
-	return (ptr);
-}
-
-void			insert(t_index *iptr, const char *key, char *val)
-{
-	unsigned int	i;
+	t_room	*room;
+	int		i;
 
 	i = hashof(key);
-	if (iptr->kw[i] == NULL)
+	room = index->rooms[i];
+	if (room == NULL)
+		return (NULL);
+	if (!ft_strcmp(key, room->name))
+		return (room->xy);
+	else
+		return (NULL);
+}
+
+void			insert(t_index *index, const char *key, const char *val)
+{
+	t_room	*entry;
+	int		i;
+
+	i = hashof(key);
+	entry = index->rooms[i];
+	if (entry == NULL)
+		entry = new_room(key, val);
+	else
 	{
-		iptr->kw[i] = set_pair(key, val);
-		if (!iptr->kw[i])
-			return ;
+		while (entry != NULL)
+		{
+			if (!ft_strcmp(key, entry->name))
+			{
+				free(entry->xy);
+				entry->xy = ft_strdup(val);
+				return ;
+			}
+			entry = entry->next;
+		}
+		entry = new_room(key, val);
 	}
 }
