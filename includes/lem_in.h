@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/16 14:09:50 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/18 21:36:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,33 @@ typedef struct	s_lem
 	int	finish;
 }				t_lem;
 
+typedef struct	s_input
+{
+	char	*line;
+	t_input	*next;
+}				t_input;
+
 typedef	struct	s_room
 {
-	char			*name;
-	char			*xy;
-	int				checked;
-	int				occupied;
-	struct s_room	*next;
+	char	*id;
+	int		x;
+	int		y;
+	int		checked;
+	int		occupied;
+	t_room	*next;
 }				t_room;
 
 typedef struct	s_link
 {
-	int				src;
-	int				dst;
-	struct s_link	*next;
+	int		src;
+	int		dst;
+	int		cost;
+	t_link	*next;
 }				t_link;
 
 typedef struct	s_index
 {
-	struct s_room	**rooms;
+	t_room	**rooms;
 }				t_index;
-
-t_index			init_index(void);
-char			*valueof(t_index *index, const char *key);
-void			insert(t_index *index, const char *key, const char *val);
-void			parse_line(char *input);
 
 #endif

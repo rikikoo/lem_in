@@ -6,13 +6,13 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/16 13:47:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/18 18:11:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-t_index			*init_index(void)
+t_index	*init_index(void)
 {
 	t_index	*index;
 	int		i;
@@ -30,21 +30,22 @@ t_index			*init_index(void)
 	return (index);
 }
 
-static t_room	*new_room(const char *key, const char *val)
+t_room	*new_room(const char *key, const int x, const int y)
 {
 	t_room	*room;
 
 	if (!(room = (t_room *)malloc(sizeof(t_room))))
-		return (NULL);
-	room->name = ft_strdup(key);
-	room->xy = ft_strdup(val);
+		return (NULL);		// TODO: error (OOM)
+	room->id = ft_strdup(key);
+	room->x = x;
+	room->y = y;
 	room->checked = 0;
 	room->occupied = 0;
 	room->next = NULL;
 	return (ptr);
 }
 
-static int		hashof(const char *key)
+int		hashof(const char *key)
 {
 	int	val;
 	int	i;
@@ -59,22 +60,7 @@ static int		hashof(const char *key)
 	return (val % SIZE);
 }
 
-char			*valueof(t_index *index, const char *key)
-{
-	t_room	*room;
-	int		i;
-
-	i = hashof(key);
-	room = index->rooms[i];
-	if (room == NULL)
-		return (NULL);
-	if (!ft_strcmp(key, room->name))
-		return (room->xy);
-	else
-		return (NULL);
-}
-
-void			insert(t_index *index, const char *key, const char *val)
+void	set(t_index *index, const char *key, const int x, const int y)
 {
 	t_room	*entry;
 	int		i;
@@ -82,19 +68,19 @@ void			insert(t_index *index, const char *key, const char *val)
 	i = hashof(key);
 	entry = index->rooms[i];
 	if (entry == NULL)
-		entry = new_room(key, val);
+		entry = new_room(key, x, y);
 	else
 	{
 		while (entry != NULL)
 		{
-			if (!ft_strcmp(key, entry->name))
+			if (!ft_strcmp(key, entry->id))
 			{
-				free(entry->xy);
-				entry->xy = ft_strdup(val);
+				entry->x = x;
+				entry->y = y;
 				return ;
 			}
 			entry = entry->next;
 		}
-		entry = new_room(key, val);
+		entry = new_room(key, x, y);
 	}
 }

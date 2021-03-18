@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/03/15 11:03:36 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/03/18 20:31:27 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ I = includes/
 
 SRC =	$Smain.c \
 		$Sparse.c \
-		$Shash.c
-
+		$Shash.c \
+		$Sgraph.c
 
 
 
