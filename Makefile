@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/03/18 20:31:27 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/03/31 12:31:12 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,9 @@ O = obj/
 I = includes/
 
 SRC =	$Smain.c \
-		$Sparse.c \
 		$Shash.c \
-		$Sgraph.c
-
+		$Sparse_rooms.c \
+		$Sparse_links.c
 
 
 OBJ = $(SRC:$S%=$O%.o)
@@ -46,8 +45,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC)
 
 $(NAME): $(OBJ)
-	@make -C libft/
-	@make -C libft/ clean
+#	@make -C libft/
+#	@make -C libft/ clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC)
 
 clean:

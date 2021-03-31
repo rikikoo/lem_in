@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/18 21:32:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/31 18:11:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ static t_lem	*init_lem(void)
 	if (!(lem = (t_lem *)malloc(sizeof(t_lem))))
 		return (NULL);		// TODO: error (OOM)
 	lem->ants = -1;
-	lem->start = -1;
-	lem->finish = -1;
+	lem->source = NULL;
+	lem->target = NULL;
+	return (lem);
 }
 
 static t_input	*new_node(void)
@@ -45,9 +46,9 @@ static t_input	*read_input(void)
 	input->line = NULL;
 	input->next = NULL;
 	head = input;
-	while (ret = get_next_line(1, &input->line))
+	while ((ret = get_next_line(0, &input->line)))
 	{
-		if ret == -1
+		if (ret == -1)
 			return (NULL);	// TODO: error (format)
 		if (!(input->next = new_node()))
 			return (NULL);	// TODO: error (OOM)
@@ -61,14 +62,34 @@ int				main(void)
 	t_input	*input;
 	t_index	*index;
 	t_lem	*lem;
-	t_graph	*graph;
-	t_link	*links;
 
 	if (!(input = read_input()))
 		return (-1);	// TODO: error (format)
-	index = init_index();
-	lem = init_lem();
-	if (!(links = parse_input(input, index, lem)))
+	if (!(index = init_index()))
+		return (-1);
+	if (!(lem = init_lem()))
+		return (-1);
+	if (parse_input(input, index, lem) < 0)
 		return (-1);	// TODO: error (format)
-	graph = create_graph(index, links, lem);
+/*
+	for (int i = 0; i < SIZE; i++)
+	{
+		if (index->rooms[i] != NULL)
+		{
+			if (i == hashof(lem->source))
+				ft_printf("---START---\n");
+			if (i == hashof(lem->target))
+				ft_printf("----END----\n");
+			ft_printf("ID:% 11s\nhash:% 9d\n(x, y): (%d, %d)\ntubes to: ",
+			index->rooms[i]->id, i, index->rooms[i]->x, index->rooms[i]->y);
+			while (index->rooms[i]->tube != NULL)
+			{
+				ft_printf("%s\t", index->rooms[i]->tube->to);
+				index->rooms[i]->tube = index->rooms[i]->tube->next;
+			}
+			ft_printf("\n");
+		}
+	}
+*/
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/18 18:11:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/31 15:33:51 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,9 @@ t_room	*new_room(const char *key, const int x, const int y)
 	room->id = ft_strdup(key);
 	room->x = x;
 	room->y = y;
-	room->checked = 0;
-	room->occupied = 0;
+	room->tube = NULL;
 	room->next = NULL;
-	return (ptr);
+	return (room);
 }
 
 int		hashof(const char *key)
@@ -50,37 +49,50 @@ int		hashof(const char *key)
 	int	val;
 	int	i;
 
-	val = 0;
+	val = 42;
 	i = 0;
-	while (i < ft_strlen(key))
+	while (i < (int)ft_strlen(key))
 	{
-		val *= (89 + key[i]);
+		val *= key[i] + 89;
 		i++;
 	}
 	return (val % SIZE);
 }
 
-void	set(t_index *index, const char *key, const int x, const int y)
+t_room	*get(t_index *index, char *key)
 {
-	t_room	*entry;
-	int		i;
+	int	i;
 
 	i = hashof(key);
-	entry = index->rooms[i];
-	if (entry == NULL)
-		entry = new_room(key, x, y);
+	while (index->rooms[i] != NULL)
+	{
+		if (ft_strequ(key, index->rooms[i]->id))
+			return (index->rooms[i]);
+		else
+			index->rooms[i] = index->rooms[i]->next;
+	}
+	return (NULL);
+}
+
+void	set(t_index *index, const char *key, const int x, const int y)
+{
+	int	i;
+
+	i = hashof(key);
+	if (index->rooms[i] == NULL)
+		index->rooms[i] = new_room(key, x, y);
 	else
 	{
-		while (entry != NULL)
+		while (index->rooms[i] != NULL)
 		{
-			if (!ft_strcmp(key, entry->id))
+			if (ft_strequ(key, index->rooms[i]->id))
 			{
-				entry->x = x;
-				entry->y = y;
+				index->rooms[i]->x = x;
+				index->rooms[i]->y = y;
 				return ;
 			}
-			entry = entry->next;
+			index->rooms[i] = index->rooms[i]->next;
 		}
-		entry = new_room(key, x, y);
+		index->rooms[i] = new_room(key, x, y);
 	}
 }

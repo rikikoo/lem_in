@@ -6,14 +6,15 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/18 20:50:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/03/23 15:46:51 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-t_graph		*create_graph(t_index *index, t_lem *lem)
+int		bfs(t_link *src, t_link *dst)
 {
-	t_link	*links;
+	t_link	q;
 
+	
 }
