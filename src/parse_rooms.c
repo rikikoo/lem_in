@@ -6,13 +6,13 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/31 14:07:04 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/06 09:53:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-static int			room_parse(t_index *index, char *str, t_lem *lem, int r)
+static int	room_parse(t_index *index, char *str, t_lem *lem, int sink)
 {
 	char	**arr;
 	int		i;
@@ -31,10 +31,10 @@ static int			room_parse(t_index *index, char *str, t_lem *lem, int r)
 		j++;
 	if (arr[1][i] != '\0' && arr[2][j] != '\0' && i < 1 && j < 1)
 		return (-1);
-	if (r == 0)
-		lem->source = ft_strdup(arr[0]);
-	else if (r == 1)
+	if (sink)
 		lem->target = ft_strdup(arr[0]);
+	else
+		lem->source = ft_strdup(arr[0]);
 	set(index, arr[0], ft_atoi(arr[1]), ft_atoi(arr[2]));
 	ft_liberator(4, &arr[0], &arr[1], &arr[2], &arr[3]);
 	free(arr);
@@ -89,6 +89,7 @@ static t_input	*get_rooms(t_input *input, t_index *index, t_lem *lem)
 				return (NULL);
 			input = input->next;
 		}
+		lem->rooms += 1;
 	}
 	if (lem->source != NULL && lem->target != NULL)
 		return (input);
@@ -96,17 +97,15 @@ static t_input	*get_rooms(t_input *input, t_index *index, t_lem *lem)
 		return (NULL);
 }
 
-int				parse_input(t_input *input, t_index *index, t_lem *lem)
+int	parse_input(t_input *input, t_index *index, t_lem *lem)
 {
-	t_input *tmp;
-
-	ft_printf("start parsing\n");
+	t_input	*tmp;
 
 	lem->ants = ft_atoi(input->line);
-	if (lem->ants <= 0)
-		return (-1);
-	input = input->next;
-	if (!(input = get_rooms(input, index, lem)))
+	if (!lem->ants)
+		return (-1);		// TODO: error (no ants)
+	input = get_rooms(input->next, index, lem);
+	if (!input)
 		return (-1);		// TODO: error (format)
 	if (get_tubes(input, index) < 0)
 		return (-1);		// TODO: error (format)
@@ -117,8 +116,5 @@ int				parse_input(t_input *input, t_index *index, t_lem *lem)
 		free(tmp->line);
 		free(tmp);
 	}
-
-	ft_printf("parsing end\n");
-
 	return (0);
 }

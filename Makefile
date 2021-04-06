@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/03/31 12:31:12 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/04/06 10:10:38 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ I = includes/
 SRC =	$Smain.c \
 		$Shash.c \
 		$Sparse_rooms.c \
-		$Sparse_links.c
+		$Sparse_links.c \
+		$Sgraph.c
 
 
 OBJ = $(SRC:$S%=$O%.o)

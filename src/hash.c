@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/31 15:33:51 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/06 10:10:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ t_index	*init_index(void)
 	t_index	*index;
 	int		i;
 
-	if (!(index = (t_index *)malloc(sizeof(t_index))))
+	index = (t_index *)malloc(sizeof(t_index));
+	if (!index)
 		return (NULL);
-	if (!(index->rooms = (t_room **)malloc(sizeof(t_room *) * SIZE)))
+	index->rooms = (t_room **)malloc(sizeof(t_room *) * HT_SIZE);
+	if (!index->rooms)
 		return (NULL);
 	i = 0;
-	while (i < SIZE)
+	while (i < HT_SIZE)
 	{
 		index->rooms[i] = NULL;
 		i++;
@@ -34,8 +36,9 @@ t_room	*new_room(const char *key, const int x, const int y)
 {
 	t_room	*room;
 
-	if (!(room = (t_room *)malloc(sizeof(t_room))))
-		return (NULL);		// TODO: error (OOM)
+	room = (t_room *)malloc(sizeof(t_room));
+	if (!room)
+		return (NULL);
 	room->id = ft_strdup(key);
 	room->x = x;
 	room->y = y;
@@ -44,7 +47,7 @@ t_room	*new_room(const char *key, const int x, const int y)
 	return (room);
 }
 
-int		hashof(const char *key)
+int	hashof(const char *key)
 {
 	int	val;
 	int	i;
@@ -56,7 +59,7 @@ int		hashof(const char *key)
 		val *= key[i] + 89;
 		i++;
 	}
-	return (val % SIZE);
+	return (val % HT_SIZE);
 }
 
 t_room	*get(t_index *index, char *key)

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/03/31 18:10:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/06 10:03:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static t_link	*new_link(char *src, char *dst)
 
 	if (!src || !dst)
 		return (NULL);
-	if (!(link = (t_link *)malloc(sizeof(t_link))))
+	link = (t_link *)malloc(sizeof(t_link));
+	if (!link)
 		return (NULL);
 	link->src = ft_strdup(src);
 	link->to = ft_strdup(dst);
@@ -40,7 +41,7 @@ static t_link	*add_link(t_room *room, char *src, char *dst)
 	return (head);
 }
 
-static char		**check_link(t_index *index, char *line)
+static char	**check_link(t_index *index, char *line)
 {
 	char	**arr;
 	t_room	*src;
@@ -56,7 +57,7 @@ static char		**check_link(t_index *index, char *line)
 	return (arr);
 }
 
-int				get_tubes(t_input *input, t_index *index)
+int	get_tubes(t_input *input, t_index *index)
 {
 	char	**arr;
 	t_room	*src;
