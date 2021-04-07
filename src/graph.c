@@ -6,33 +6,49 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/06 10:21:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/07 19:54:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lem_in.h"
 
-static int	bfs(t_link *src, t_link *dst)
+static int	bfs(t_link *link)
 {
-	int	flow;
+	return (link->cost);
+}
 
-	flow = 0;
-	if (src->cost == 0 && src->src != dst->src)
-		flow++;
-	return (flow);
+static void	print_links(t_index *index, t_lem *lem)
+{
+	t_room *room;
+	t_link *link;
+
+	ft_printf("Number of ants: %i\n", lem->ants);
+	ft_printf("Number of rooms: %i\n", lem->rooms);
+	ft_printf("Number of tubes: %i\n\n", lem->tubes);
+	for (int i = 0; i < HT_SIZE; i++) {
+		if (index->rooms[i] != NULL)
+		{
+			room = index->rooms[i];
+			while (room != NULL)
+			{
+				if (room->tube != NULL)
+				{
+					link = room->tube;
+					while (link != NULL)
+					{
+						ft_printf("Found a link! %s -> %s\t\tflow: %d\n", \
+						link->src, link->to, bfs(link));
+						link = link->next;
+					}
+				}
+				room = room->next;
+			}
+		}
+	}
 }
 
 int	edm_karp(t_index *index, t_lem *lem)
 {
-	for (int i = 0; i < lem->rooms; i++) {
-		if (index->rooms[i] != NULL)
-		{
-			ft_printf("Found a link! %s -> %s\n", \
-			index->rooms[i]->id, \
-			index->rooms[i]->tube->to);
-			ft_printf("Flow: %i", bfs(index->rooms[i]->tube, \
-			index->rooms[i]->tube->next));
-		}
-	}
+	print_links(index, lem);
 	return (0);
 }

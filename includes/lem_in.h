@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/06 10:32:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/07 19:48:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEM_IN_H
 # define LEM_IN_H
 
-# define HT_SIZE 1000
+# define HT_SIZE 100
 # include <stdlib.h>
 # include <unistd.h>
 # include "../libft/includes/libft.h"
@@ -22,6 +22,7 @@ typedef struct s_lem
 {
 	int		ants;
 	int		rooms;
+	int		tubes;
 	char	*source;
 	char	*target;
 }	t_lem;

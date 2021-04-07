@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/06 10:08:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/07 18:35:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static t_lem	*init_lem(void)
 		return (NULL);
 	lem->ants = 0;
 	lem->rooms = 0;
+	lem->tubes = 0;
 	lem->source = NULL;
 	lem->target = NULL;
 	return (lem);

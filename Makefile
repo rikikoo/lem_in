@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/04/06 10:10:38 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/04/06 11:30:37 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,10 +50,15 @@ $(NAME): $(OBJ)
 #	@make -C libft/ clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC)
 
+debug:
+	gcc -g src/*.c libft/libft.a
+	lldb a.out
+
 clean:
 	rm -rf $O
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f a.out
 
 re: fclean all

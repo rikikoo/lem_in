@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/06 10:10:17 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/07 18:02:22 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,38 +64,44 @@ int	hashof(const char *key)
 
 t_room	*get(t_index *index, char *key)
 {
-	int	i;
+	int		i;
+	t_room	*room;
 
 	i = hashof(key);
-	while (index->rooms[i] != NULL)
+	room = index->rooms[i];
+	while (room != NULL)
 	{
-		if (ft_strequ(key, index->rooms[i]->id))
-			return (index->rooms[i]);
+		if (ft_strequ(key, room->id))
+			return (room);
 		else
-			index->rooms[i] = index->rooms[i]->next;
+			room = room->next;
 	}
 	return (NULL);
 }
 
 void	set(t_index *index, const char *key, const int x, const int y)
 {
-	int	i;
+	int		i;
+	t_room	*prev;
+	t_room	*new;
 
 	i = hashof(key);
-	if (index->rooms[i] == NULL)
-		index->rooms[i] = new_room(key, x, y);
-	else
+	new = index->rooms[i];
+	if (new == NULL)
 	{
-		while (index->rooms[i] != NULL)
-		{
-			if (ft_strequ(key, index->rooms[i]->id))
-			{
-				index->rooms[i]->x = x;
-				index->rooms[i]->y = y;
-				return ;
-			}
-			index->rooms[i] = index->rooms[i]->next;
-		}
 		index->rooms[i] = new_room(key, x, y);
+		return ;
 	}
+	while (new != NULL)
+	{
+		if (ft_strequ(key, new->id))
+		{
+			new->x = x;
+			new->y = y;
+			return ;
+		}
+		prev = new;
+		new = prev->next;
+	}
+	prev->next = new_room(key, x, y);
 }
