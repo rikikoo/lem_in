@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/07 19:48:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/29 12:04:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEM_IN_H
 # define LEM_IN_H
 
-# define HT_SIZE 100
+# define HT_SIZE 10000
 # include <stdlib.h>
 # include <unistd.h>
 # include "../libft/includes/libft.h"
@@ -38,6 +38,7 @@ typedef struct s_room
 	char			*id;
 	int				x;
 	int				y;
+	int				visited;
 	struct s_link	*tube;
 	struct s_room	*next;
 }	t_room;
@@ -53,6 +54,7 @@ typedef struct s_link
 typedef struct s_index
 {
 	struct s_room	**rooms;
+	struct s_link	**links;
 }	t_index;
 
 int		hashof(const char *key);

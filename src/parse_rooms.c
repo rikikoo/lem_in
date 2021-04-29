@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/07 18:37:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/07 20:17:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	room_parse(t_index *index, char *str, t_lem *lem, int v)
 		i++;
 	while (ft_isdigit(arr[2][j]))
 		j++;
-	if (arr[1][i] != '\0' && arr[2][j] != '\0' && i < 1 && j < 1)
+	if (arr[1][i] != '\0' || arr[2][j] != '\0' || i < 1 || j < 1)
 		return (-1);
 	if (v == 1)
 		lem->target = ft_strdup(arr[0]);
