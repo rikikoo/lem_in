@@ -6,11 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/28 19:05:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/30 14:49:57 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/lem_in.h"
+#include "lem_in.h"
 
 t_index	*init_index(void)
 {

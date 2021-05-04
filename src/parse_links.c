@@ -6,11 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/07 19:46:45 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/30 14:50:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/lem_in.h"
+#include "lem_in.h"
 
 static t_link	*new_link(char *src, char *dst)
 {

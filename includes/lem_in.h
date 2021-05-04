@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/29 12:04:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/30 15:55:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct s_link
 typedef struct s_index
 {
 	struct s_room	**rooms;
-	struct s_link	**links;
 }	t_index;
 
 int		hashof(const char *key);

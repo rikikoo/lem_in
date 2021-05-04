@@ -6,11 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/07 18:35:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/30 14:49:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/lem_in.h"
+#include "lem_in.h"
 
 static t_lem	*init_lem(void)
 {

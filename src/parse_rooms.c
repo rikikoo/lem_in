@@ -6,11 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/07 20:17:18 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/04/30 14:50:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/lem_in.h"
+#include "lem_in.h"
 
 static int	room_parse(t_index *index, char *str, t_lem *lem, int v)
 {
