@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graph.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/02 18:38:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/11 16:17:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,35 +29,43 @@ static char	**init_array(int size)
 	return (arr);
 }
 
+static char	**append(char ***arr, char *room)
+{
+	int	i;
+
+	i = 0;
+	while ((*arr)[i] != NULL)
+		i++;
+	(*arr)[i] = ft_strdup(room);
+}
+
 static char	**bfs(t_index *index, t_lem *lem, char **prev)
 {
 	char	**queue;
 	t_room	*curr;
 	t_link	*tubes;
 	int		i;
-	int		j;
 
 	queue = init_array(lem->rooms);
+	prev = init_array(lem->rooms);
 	if (!queue || !prev)
 		return (0);
 	i = 0;
-	queue[i] = ft_strdup(lem->source);
+	append(&queue, lem->source);
 	while (i < lem->rooms)
 	{
-		j = i + 1;
 		curr = get(index, queue[i]);
 		curr->visited = 1;
-		prev[i] = ft_strdup(curr->id);
+		append(&prev, curr->id);
 		tubes = curr->tube;
 		while (tubes != NULL)
 		{
 			curr = get(index, tubes->to);
 			if (!curr->visited)
-				queue[i + j] = ft_strdup(curr->id);
+				append(&queue, curr->id);
 			tubes = tubes->next;
-			j++;
 		}
-		i = j;
+		i++;
 	}
 	i = 0;
 	while (queue[i] != NULL)
