@@ -3,15 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/30 14:49:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/18 18:53:51 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** t_lem is a struct containing
+**	- the # of ants
+**	- the # of vertices
+**	- the # of edges
+**	- source and sink ids
+**
+** returns a pointer to an initialized t_lem
+*/
 static t_lem	*init_lem(void)
 {
 	t_lem	*lem;
@@ -27,6 +36,9 @@ static t_lem	*init_lem(void)
 	return (lem);
 }
 
+/*
+** returns a new list element
+*/
 static t_input	*new_node(void)
 {
 	t_input	*new;
@@ -39,6 +51,9 @@ static t_input	*new_node(void)
 	return (new);
 }
 
+/*
+** reads input (graph info) into a linked list, a line at a time
+*/
 static t_input	*read_input(void)
 {
 	t_input	*input;
@@ -66,6 +81,14 @@ static t_input	*read_input(void)
 	return (head);
 }
 
+/*
+**	1. read instructions from STDIN
+**	2. validate and store relevant information into appropriate structs
+**	3. free input
+**	4. calculate the paths of the ants
+**	5. ???
+**	6. PROFIT!
+*/
 int	main(void)
 {
 	t_input	*input;

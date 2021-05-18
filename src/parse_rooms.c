@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_rooms.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/30 14:50:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/18 19:49:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,10 @@ static t_input	*get_rooms(t_input *input, t_index *index, t_lem *lem)
 		return (NULL);
 }
 
+/*
+** parses input that contains the names of the vertices, number of ants,
+** hj 
+*/
 int	parse_input(t_input *input, t_index *index, t_lem *lem)
 {
 	t_input	*tmp;

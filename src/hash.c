@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   hash.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/30 14:49:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/18 19:36:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** index in this case is an implementation of a hash table in C.
+** t_index is a struct that has an array of pointers to rooms/vertices.
+** the size of the array HT_SIZE is pre-defined in lem_in.h
+**
+** init_index returns a pointer to t_index, all pointers initialized to NULL
+*/
 t_index	*init_index(void)
 {
 	t_index	*index;
@@ -32,6 +39,12 @@ t_index	*init_index(void)
 	return (index);
 }
 
+/*
+** allocates memory for a new room/vertex and returns a pointer to it
+**
+** key: the name/id of the vertex
+** x, y: the coordinates of the vertex
+*/
 t_room	*new_room(const char *key, const int x, const int y)
 {
 	t_room	*room;
@@ -48,6 +61,13 @@ t_room	*new_room(const char *key, const int x, const int y)
 	return (room);
 }
 
+/*
+** returns a hash of the room name/id
+**
+** key: name/id of the vertex to be hashed
+**
+** TODO: look up an actual hashing algorithm, don't use this nonsense
+*/
 int	hashof(const char *key)
 {
 	int	val;
@@ -63,6 +83,12 @@ int	hashof(const char *key)
 	return (val % HT_SIZE);
 }
 
+/*
+** returns the room/vertex pointer if found in the hash table, NULL otherwise
+**
+** index: a pointer to t_index
+** key: name/id of the vertex to get
+*/
 t_room	*get(t_index *index, char *key)
 {
 	int		i;
@@ -80,6 +106,13 @@ t_room	*get(t_index *index, char *key)
 	return (NULL);
 }
 
+/*
+** inserts a new entry to the hash table (index)
+**
+** index: a pointer to t_index
+** key: name/id of the vertex to insert
+** x, y: coordinates of the vertex
+*/
 void	set(t_index *index, const char *key, const int x, const int y)
 {
 	int		i;

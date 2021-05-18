@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   parse_links.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/04/30 14:50:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/18 19:13:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** returns a pointer to t_link (edge struct)
+**
+** src: name/id of the edge's source
+** dst: name/id of the edge's sink
+*/
 static t_link	*new_link(char *src, char *dst)
 {
 	t_link	*link;
@@ -28,6 +34,13 @@ static t_link	*new_link(char *src, char *dst)
 	return (link);
 }
 
+/*
+** appends new edge to the list of edges coming out of a vertex
+**
+** room: pointer to t_room where the edge starts
+** src: name/id of the edge's source
+** dst: name/id of the edge's sink
+*/
 static void	append_link(t_room *room, char *src, char *dst)
 {
 	if (!room || !src || !dst)
@@ -44,6 +57,13 @@ static void	append_link(t_room *room, char *src, char *dst)
 		room->tube = new_link(src, dst);
 }
 
+/*
+** splits input line containing the two vertex ids into a string array,
+** checks that the vertices exist and returns the array
+**
+** index: pointer to hash table t_index
+** line: raw line of program input
+*/
 static char	**check_link(t_index *index, char *line)
 {
 	char	**arr;
@@ -60,6 +80,13 @@ static char	**check_link(t_index *index, char *line)
 	return (arr);
 }
 
+/*
+** parses raw input for graph edges.
+** returns number of edges on success, -1 otherwise.
+**
+** input: list of input lines, starting from the point where the edges begin
+** index: pointer to hash table t_index
+*/
 int	get_tubes(t_input *input, t_index *index)
 {
 	char	**arr;
