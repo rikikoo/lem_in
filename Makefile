@@ -6,26 +6,29 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/04/30 14:48:23 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/05/21 12:58:48 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 S = src/
 O = obj/
 I = includes/
+L = libft/
 
 SRC =	$Smain.c \
 		$Shash.c \
-		$Sparse_rooms.c \
-		$Sparse_links.c \
+		$Sparse_vertices.c \
+		$Sparse_edges.c \
 		$Sgraph.c
 
 
 OBJ = $(SRC:$S%=$O%.o)
 
-INC = $I
+INC = $(I)
 
-LIB = libft/libft.a
+LIB = $(L)libft.a
+
+LIBINC = $(L)$(I)
 
 CCOMP = gcc
 
@@ -43,12 +46,12 @@ $O:
 $(OBJ): | $O
 
 $(OBJ): $O%.o: $S%
-	$(CCOMP) $(CFLAGS) -I$(INC) -c $< -o $@
+	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-#	@make -C libft/
-#	@make -C libft/ clean
-	$(CCOMP) $(CFLAGS) -I$(INC) $^ $(LIB) -o $@
+	@make -C libft/
+	@make -C libft/ clean
+	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:
 	gcc -g -fsanitize=address src/*.c libft/libft.a

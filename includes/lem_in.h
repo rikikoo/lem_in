@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lem_in.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/18 19:32:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:53:39 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,18 @@
 
 /*
 ** ants: # of ants we have to transport through the graph
-** rooms: # of vertices in the graph
-** tubes: # of edges in the graph
+** vertices: # of vertices in the graph
+** edges: # of edges in the graph
 ** source: name/id of the source vertex
-** target: name/id of the sink vertex
+** sink: name/id of the sink vertex
 */
 typedef struct s_lem
 {
 	int		ants;
-	int		rooms;
-	int		tubes;
+	int		vertices;
+	int		edges;
 	char	*source;
-	char	*target;
+	char	*sink;
 }	t_lem;
 
 /*
@@ -45,51 +45,51 @@ typedef struct s_input
 }	t_input;
 
 /*
-** id: name of the room/vertex
+** id: name of the vertex
 ** x, y: coordinates of the vertex (used only for visualizer)
 ** visited: boolean for breadth-first search algorithm
-** tube: a pointer to the struct t_list, a list of outgoing tubes/edges.
-** next: a pointer to another t_room whose id might have the same
+** edge: a pointer to the struct t_list, a list of outgoing edges.
+** next: a pointer to another t_vertex whose id might have the same
 ** 	hashed value as this one.
 */
-typedef struct s_room
+typedef struct s_vertex
 {
 	char			*id;
 	int				x;
 	int				y;
 	int				visited;
-	struct s_link	*tube;
-	struct s_room	*next;
-}	t_room;
+	struct s_edge	*edge;
+	struct s_vertex	*next;
+}	t_vertex;
 
 /*
 ** src: name/id of the edge's source vertex
-** dst: name/id of the edge's sink vertex
+** dst: name/id of the edge's destination vertex
 ** next: a pointer to the next edge that has the same source vertex
 */
-typedef struct s_link
+typedef struct s_edge
 {
 	char			*src;
 	char			*to;
 	int				cost;
-	struct s_link	*next;
-}	t_link;
+	struct s_edge	*next;
+}	t_edge;
 
 /*
 ** "hash table", aka an array of pointers to vertices
 */
 typedef struct s_index
 {
-	struct s_room	**rooms;
+	struct s_vertex	**vertices;
 }	t_index;
 
-int		hashof(const char *key);
-t_index	*init_index(void);
-void	set(t_index *index, const char *key, const int x, const int y);
-t_room	*get(t_index *index, char *key);
-t_room	*new_room(const char *key, const int x, const int y);
-int		parse_input(t_input *input, t_index *index, t_lem *lem);
-int		get_tubes(t_input *input, t_index *index);
-int		edm_karp(t_index *index, t_lem *lem);
+int			hashof(const char *key);
+t_index		*init_index(void);
+void		set(t_index *index, const char *key, const int x, const int y);
+t_vertex	*get(t_index *index, char *key);
+t_vertex	*new_vertex(const char *key, const int x, const int y);
+int			parse_input(t_input *input, t_index *index, t_lem *lem);
+int			get_edges(t_input *input, t_index *index);
+int			edm_karp(t_index *index, t_lem *lem);
 
 #endif

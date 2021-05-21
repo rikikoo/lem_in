@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_rooms.c                                      :+:      :+:    :+:   */
+/*   parse_vertices.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/18 19:49:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:58:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static int	room_parse(t_index *index, char *str, t_lem *lem, int v)
+static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 {
 	char	**arr;
 	int		i;
@@ -32,7 +32,7 @@ static int	room_parse(t_index *index, char *str, t_lem *lem, int v)
 	if (arr[1][i] != '\0' || arr[2][j] != '\0' || i < 1 || j < 1)
 		return (-1);
 	if (v == 1)
-		lem->target = ft_strdup(arr[0]);
+		lem->sink = ft_strdup(arr[0]);
 	else if (v == 0)
 		lem->source = ft_strdup(arr[0]);
 	set(index, arr[0], ft_atoi(arr[1]), ft_atoi(arr[2]));
@@ -55,13 +55,13 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	if (ft_strequ((str + 2), "start") && lem->source == NULL)
 	{
 		input = input->next;
-		if (room_parse(index, input->line, lem, 0) < 0)
+		if (vertex_parse(index, input->line, lem, 0) < 0)
 			return (NULL);		// TODO: error (format)
 	}
-	else if (ft_strequ((str + 2), "end") && lem->target == NULL)
+	else if (ft_strequ((str + 2), "end") && lem->sink == NULL)
 	{
 		input = input->next;
-		if (room_parse(index, input->line, lem, 1) < 0)
+		if (vertex_parse(index, input->line, lem, 1) < 0)
 			return (NULL);		// TODO: error (format)
 	}
 	else
@@ -69,7 +69,7 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	return (input->next);
 }
 
-static t_input	*get_rooms(t_input *input, t_index *index, t_lem *lem)
+static t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 {
 	while (1)
 	{
@@ -85,21 +85,20 @@ static t_input	*get_rooms(t_input *input, t_index *index, t_lem *lem)
 			break ;
 		else
 		{
-			if (room_parse(index, input->line, lem, 2) < 0)
+			if (vertex_parse(index, input->line, lem, 2) < 0)
 				return (NULL);
 			input = input->next;
 		}
-		lem->rooms += 1;
+		lem->vertices += 1;
 	}
-	if (lem->source != NULL && lem->target != NULL)
+	if (lem->source != NULL && lem->sink != NULL)
 		return (input);
 	else
 		return (NULL);
 }
 
 /*
-** parses input that contains the names of the vertices, number of ants,
-** hj 
+** parses input, which contains the all necessary info to construct the graph
 */
 int	parse_input(t_input *input, t_index *index, t_lem *lem)
 {
@@ -108,11 +107,11 @@ int	parse_input(t_input *input, t_index *index, t_lem *lem)
 	lem->ants = ft_atoi(input->line);
 	if (!lem->ants)
 		return (-1);		// TODO: error (no ants)
-	input = get_rooms(input->next, index, lem);
+	input = get_vertices(input->next, index, lem);
 	if (!input)
 		return (-1);		// TODO: error (format)
-	lem->tubes = get_tubes(input, index);
-	if (lem->tubes < 0)
+	lem->edges = get_edges(input, index);
+	if (lem->edges < 0)
 		return (-1);		// TODO: error (format)
 	while (input != NULL)
 	{

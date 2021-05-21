@@ -3,20 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   hash.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/18 19:36:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:27:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** index in this case is an implementation of a hash table in C.
-** t_index is a struct that has an array of pointers to rooms/vertices.
-** the size of the array HT_SIZE is pre-defined in lem_in.h
-**
 ** init_index returns a pointer to t_index, all pointers initialized to NULL
 */
 t_index	*init_index(void)
@@ -27,13 +23,13 @@ t_index	*init_index(void)
 	index = (t_index *)malloc(sizeof(t_index));
 	if (!index)
 		return (NULL);
-	index->rooms = (t_room **)malloc(sizeof(t_room *) * HT_SIZE);
-	if (!index->rooms)
+	index->vertices = (t_vertex **)malloc(sizeof(t_vertex *) * HT_SIZE);
+	if (!index->vertices)
 		return (NULL);
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		index->rooms[i] = NULL;
+		index->vertices[i] = NULL;
 		i++;
 	}
 	return (index);
@@ -45,18 +41,18 @@ t_index	*init_index(void)
 ** key: the name/id of the vertex
 ** x, y: the coordinates of the vertex
 */
-t_room	*new_room(const char *key, const int x, const int y)
+t_vertex	*new_room(const char *key, const int x, const int y)
 {
-	t_room	*room;
+	t_vertex	*room;
 
-	room = (t_room *)malloc(sizeof(t_room));
+	room = (t_vertex *)malloc(sizeof(t_vertex));
 	if (!room)
 		return (NULL);
 	room->id = ft_strdup(key);
 	room->x = x;
 	room->y = y;
 	room->visited = 0;
-	room->tube = NULL;
+	room->edge = NULL;
 	room->next = NULL;
 	return (room);
 }
@@ -89,13 +85,13 @@ int	hashof(const char *key)
 ** index: a pointer to t_index
 ** key: name/id of the vertex to get
 */
-t_room	*get(t_index *index, char *key)
+t_vertex	*get(t_index *index, char *key)
 {
-	int		i;
-	t_room	*room;
+	int			i;
+	t_vertex	*room;
 
 	i = hashof(key);
-	room = index->rooms[i];
+	room = index->vertices[i];
 	while (room != NULL)
 	{
 		if (ft_strequ(key, room->id))
@@ -115,15 +111,15 @@ t_room	*get(t_index *index, char *key)
 */
 void	set(t_index *index, const char *key, const int x, const int y)
 {
-	int		i;
-	t_room	*prev;
-	t_room	*new;
+	int			i;
+	t_vertex	*prev;
+	t_vertex	*new;
 
 	i = hashof(key);
-	new = index->rooms[i];
+	new = index->vertices[i];
 	if (new == NULL)
 	{
-		index->rooms[i] = new_room(key, x, y);
+		index->vertices[i] = new_room(key, x, y);
 		return ;
 	}
 	while (new != NULL)

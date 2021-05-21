@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/18 18:53:51 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:13:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static t_lem	*init_lem(void)
 	if (!lem)
 		return (NULL);
 	lem->ants = 0;
-	lem->rooms = 0;
-	lem->tubes = 0;
+	lem->vertices = 0;
+	lem->edges = 0;
 	lem->source = NULL;
-	lem->target = NULL;
+	lem->sink = NULL;
 	return (lem);
 }
 

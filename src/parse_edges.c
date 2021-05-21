@@ -1,60 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_links.c                                      :+:      :+:    :+:   */
+/*   parse_edges.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/18 19:13:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/21 12:59:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** returns a pointer to t_link (edge struct)
+** returns a pointer to t_edge (edge struct)
 **
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
 */
-static t_link	*new_link(char *src, char *dst)
+static t_edge	*new_edge(char *src, char *dst)
 {
-	t_link	*link;
+	t_edge	*edge;
 
 	if (!src || !dst)
 		return (NULL);
-	link = (t_link *)malloc(sizeof(t_link));
-	if (!link)
+	edge = (t_edge *)malloc(sizeof(t_edge));
+	if (!edge)
 		return (NULL);
-	link->src = ft_strdup(src);
-	link->to = ft_strdup(dst);
-	link->cost = -1;
-	link->next = NULL;
-	return (link);
+	edge->src = ft_strdup(src);
+	edge->to = ft_strdup(dst);
+	edge->cost = -1;
+	edge->next = NULL;
+	return (edge);
 }
 
 /*
 ** appends new edge to the list of edges coming out of a vertex
 **
-** room: pointer to t_room where the edge starts
+** room: pointer to t_vertex where the edge starts
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
 */
-static void	append_link(t_room *room, char *src, char *dst)
+static void	append_edge(t_vertex *vertex, char *src, char *dst)
 {
-	if (!room || !src || !dst)
+	if (!vertex || !src || !dst)
 		return ;
-	if (room->tube != NULL)
+	if (vertex->edge != NULL)
 	{
-		while (room->tube->next != NULL)
+		while (vertex->edge->next != NULL)
 		{
-			room->tube = room->tube->next;
+			vertex->edge = vertex->edge->next;
 		}
-		room->tube->next = new_link(src, dst);
+		vertex->edge->next = new_edge(src, dst);
 	}
 	else
-		room->tube = new_link(src, dst);
+		vertex->edge = new_edge(src, dst);
 }
 
 /*
@@ -64,11 +64,11 @@ static void	append_link(t_room *room, char *src, char *dst)
 ** index: pointer to hash table t_index
 ** line: raw line of program input
 */
-static char	**check_link(t_index *index, char *line)
+static char	**check_edge(t_index *index, char *line)
 {
-	char	**arr;
-	t_room	*src;
-	t_room	*dst;
+	char		**arr;
+	t_vertex	*src;
+	t_vertex	*dst;
 
 	arr = ft_strsplit(line, '-');
 	if (!arr[0] || !arr[1])
@@ -87,26 +87,26 @@ static char	**check_link(t_index *index, char *line)
 ** input: list of input lines, starting from the point where the edges begin
 ** index: pointer to hash table t_index
 */
-int	get_tubes(t_input *input, t_index *index)
+int	get_edges(t_input *input, t_index *index)
 {
-	char	**arr;
-	t_room	*src;
-	int		i;
+	char		**arr;
+	t_vertex	*src;
+	int			i;
 
 	i = 0;
 	while (input->line != NULL)
 	{
-		arr = check_link(index, input->line);
+		arr = check_edge(index, input->line);
 		if (arr == NULL)
 			return (-1);
 		src = get(index, arr[0]);
-		append_link(src, arr[0], arr[1]);
+		append_edge(src, arr[0], arr[1]);
 		i += 1;
 		input = input->next;
 	}
 	ft_liberator(3, &arr[0], &arr[1], &arr[2]);
 	free(arr);
-	if (src->tube == NULL)
+	if (src->edge == NULL)
 		return (-1);
 	return (i);
 }
