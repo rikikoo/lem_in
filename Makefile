@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/05/21 12:58:48 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/05/23 13:28:06 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ I = includes/
 L = libft/
 
 SRC =	$Smain.c \
+		$Sinits.c \
 		$Shash.c \
 		$Sparse_vertices.c \
 		$Sparse_edges.c \
@@ -23,17 +24,11 @@ SRC =	$Smain.c \
 
 
 OBJ = $(SRC:$S%=$O%.o)
-
 INC = $(I)
-
 LIB = $(L)libft.a
-
 LIBINC = $(L)$(I)
-
 CCOMP = gcc
-
 CFLAGS = -Wall -Wextra -Werror
-
 NAME = lem-in
 
 .PHONY: all clean fclean re
@@ -49,8 +44,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-	@make -C libft/
-	@make -C libft/ clean
+	@make -C $(L)
+	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:

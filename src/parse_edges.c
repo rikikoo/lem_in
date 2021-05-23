@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/21 12:59:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/21 15:31:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** returns a pointer to t_edge (edge struct)
+** returns a pointer to t_edge
 **
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
@@ -29,7 +29,7 @@ static t_edge	*new_edge(char *src, char *dst)
 		return (NULL);
 	edge->src = ft_strdup(src);
 	edge->to = ft_strdup(dst);
-	edge->cost = -1;
+	edge->cap = 2;
 	edge->next = NULL;
 	return (edge);
 }

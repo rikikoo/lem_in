@@ -6,34 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/21 12:27:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/23 13:14:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** init_index returns a pointer to t_index, all pointers initialized to NULL
-*/
-t_index	*init_index(void)
-{
-	t_index	*index;
-	int		i;
-
-	index = (t_index *)malloc(sizeof(t_index));
-	if (!index)
-		return (NULL);
-	index->vertices = (t_vertex **)malloc(sizeof(t_vertex *) * HT_SIZE);
-	if (!index->vertices)
-		return (NULL);
-	i = 0;
-	while (i < HT_SIZE)
-	{
-		index->vertices[i] = NULL;
-		i++;
-	}
-	return (index);
-}
 
 /*
 ** allocates memory for a new room/vertex and returns a pointer to it

@@ -6,35 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/21 12:13:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/23 13:13:01 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** t_lem is a struct containing
-**	- the # of ants
-**	- the # of vertices
-**	- the # of edges
-**	- source and sink ids
-**
-** returns a pointer to an initialized t_lem
-*/
-static t_lem	*init_lem(void)
-{
-	t_lem	*lem;
-
-	lem = (t_lem *)malloc(sizeof(t_lem));
-	if (!lem)
-		return (NULL);
-	lem->ants = 0;
-	lem->vertices = 0;
-	lem->edges = 0;
-	lem->source = NULL;
-	lem->sink = NULL;
-	return (lem);
-}
 
 /*
 ** returns a new list element

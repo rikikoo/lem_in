@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/21 12:53:39 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/23 13:20:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,14 @@ typedef struct s_vertex
 /*
 ** src: name/id of the edge's source vertex
 ** dst: name/id of the edge's destination vertex
+** cap: capacity of the edge
 ** next: a pointer to the next edge that has the same source vertex
 */
 typedef struct s_edge
 {
 	char			*src;
 	char			*to;
-	int				cost;
+	int				cap;
 	struct s_edge	*next;
 }	t_edge;
 
@@ -83,8 +84,10 @@ typedef struct s_index
 	struct s_vertex	**vertices;
 }	t_index;
 
-int			hashof(const char *key);
+t_lem		*init_lem(void);
 t_index		*init_index(void);
+char		**init_array(int size);
+int			hashof(const char *key);
 void		set(t_index *index, const char *key, const int x, const int y);
 t_vertex	*get(t_index *index, char *key);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
