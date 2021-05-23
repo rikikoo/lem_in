@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/05/23 13:28:06 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/05/23 20:21:17 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,12 +44,12 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-	@make -C $(L)
-	@make -C $(L) clean
+#	@make -C $(L)
+#	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:
-	gcc -g -fsanitize=address src/*.c libft/libft.a
+	gcc -g -fsanitize=address src/*.c libft/libft.a -I $(INC) -I $(LIBINC)
 
 clean:
 	rm -rf $O

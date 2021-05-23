@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 13:13:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/23 19:50:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static t_input	*read_input(void)
 	{
 		ret = get_next_line(0, &input->line);
 		if (ret == -1)
-			return (NULL);	// TODO: error (format)
+			return (NULL);
 		if (ret == 0)
 			break ;
 		input->next = new_node();
@@ -75,8 +75,8 @@ int	main(void)
 	index = init_index();
 	lem = init_lem();
 	if (parse_input(input, index, lem) < 0)
-		return (-1);	// TODO: error (format)
+		return (-1);
 	if (edm_karp(index, lem) < 0)
-		return (-1);	// TODO: error (incomplete graph)
+		return (-1);
 	return (0);
 }

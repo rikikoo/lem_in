@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/21 12:58:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/23 19:49:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,16 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	{
 		input = input->next;
 		if (vertex_parse(index, input->line, lem, 0) < 0)
-			return (NULL);		// TODO: error (format)
+			return (NULL);
 	}
 	else if (ft_strequ((str + 2), "end") && lem->sink == NULL)
 	{
 		input = input->next;
 		if (vertex_parse(index, input->line, lem, 1) < 0)
-			return (NULL);		// TODO: error (format)
+			return (NULL);
 	}
 	else
-		return (NULL);			// TODO: error (format)
+		return (NULL);
 	return (input->next);
 }
 
@@ -106,13 +106,13 @@ int	parse_input(t_input *input, t_index *index, t_lem *lem)
 
 	lem->ants = ft_atoi(input->line);
 	if (!lem->ants)
-		return (-1);		// TODO: error (no ants)
+		return (-1);
 	input = get_vertices(input->next, index, lem);
 	if (!input)
-		return (-1);		// TODO: error (format)
+		return (-1);
 	lem->edges = get_edges(input, index);
 	if (lem->edges < 0)
-		return (-1);		// TODO: error (format)
+		return (-1);
 	while (input != NULL)
 	{
 		tmp = input;

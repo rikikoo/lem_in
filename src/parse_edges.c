@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/21 15:31:27 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/23 19:49:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ static char	**check_edge(t_index *index, char *line)
 
 	arr = ft_strsplit(line, '-');
 	if (!arr[0] || !arr[1])
-		return (NULL);		// TODO: format error => proper free and exit
+		return (NULL);
 	src = get(index, arr[0]);
 	dst = get(index, arr[1]);
 	if (!src || !dst)
-		return (NULL);		// TODO: format error => proper free and exit
+		return (NULL);
 	return (arr);
 }
 
