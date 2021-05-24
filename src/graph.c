@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 22:20:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/24 15:41:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,18 @@ static char	**bfs(t_index *index, t_lem *lem, char **queue, char **prev)
 
 int	edm_karp(t_index *index, t_lem *lem)
 {
-	char		**queue;
-	char		**prev;
+	char	**queue;
+	char	**prev;
+	int		flow;
 
-	queue = init_array(lem->vertices + 1);
-	prev = init_array(lem->vertices);
-	if (!queue || !prev)
-		return (-1);
-	prev = bfs(index, lem, queue, prev);
-
-	for (int i = 0; prev[i] != NULL; i++) {
-		ft_printf("%s\n", prev[i]);
+	flow = 1;
+	while (flow > 0)
+	{
+		queue = init_array(lem->vertices + 1);
+		prev = init_array(lem->vertices);
+		if (!queue || !prev)
+			return (-1);
+		prev = bfs(index, lem, queue, prev);
 	}
-
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/05/23 20:21:17 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/05/24 17:34:03 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,6 +53,7 @@ debug:
 
 clean:
 	rm -rf $O
+	rm -rf a.out*
 
 fclean: clean
 	rm -f $(NAME)
