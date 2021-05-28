@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 13:20:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/28 13:56:50 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 /*
 ** ants: # of ants we have to transport through the graph
 ** vertices: # of vertices in the graph
-** edges: # of edges in the graph
+** edges: # of edges in the graph	!!! NOTE !!! is this number useful?
+** max_flow: # of ants we can send through the graph at once
 ** source: name/id of the source vertex
 ** sink: name/id of the sink vertex
 */
@@ -30,6 +31,7 @@ typedef struct s_lem
 	int		ants;
 	int		vertices;
 	int		edges;
+	int		max_flow;
 	char	*source;
 	char	*sink;
 }	t_lem;
@@ -47,10 +49,10 @@ typedef struct s_input
 /*
 ** id: name of the vertex
 ** x, y: coordinates of the vertex (used only for visualizer)
-** visited: boolean for breadth-first search algorithm
+** visited: corresponding value for each bfs iteration
 ** edge: a pointer to the struct t_list, a list of outgoing edges.
 ** next: a pointer to another t_vertex whose id might have the same
-** 	hashed value as this one.
+** 	hashed value as the one being examined
 */
 typedef struct s_vertex
 {
@@ -65,16 +67,28 @@ typedef struct s_vertex
 /*
 ** src: name/id of the edge's source vertex
 ** dst: name/id of the edge's destination vertex
-** cap: capacity of the edge
+** fwd_cap & rev_cap: forward and backward capacity of the edge, respectively
 ** next: a pointer to the next edge that has the same source vertex
 */
 typedef struct s_edge
 {
 	char			*src;
 	char			*to;
-	int				cap;
+	int				fwd_cap;
+	int				rev_cap;
 	struct s_edge	*next;
 }	t_edge;
+
+/*
+** path: head of a path found in by the breadth-first search algorithm
+** next: pointer to the next route
+*/
+typedef struct s_route
+{
+	int				i;
+	char			**path;
+	struct s_route	*next;
+}	t_route;
 
 /*
 ** "hash table", aka an array of pointers to vertices
@@ -86,13 +100,15 @@ typedef struct s_index
 
 t_lem		*init_lem(void);
 t_index		*init_index(void);
-char		**init_array(int size);
+int			parse_input(t_input *input, t_index *index, t_lem *lem);
 int			hashof(const char *key);
 void		set(t_index *index, const char *key, const int x, const int y);
-t_vertex	*get(t_index *index, char *key);
+t_vertex	*get(t_index *index, const char *key);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
-int			parse_input(t_input *input, t_index *index, t_lem *lem);
+t_edge		*new_edge(const char *src, const char *dst);
 int			get_edges(t_input *input, t_index *index);
+char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
 int			edm_karp(t_index *index, t_lem *lem);
+char		**wipe_array(char **arr, const int size);
 
 #endif

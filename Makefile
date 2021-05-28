@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/05/24 17:34:03 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/05/26 19:27:41 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,10 @@ L = libft/
 SRC =	$Smain.c \
 		$Sinits.c \
 		$Shash.c \
-		$Sparse_vertices.c \
-		$Sparse_edges.c \
-		$Sgraph.c
+		$Svertices.c \
+		$Sedges.c \
+		$Sgraph.c \
+		$Sbfs.c
 
 
 OBJ = $(SRC:$S%=$O%.o)

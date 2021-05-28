@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 19:50:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/28 14:44:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,6 @@ int	main(void)
 		return (-1);
 	if (edm_karp(index, lem) < 0)
 		return (-1);
+	while(1) continue;
 	return (0);
 }

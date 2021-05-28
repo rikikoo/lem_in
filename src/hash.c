@@ -6,36 +6,36 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 13:14:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/28 13:56:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** allocates memory for a new room/vertex and returns a pointer to it
+** allocates memory for a new vertex and returns a pointer to it
 **
 ** key: the name/id of the vertex
 ** x, y: the coordinates of the vertex
 */
-t_vertex	*new_room(const char *key, const int x, const int y)
+t_vertex	*new_vertex(const char *key, const int x, const int y)
 {
-	t_vertex	*room;
+	t_vertex	*vertex;
 
-	room = (t_vertex *)malloc(sizeof(t_vertex));
-	if (!room)
+	vertex = (t_vertex *)malloc(sizeof(t_vertex));
+	if (!vertex)
 		return (NULL);
-	room->id = ft_strdup(key);
-	room->x = x;
-	room->y = y;
-	room->visited = 0;
-	room->edge = NULL;
-	room->next = NULL;
-	return (room);
+	vertex->id = ft_strdup(key);
+	vertex->x = x;
+	vertex->y = y;
+	vertex->visited = 0;
+	vertex->edge = NULL;
+	vertex->next = NULL;
+	return (vertex);
 }
 
 /*
-** returns a hash of the room name/id
+** returns a hash of the vertex name/id
 **
 ** key: name/id of the vertex to be hashed
 **
@@ -57,24 +57,24 @@ int	hashof(const char *key)
 }
 
 /*
-** returns the room/vertex pointer if found in the hash table, NULL otherwise
+** returns the vertex pointer if found in the hash table, NULL otherwise
 **
 ** index: a pointer to t_index
 ** key: name/id of the vertex to get
 */
-t_vertex	*get(t_index *index, char *key)
+t_vertex	*get(t_index *index, const char *key)
 {
 	int			i;
-	t_vertex	*room;
+	t_vertex	*vertex;
 
 	i = hashof(key);
-	room = index->vertices[i];
-	while (room != NULL)
+	vertex = index->vertices[i];
+	while (vertex != NULL)
 	{
-		if (ft_strequ(key, room->id))
-			return (room);
+		if (ft_strequ(key, vertex->id))
+			return (vertex);
 		else
-			room = room->next;
+			vertex = vertex->next;
 	}
 	return (NULL);
 }
@@ -96,7 +96,7 @@ void	set(t_index *index, const char *key, const int x, const int y)
 	new = index->vertices[i];
 	if (new == NULL)
 	{
-		index->vertices[i] = new_room(key, x, y);
+		index->vertices[i] = new_vertex(key, x, y);
 		return ;
 	}
 	while (new != NULL)
@@ -110,5 +110,5 @@ void	set(t_index *index, const char *key, const int x, const int y)
 		prev = new;
 		new = prev->next;
 	}
-	prev->next = new_room(key, x, y);
+	prev->next = new_vertex(key, x, y);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 13:33:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/27 16:40:42 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 **	- the # of vertices
 **	- the # of edges
 **	- source and sink ids
+**	- flow of the graph, initialized to a large number
 **
 ** returns a pointer to an initialized t_lem
 */
@@ -31,6 +32,7 @@ t_lem	*init_lem(void)
 	lem->ants = 0;
 	lem->vertices = 0;
 	lem->edges = 0;
+	lem->max_flow = 0;
 	lem->source = NULL;
 	lem->sink = NULL;
 	return (lem);
@@ -63,14 +65,10 @@ t_index	*init_index(void)
 ** returns an array of char pointers of the given size.
 ** functions as a makeshift queue data structure.
 */
-char	**init_array(int size)
+char	**wipe_array(char **arr, const int size)
 {
-	char	**arr;
 	int		i;
 
-	arr = (char **)malloc(sizeof(char *) * size);
-	if (!arr)
-		return (NULL);
 	i = 0;
 	while (i < size)
 	{

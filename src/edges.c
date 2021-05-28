@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_edges.c                                      :+:      :+:    :+:   */
+/*   edges.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 19:49:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/28 14:12:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,17 @@
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
 */
-static t_edge	*new_edge(char *src, char *dst)
+t_edge	*new_edge(const char *src, const char *dst)
 {
 	t_edge	*edge;
 
-	if (!src || !dst)
-		return (NULL);
 	edge = (t_edge *)malloc(sizeof(t_edge));
 	if (!edge)
 		return (NULL);
 	edge->src = ft_strdup(src);
 	edge->to = ft_strdup(dst);
-	edge->cap = 2;
+	edge->fwd_cap = 1;
+	edge->rev_cap = 0;
 	edge->next = NULL;
 	return (edge);
 }
@@ -41,7 +40,7 @@ static t_edge	*new_edge(char *src, char *dst)
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
 */
-static void	append_edge(t_vertex *vertex, char *src, char *dst)
+static void	edge_append(t_vertex *vertex, char *src, char *dst)
 {
 	if (!vertex || !src || !dst)
 		return ;
@@ -100,7 +99,9 @@ int	get_edges(t_input *input, t_index *index)
 		if (arr == NULL)
 			return (-1);
 		src = get(index, arr[0]);
-		append_edge(src, arr[0], arr[1]);
+		edge_append(src, arr[0], arr[1]);
+		src = get(index, arr[1]);
+		edge_append(src, arr[1], arr[0]);
 		i += 1;
 		input = input->next;
 	}
