@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/28 14:44:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/28 20:02:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,26 @@ int	main(void)
 	t_input	*input;
 	t_index	*index;
 	t_lem	*lem;
+	t_route	*routes;
 
 	input = read_input();
 	index = init_index();
 	lem = init_lem();
 	if (parse_input(input, index, lem) < 0)
 		return (-1);
-	if (edm_karp(index, lem) < 0)
+	routes = edm_karp(index, lem);
+	if (!routes)
 		return (-1);
-	while(1) continue;
+
+	ft_printf("there should be %d routes...\n", lem->max_flow);
+	while (routes->next != NULL)
+	{
+		ft_printf("\n");
+		for (int i = 0; routes->path[i] != NULL; i++)
+		{
+			ft_printf("%s\n", routes->path[i]);
+		}
+		routes = routes->next;
+	}
 	return (0);
 }

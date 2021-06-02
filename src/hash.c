@@ -6,33 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/28 13:56:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/30 15:00:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** allocates memory for a new vertex and returns a pointer to it
-**
-** key: the name/id of the vertex
-** x, y: the coordinates of the vertex
-*/
-t_vertex	*new_vertex(const char *key, const int x, const int y)
-{
-	t_vertex	*vertex;
-
-	vertex = (t_vertex *)malloc(sizeof(t_vertex));
-	if (!vertex)
-		return (NULL);
-	vertex->id = ft_strdup(key);
-	vertex->x = x;
-	vertex->y = y;
-	vertex->visited = 0;
-	vertex->edge = NULL;
-	vertex->next = NULL;
-	return (vertex);
-}
 
 /*
 ** returns a hash of the vertex name/id
@@ -41,7 +19,7 @@ t_vertex	*new_vertex(const char *key, const int x, const int y)
 **
 ** TODO: look up an actual hashing algorithm, don't use this nonsense
 */
-int	hashof(const char *key)
+static int	hashof(const char *key)
 {
 	int	val;
 	int	i;
@@ -67,6 +45,8 @@ t_vertex	*get(t_index *index, const char *key)
 	int			i;
 	t_vertex	*vertex;
 
+	if (!key)
+		return (NULL);
 	i = hashof(key);
 	vertex = index->vertices[i];
 	while (vertex != NULL)

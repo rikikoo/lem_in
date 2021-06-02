@@ -6,21 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/27 16:40:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/30 12:20:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** t_lem is a struct containing
-**	- the # of ants
-**	- the # of vertices
-**	- the # of edges
-**	- source and sink ids
-**	- flow of the graph, initialized to a large number
-**
-** returns a pointer to an initialized t_lem
+** returns a pointer to a zero/NULL initialized t_lem
 */
 t_lem	*init_lem(void)
 {
@@ -39,7 +32,8 @@ t_lem	*init_lem(void)
 }
 
 /*
-** init_index returns a pointer to t_index, all pointers initialized to NULL
+** init_index returns a pointer to t_index, with all vertex pointers
+** initialized to NULL
 */
 t_index	*init_index(void)
 {
@@ -62,18 +56,43 @@ t_index	*init_index(void)
 }
 
 /*
-** returns an array of char pointers of the given size.
-** functions as a makeshift queue data structure.
+** allocates memory for a new vertex and returns a pointer to it
+**
+** key: the name/id of the vertex
+** x, y: the coordinates of the vertex
 */
-char	**wipe_array(char **arr, const int size)
+t_vertex	*new_vertex(const char *key, const int x, const int y)
 {
-	int		i;
+	t_vertex	*vertex;
 
-	i = 0;
-	while (i < size)
-	{
-		arr[i] = NULL;
-		i++;
-	}
-	return (arr);
+	vertex = (t_vertex *)malloc(sizeof(t_vertex));
+	if (!vertex)
+		return (NULL);
+	vertex->id = ft_strdup(key);
+	vertex->x = x;
+	vertex->y = y;
+	vertex->visited = 0;
+	vertex->edge = NULL;
+	vertex->next = NULL;
+	return (vertex);
+}
+
+/*
+** allocates memory for and returns a pointer to t_edge
+**
+** src: name/id of the edge's source
+** dst: name/id of the edge's sink
+*/
+t_edge	*new_edge(const char *src, const char *dst)
+{
+	t_edge	*edge;
+
+	edge = (t_edge *)malloc(sizeof(t_edge));
+	if (!edge)
+		return (NULL);
+	edge->src = ft_strdup(src);
+	edge->to = ft_strdup(dst);
+	edge->fwd_cap = 1;
+	edge->next = NULL;
+	return (edge);
 }

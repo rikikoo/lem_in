@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/28 13:56:50 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/31 23:01:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 # include "libft.h"
 
 /*
-** ants: # of ants we have to transport through the graph
-** vertices: # of vertices in the graph
-** edges: # of edges in the graph	!!! NOTE !!! is this number useful?
-** max_flow: # of ants we can send through the graph at once
+** ants: nbr of ants we have to transport through the graph
+** vertices: nbr of vertices in the graph
+** edges: nbr of edges in the graph		¡¡¡NOTE!!! number useful at any point?
+** max_flow: nbr of ants we can send through the graph at once
 ** source: name/id of the source vertex
 ** sink: name/id of the sink vertex
 */
@@ -75,7 +75,6 @@ typedef struct s_edge
 	char			*src;
 	char			*to;
 	int				fwd_cap;
-	int				rev_cap;
 	struct s_edge	*next;
 }	t_edge;
 
@@ -100,15 +99,17 @@ typedef struct s_index
 
 t_lem		*init_lem(void);
 t_index		*init_index(void);
-int			parse_input(t_input *input, t_index *index, t_lem *lem);
-int			hashof(const char *key);
-void		set(t_index *index, const char *key, const int x, const int y);
-t_vertex	*get(t_index *index, const char *key);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
 t_edge		*new_edge(const char *src, const char *dst);
+void		set(t_index *index, const char *key, const int x, const int y);
+t_vertex	*get(t_index *index, const char *key);
+int			parse_input(t_input *input, t_index *index, t_lem *lem);
 int			get_edges(t_input *input, t_index *index);
+t_route		*edm_karp(t_index *index, t_lem *lem);
 char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
-int			edm_karp(t_index *index, t_lem *lem);
-char		**wipe_array(char **arr, const int size);
+char		**wipe_array(char **arr, const int size, const char *source);
+char		*pop_first(char ***arr);
+void		arr_append(char ***arr, char *vertex);
+int			is_linked(t_edge *curr, t_vertex *prev_vertex, char *sink);
 
 #endif

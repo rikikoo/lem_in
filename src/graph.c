@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/28 14:43:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:25:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@ static void	free_queue(char ***queue, int size)
 {
 	while (size)
 	{
-		free((*queue)[size]);
+		if ((*queue)[size] != NULL)
+			free((*queue)[size]);
 		size--;
 	}
 	free(*queue);
 }
 
-static t_route	*new_route(int vertices, int iteration)
+static t_route	*new_route(int vertices, int iteration, char *source)
 {
 	t_route	*route;
 	int		i;
@@ -37,34 +38,33 @@ static t_route	*new_route(int vertices, int iteration)
 		route->path[i] = NULL;
 		i++;
 	}
+	route->path[0] = ft_strdup(source);
 	route->i = iteration;
 	route->next = NULL;
 	return (route);
 }
 
-static int	send_flow(t_index *index, char **path)
+static int	send_flow(t_index *index, char **path, char *sink)
 {
-	int 		i;
-	int			flow;
-	t_vertex	*vert;
-	t_edge		*edge;
+	t_vertex	*vertex;
+	t_edge		*edge_out;
+	t_edge		*edge_in;
+	int			i;
 
-	i = 0;
-	flow = 0;
-	while (path[i + 1] != NULL)
+	i = 1;
+	while (path[i + 1] != NULL && !ft_strequ(path[i], sink))
 	{
-		vert = get(index, path[i]);
-		edge = vert->edge;
-		while (edge != NULL)
+		vertex = get(index, path[i]);
+		edge_out = vertex->edge;
+		while (edge_out != NULL)
 		{
-			if (ft_strequ(edge->src, path[i]) && \
-			ft_strequ(edge->to, path[i + 1]))
-			{
-				edge->fwd_cap -= 1;
-				edge->rev_cap -= 1;
-				break ;
-			}
-			edge = edge->next;
+			edge_out->fwd_cap = 0;
+			vertex = get(index, path[i - 1]);
+			edge_in = vertex->edge;
+			while (!ft_strequ(edge_in->to, path[i]))
+				edge_in = edge_in->next;
+			edge_in->fwd_cap = 0;
+			edge_out = edge_out->next;
 		}
 		i++;
 	}
@@ -85,7 +85,7 @@ static int	path_found(char *sink, char **path)
 	return (0);
 }
 
-int	edm_karp(t_index *index, t_lem *lem)
+t_route	*edm_karp(t_index *index, t_lem *lem)
 {
 	char	**queue;
 	t_route	*route;
@@ -95,31 +95,20 @@ int	edm_karp(t_index *index, t_lem *lem)
 	queue = (char **)malloc(sizeof(char *) * (lem->vertices + 1));
 	queue[lem->vertices] = NULL;
 	i = 1;
-	route = new_route(lem->vertices, i);
+	route = new_route(lem->vertices, i, lem->source);
 	head = route;
 	if (!queue || !route)
-		return (-1);
+		return (NULL);
 	while (1)
 	{
-		queue = wipe_array(queue, lem->vertices);
+		queue = wipe_array(queue, lem->vertices, lem->source);
 		route->path = bfs(index, lem, queue, route);
 		if (!path_found(lem->sink, route->path))
 			break ;
-		lem->max_flow += send_flow(index, route->path);
-		route->next = new_route(lem->vertices, ++i);
+		lem->max_flow += send_flow(index, route->path, lem->sink);
+		route->next = new_route(lem->vertices, ++i, lem->source);
 		route = route->next;
 	}
-
-	ft_printf("there should be %d routes...\n", lem->max_flow);
-	while (head->next != NULL)
-	{
-		ft_printf("\n");
-		for (i = 0; head->path[i] != NULL; i++)
-		{
-			ft_printf("%s\n", head->path[i]);
-		}
-		head = head->next;
-	}
 	free_queue(&queue, lem->vertices);
-	return (0);
+	return (head);
 }

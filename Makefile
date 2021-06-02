@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/05/26 19:27:41 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/05/30 13:05:10 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRC =	$Smain.c \
 		$Svertices.c \
 		$Sedges.c \
 		$Sgraph.c \
-		$Sbfs.c
+		$Sbfs.c \
+		$Sutils.c
 
 
 OBJ = $(SRC:$S%=$O%.o)

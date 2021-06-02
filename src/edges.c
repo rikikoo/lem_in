@@ -6,32 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/28 14:12:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/05/30 12:06:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** returns a pointer to t_edge
-**
-** src: name/id of the edge's source
-** dst: name/id of the edge's sink
-*/
-t_edge	*new_edge(const char *src, const char *dst)
-{
-	t_edge	*edge;
-
-	edge = (t_edge *)malloc(sizeof(t_edge));
-	if (!edge)
-		return (NULL);
-	edge->src = ft_strdup(src);
-	edge->to = ft_strdup(dst);
-	edge->fwd_cap = 1;
-	edge->rev_cap = 0;
-	edge->next = NULL;
-	return (edge);
-}
 
 /*
 ** appends new edge to the list of edges coming out of a vertex

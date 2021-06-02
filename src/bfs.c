@@ -6,48 +6,47 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:32:03 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/28 14:36:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:46:08 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** removes first item from queue and returns it
+** returns a pointer to the last malloc'd element of the array
 */
-static char	*pop_first(char ***arr)
-{
-	char	*popped;
-	char	**tmp;
-
-	if (!(*arr)[0])
-		return (NULL);
-	popped = ft_strdup((*arr)[0]);
-	tmp = *arr;
-	(*arr)++;
-	if (*tmp != NULL)
-	{
-		free((*tmp));
-		*tmp = NULL;
-	}
-	return (popped);
-}
-
-/*
-** appends a new vertex to the end of the queue/prev list
-*/
-static void	arr_append(char ***arr, char *vertex)
+static char	*lastof(char **arr)
 {
 	int	i;
 
 	i = 0;
-	while ((*arr)[i] != NULL)
-	{
-		if (ft_strequ((*arr)[i], vertex))
-			return ;
+	while (arr[i] != NULL)
 		i++;
+	if (i > 0)
+		return (arr[i - 1]);
+	else
+		return (NULL);
+}
+
+static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
+{
+	int			ret;
+	t_vertex	*vert;
+
+	ret = 0;
+	vert = get(index, edge->to);
+	if (vert->visited < route->i && edge->fwd_cap > 0 && \
+	(!ft_strequ(vert->id, lem->sink) && !ft_strequ(edge->to, lem->source)))
+	{
+		vert->visited += 1;
+		ret = 1 + is_linked(edge, get(index, lastof(route->path)), lem->sink);
 	}
-	(*arr)[i] = ft_strdup(vertex);
+	else if (ft_strequ(vert->id, lem->sink) && \
+	is_linked(edge, get(index, lastof(route->path)), lem->sink))
+	{
+		ret = 3;
+	}
+	return (ret);
 }
 
 /*
@@ -57,11 +56,10 @@ char	**bfs(t_index *index, t_lem *lem, char **queue, t_route *route)
 {
 	t_vertex	*vertex;
 	t_edge		*edge;
-	char		**path;
+	int			traversable;
 
-	path = route->path;
-	arr_append(&queue, lem->source);
-	while (!(*queue == NULL))
+	traversable = 0;
+	while (!(*queue == NULL) && traversable != 3)
 	{
 		vertex = get(index, pop_first(&queue));
 		if (vertex == NULL)
@@ -69,19 +67,13 @@ char	**bfs(t_index *index, t_lem *lem, char **queue, t_route *route)
 		edge = vertex->edge;
 		while (edge != NULL)
 		{
-			vertex  = get(index, edge->to);
-			if (!ft_strequ(edge->to, lem->source) && \
-			vertex->visited < route->i && edge->fwd_cap > 0)
-			{
-				vertex->visited += 1;
+			traversable = traverse(index, lem, edge, route);
+			if (traversable > 0)
 				arr_append(&queue, edge->to);
-				arr_append(&path, edge->src);
-				if (ft_strequ(lem->sink, edge->to))
-				{
-					arr_append(&path, lem->sink);
-					return (route->path);
-				}
-			}
+			if (traversable > 1)
+				arr_append(&(route->path), edge->src);
+			if (traversable > 2)
+				arr_append(&(route->path), lem->sink);
 			edge = edge->next;
 		}
 	}
