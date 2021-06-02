@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/31 23:01:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 21:23:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,14 @@ typedef struct s_index
 
 t_lem		*init_lem(void);
 t_index		*init_index(void);
+t_input		*read_input(void);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
 t_edge		*new_edge(const char *src, const char *dst);
+t_route		*new_route(int vertices, int iteration, char *source);
 void		set(t_index *index, const char *key, const int x, const int y);
 t_vertex	*get(t_index *index, const char *key);
 int			parse_input(t_input *input, t_index *index, t_lem *lem);
+t_input		*get_vertices(t_input *input, t_index *index, t_lem *lem);
 int			get_edges(t_input *input, t_index *index);
 t_route		*edm_karp(t_index *index, t_lem *lem);
 char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
@@ -111,5 +114,12 @@ char		**wipe_array(char **arr, const int size, const char *source);
 char		*pop_first(char ***arr);
 void		arr_append(char ***arr, char *vertex);
 int			is_linked(t_edge *curr, t_vertex *prev_vertex, char *sink);
+int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
+void		free_input(t_input **input);
+void		free_index(t_index **index);
+void		free_lem(t_lem **lem);
+void		free_route(t_route **route);
+void		free_queue(char ***queue, int size);
+void		print_moves(t_route *route, t_lem *lem);
 
 #endif

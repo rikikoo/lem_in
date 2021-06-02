@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_vertices.c                                   :+:      :+:    :+:   */
+/*   vertices.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/23 19:49:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 16:51:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	return (input->next);
 }
 
-static t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
+t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 {
 	while (1)
 	{
@@ -95,30 +95,4 @@ static t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 		return (input);
 	else
 		return (NULL);
-}
-
-/*
-** parses input, which contains the all necessary info to construct the graph
-*/
-int	parse_input(t_input *input, t_index *index, t_lem *lem)
-{
-	t_input	*tmp;
-
-	lem->ants = ft_atoi(input->line);
-	if (!lem->ants)
-		return (-1);
-	input = get_vertices(input->next, index, lem);
-	if (!input)
-		return (-1);
-	lem->edges = get_edges(input, index);
-	if (lem->edges < 0)
-		return (-1);
-	while (input != NULL)
-	{
-		tmp = input;
-		input = input->next;
-		free(tmp->line);
-		free(tmp);
-	}
-	return (0);
 }

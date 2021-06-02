@@ -6,11 +6,29 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/31 23:00:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 21:19:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
+
+int	die(t_input **input, t_index **index, t_lem **lem, t_route **route)
+{
+	if (*input)
+		free_input(input);
+	if (*index)
+		free_index(index);
+	if (*lem)
+		free_lem(lem);
+	if (*route)
+		free_route(route);
+	ft_printf("\nE       R\n");
+	ft_printf("  R   O  \n");
+	ft_printf("    R    \n");
+	ft_printf("  R   O  \n");
+	ft_printf("E       R\n\n");
+	return (-1);
+}
 
 /*
 ** adds the source vertex id to the start of the previously malloc'd array

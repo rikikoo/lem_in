@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/05/30 13:05:10 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/06/02 21:42:08 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,12 +17,15 @@ L = libft/
 
 SRC =	$Smain.c \
 		$Sinits.c \
+		$Sinput.c \
 		$Shash.c \
 		$Svertices.c \
 		$Sedges.c \
 		$Sgraph.c \
 		$Sbfs.c \
-		$Sutils.c
+		$Sutils.c \
+		$Sfree.c \
+		$Soutput.c
 
 
 OBJ = $(SRC:$S%=$O%.o)
@@ -46,8 +49,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-#	@make -C $(L)
-#	@make -C $(L) clean
+	@make -C $(L)
+	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:

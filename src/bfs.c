@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:32:03 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 14:46:08 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 16:20:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ static char	*lastof(char **arr)
 static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
 {
 	int			ret;
-	t_vertex	*vert;
+	t_vertex	*vertex;
 
 	ret = 0;
-	vert = get(index, edge->to);
-	if (vert->visited < route->i && edge->fwd_cap > 0 && \
-	(!ft_strequ(vert->id, lem->sink) && !ft_strequ(edge->to, lem->source)))
+	vertex = get(index, edge->to);
+	if (vertex->visited < route->i && edge->fwd_cap > 0 && \
+	(!ft_strequ(vertex->id, lem->sink) && !ft_strequ(edge->to, lem->source)))
 	{
-		vert->visited += 1;
+		vertex->visited += 1;
 		ret = 1 + is_linked(edge, get(index, lastof(route->path)), lem->sink);
 	}
-	else if (ft_strequ(vert->id, lem->sink) && \
+	else if (ft_strequ(vertex->id, lem->sink) && \
 	is_linked(edge, get(index, lastof(route->path)), lem->sink))
 	{
 		ret = 3;
@@ -68,7 +68,7 @@ char	**bfs(t_index *index, t_lem *lem, char **queue, t_route *route)
 		while (edge != NULL)
 		{
 			traversable = traverse(index, lem, edge, route);
-			if (traversable > 0)
+			if (traversable)
 				arr_append(&queue, edge->to);
 			if (traversable > 1)
 				arr_append(&(route->path), edge->src);

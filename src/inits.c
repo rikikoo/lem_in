@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/30 12:20:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 16:54:48 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,25 @@ t_edge	*new_edge(const char *src, const char *dst)
 	edge->fwd_cap = 1;
 	edge->next = NULL;
 	return (edge);
+}
+
+t_route	*new_route(int vertices, int iteration, char *source)
+{
+	t_route	*route;
+	int		i;
+
+	route = (t_route *)malloc(sizeof(t_route));
+	route->path = (char **)malloc(sizeof(char *) * (vertices + 1));
+	if (!route || !route->path)
+		return (NULL);
+	i = 0;
+	while (i <= vertices)
+	{
+		route->path[i] = NULL;
+		i++;
+	}
+	route->path[0] = ft_strdup(source);
+	route->i = iteration;
+	route->next = NULL;
+	return (route);
 }

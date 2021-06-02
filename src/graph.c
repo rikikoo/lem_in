@@ -6,43 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 14:25:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/02 19:38:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-static void	free_queue(char ***queue, int size)
-{
-	while (size)
-	{
-		if ((*queue)[size] != NULL)
-			free((*queue)[size]);
-		size--;
-	}
-	free(*queue);
-}
-
-static t_route	*new_route(int vertices, int iteration, char *source)
-{
-	t_route	*route;
-	int		i;
-
-	route = (t_route *)malloc(sizeof(t_route));
-	route->path = (char **)malloc(sizeof(char *) * (vertices + 1));
-	if (!route || !route->path)
-		return (NULL);
-	i = 0;
-	while (i <= vertices)
-	{
-		route->path[i] = NULL;
-		i++;
-	}
-	route->path[0] = ft_strdup(source);
-	route->i = iteration;
-	route->next = NULL;
-	return (route);
-}
 
 static int	send_flow(t_index *index, char **path, char *sink)
 {
@@ -52,6 +20,8 @@ static int	send_flow(t_index *index, char **path, char *sink)
 	int			i;
 
 	i = 1;
+	if (ft_strequ(path[i], sink))
+		(get(index, path[0]))->edge->fwd_cap = 0;
 	while (path[i + 1] != NULL && !ft_strequ(path[i], sink))
 	{
 		vertex = get(index, path[i]);
