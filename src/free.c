@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 20:48:24 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/04 18:52:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	free_route(t_route **route)
 
 void	free_queue(char ***queue, int size)
 {
-	while (size)
+	while (size >= 0)
 	{
 		if ((*queue)[size] != NULL)
 			free((*queue)[size]);

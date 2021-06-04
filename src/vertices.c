@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 16:51:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/03 19:28:00 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 	if (!str)
 		return (-1);
 	arr = ft_strsplit(str, ' ');
-	if (ft_lstlen((void **)arr) != 3)
+	if (ft_arrlen((void **)arr) != 3)
 		return (-1);
 	i = 0;
 	j = 0;

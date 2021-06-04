@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 16:54:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/04 12:07:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ t_route	*new_route(int vertices, int iteration, char *source)
 	}
 	route->path[0] = ft_strdup(source);
 	route->i = iteration;
+	route->is_valid = 0;
+	route->len = INT_MAX;
 	route->next = NULL;
 	return (route);
 }

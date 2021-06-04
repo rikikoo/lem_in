@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 21:22:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/04 13:12:54 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,8 @@ int	main(void)
 	if (parse_input(input, index, lem) < 0)
 		return (die(&input, &index, &lem, &routes));
 	routes = edm_karp(index, lem);
-	if (!routes)
+	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
-/*
-	ft_printf("routes found: %d\n", lem->max_flow);
-	while (routes->next != NULL)
-	{
-		ft_printf("\n");
-		for (int i = 0; routes->path[i] != NULL; i++)
-		{
-			ft_printf("%s\n", routes->path[i]);
-		}
-		routes = routes->next;
-	}
-*/
-	print_moves(routes, lem);
+	prepare_output(routes, lem);
 	return (0);
 }

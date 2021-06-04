@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 19:38:58 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/03 18:01:54 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ t_route	*edm_karp(t_index *index, t_lem *lem)
 		route->path = bfs(index, lem, queue, route);
 		if (!path_found(lem->sink, route->path))
 			break ;
+		route->is_valid = 1;
 		lem->max_flow += send_flow(index, route->path, lem->sink);
 		route->next = new_route(lem->vertices, ++i, lem->source);
 		route = route->next;

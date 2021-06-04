@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 21:23:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/03 19:04:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define HT_SIZE 10000
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
 # include "libft.h"
 
 /*
@@ -79,12 +80,17 @@ typedef struct s_edge
 }	t_edge;
 
 /*
+** i: corresponding value for each new path
+** is_valid: marked true if stored path can reach sink
 ** path: head of a path found in by the breadth-first search algorithm
+** len: length of the path
 ** next: pointer to the next route
 */
 typedef struct s_route
 {
 	int				i;
+	int				is_valid;
+	int				len;
 	char			**path;
 	struct s_route	*next;
 }	t_route;
@@ -102,12 +108,12 @@ t_index		*init_index(void);
 t_input		*read_input(void);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
 t_edge		*new_edge(const char *src, const char *dst);
-t_route		*new_route(int vertices, int iteration, char *source);
-void		set(t_index *index, const char *key, const int x, const int y);
-t_vertex	*get(t_index *index, const char *key);
-int			parse_input(t_input *input, t_index *index, t_lem *lem);
 t_input		*get_vertices(t_input *input, t_index *index, t_lem *lem);
+t_vertex	*get(t_index *index, const char *key);
+void		set(t_index *index, const char *key, const int x, const int y);
 int			get_edges(t_input *input, t_index *index);
+int			parse_input(t_input *input, t_index *index, t_lem *lem);
+t_route		*new_route(int vertices, int iteration, char *source);
 t_route		*edm_karp(t_index *index, t_lem *lem);
 char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
 char		**wipe_array(char **arr, const int size, const char *source);
@@ -120,6 +126,6 @@ void		free_index(t_index **index);
 void		free_lem(t_lem **lem);
 void		free_route(t_route **route);
 void		free_queue(char ***queue, int size);
-void		print_moves(t_route *route, t_lem *lem);
+void		prepare_output(t_route *route, t_lem *lem);
 
 #endif
