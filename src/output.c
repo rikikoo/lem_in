@@ -5,95 +5,93 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/04 18:40:24 by rkyttala         ###   ########.fr       */
+/*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
+/*   Updated: 2021/06/09 17:29:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	swap(t_route **prev, t_route **current, t_route **next)
+static char	*ant_move(char *ant, char *vertex)
 {
-	t_route	*tmp;
+	char	*move;
+	int		ant_len;
+	int		vertex_len;
 
-	tmp = *current;
-	tmp->next = (*next)->next;
-	if (*prev == NULL)
-	{
-		*current = *next;
-		(*current)->next = tmp;
-	}
-	else
-	{
-		*current = *next;
-		(*prev)->next = *current;
-		(*current)->next = tmp;
-	}
+	ant_len = ft_strlen(ant);
+	vertex_len = ft_strlen(vertex);
+	move = (char *)malloc(sizeof(char) * (ant_len + vertex_len + 3));
+	if (!move)
+		return (NULL);
+	move[0] = 'L';
+	move[ant_len + vertex_len + 3] = '\0';
+	move = ft_strcpy(move + 1, ant);
+	*(move + ant_len + 1) = '-';
+	move = ft_strcpy(move + ant_len + 2, vertex);
+	free(ant);
+	return (move);
 }
 
-t_route	*sort_paths(t_route *route)
+static char	***fill_output_arr(t_route *route, t_lem *lem, char ***out)
 {
-	t_route	*prev;
-	t_route	*curr;
-	t_route *next;
+	int		ant_path;
+	int		move;
+	int		ant;
 	t_route	*head;
 
-	prev = NULL;
-	curr = route;
-	while (curr->next->is_valid)
-	{
-		if (curr->len == INT_MAX)
-			curr->len = ft_arrlen((void **)curr->path);
-		next = curr->next;
-		while (next->is_valid)
-		{
-			if (next->len == INT_MAX)
-				next->len = ft_arrlen((void **)next->path);
-			if (curr->len > next->len)
-			{
-				swap(&prev, &curr, &next);
-				head = curr;
-			}
-			next = next->next;
-		}
-		prev = curr;
-		curr = curr->next;
-	}
-	return (head);
-}
-
-/*
-** WIP
-*/
-void	prepare_output(t_route *route, t_lem *lem)
-{
-	int		i;
-	t_route	*head;
-
-	lem->edges++;
+	if (!route || !lem || !out)
+		return (NULL);
+	ant_path = 0;
+	move = 0;
+	ant = 1;
 	head = route;
-	while (route->next != NULL)
+	while (ant <= lem->ants)
 	{
-		i = 0;
-		while (route->path[i + 1] != NULL)
+		while (move < route->len)
 		{
-			ft_printf("%s -> ", route->path[i]);
-			i++;
+			out[ant - 1][move] = ant_move(ft_itoa(ant), route->path[move]);
+			move++;
 		}
-		ft_printf("%s\n", route->path[i]);
-		route = route->next;
+		if (route->i % lem->max_flow)
+			route = route->next;
+		else
+			route = head;
+		ant++;
 	}
-	route = sort_paths(head);
-	ft_printf("\n");
-	while (route->next != NULL)
+	return (out);
+}
+
+static char	***prepare_output_arr(t_route *route, t_lem *lem)
+{
+	char	***out;
+	t_route	*longest;
+	int		i;
+
+	out = (char ***)malloc(sizeof(char **) * lem->ants);
+	if (!out)
+		return (NULL);
+	longest = route;
+	while (longest->next->is_valid)
+		longest = longest->next;
+	i = 0;
+	while (i < lem->ants)
 	{
-		i = 0;
-		while (route->path[i + 1] != NULL)
-		{
-			ft_printf("%s -> ", route->path[i]);
-			i++;
-		}
-		ft_printf("%s\n", route->path[i]);
-		route = route->next;
+		out[i] = (char **)malloc(sizeof(char *) * longest->len + 1);
+		if (!out[i])
+			return (NULL);
+		i++;
 	}
+	out[i] = NULL;
+	return (out);
+}
+
+int	print_moves(t_route *route, t_lem *lem)
+{
+	char	***out;
+
+	out = fill_output_arr(route, lem, prepare_output_arr(route, lem));
+	if (!out)
+		return (-1);
+	ft_printf("%s\n", out[0][0]);
+	return (0);
 }

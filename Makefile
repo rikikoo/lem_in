@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/06/04 13:08:31 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/06/04 19:46:53 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC =	$Smain.c \
 		$Sbfs.c \
 		$Sutils.c \
 		$Sfree.c \
+		$Ssort.c \
 		$Soutput.c
 
 

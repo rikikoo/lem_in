@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/03 19:04:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/04 20:19:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ void		free_index(t_index **index);
 void		free_lem(t_lem **lem);
 void		free_route(t_route **route);
 void		free_queue(char ***queue, int size);
-void		prepare_output(t_route *route, t_lem *lem);
+void		mark_route_lengths(t_route *route);
+t_route		*sort_paths(t_route *route);
+int			print_moves(t_route *route, t_lem *lem);
 
 #endif

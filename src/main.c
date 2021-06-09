@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/04 13:12:54 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/04 20:24:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	main(void)
 	routes = edm_karp(index, lem);
 	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
-	prepare_output(routes, lem);
+	mark_route_lengths(routes);
+	if (print_moves(sort_paths(routes), lem) < 0)
+		(die(&input, &index, &lem, &routes));
 	return (0);
 }
