@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/09 17:37:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/10 13:57:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_route	*sort_paths(t_route *route)
 {
 	t_route	*prev;
 	t_route	*curr;
-	t_route *next;
+	t_route	*next;
 	t_route	*head;
 
 	prev = NULL;

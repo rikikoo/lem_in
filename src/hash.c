@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hash.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/30 15:00:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/10 13:35:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	hashof(const char *key)
 }
 
 /*
-** returns the vertex pointer if found in the hash table, NULL otherwise
+** returns the requested vertex pointer if found in the hash table, else NULL
 **
 ** index: a pointer to t_index
 ** key: name/id of the vertex to get
