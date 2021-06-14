@@ -6,12 +6,23 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/03 19:28:00 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/14 19:15:04 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** vertex info is given in the form "id coord_x coord_y" followed by a newline.
+** vertex_parse() splits the three attributes into their own strings, validates
+** each one and stores them.
+**
+** index: pointer to hash table for vertices
+** str: current input line string
+** lem: pointer to a general runtime info struct
+** v: deteremines whether str contains source (0), sink (1) or intermediate (2)
+** 	vertex info
+*/
 static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 {
 	char	**arr;
@@ -41,6 +52,16 @@ static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 	return (0);
 }
 
+/*
+** source and sink are denoted in a preceding line by "##start" or "##end".
+** if the main loop in parse_input() encounters a line with a
+** '#', check_command() will check which command it is and store
+** the following line accordingly to struct t_lem.
+**
+** input: pointer to list of instructions
+** index: pointer to hast table for vertices
+** lem: pointer to a general runtime info struct
+*/
 static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 {
 	char	*str;
@@ -69,6 +90,16 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	return (input->next);
 }
 
+/*
+** loop through input lines until a line with a '-' (dash) is encountered.
+** the lines until that point should contain all vertex names, their coordinates
+** and identify source and sink vertices. if both source and sink weren't found,
+** the program will exit and return error.
+**
+** input: pointer to list of instructions
+** index: pointer to hast table for vertices
+** lem: pointer to a general runtime info struct
+*/
 t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 {
 	while (1)

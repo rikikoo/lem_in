@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 21:19:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/14 23:32:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,11 @@ void	arr_append(char ***arr, char *vertex)
 	(*arr)[i] = ft_strdup(vertex);
 }
 
-int	is_linked(t_edge *curr, t_vertex *prev_vertex, char *sink)
+/*
+** returns true if current edge source is the same as previous vertex outgoing
+** edge's sink, i.e. if they are linked. returns false otherwise.
+*/
+int	is_linked(t_edge *curr, t_vertex *prev_vertex, const char *sink)
 {
 	t_edge	*prev;
 

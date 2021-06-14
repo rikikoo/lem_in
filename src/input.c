@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/02 19:37:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/14 19:15:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static t_input	*new_node(void)
 }
 
 /*
-** reads input (graph info) into a linked list, a line at a time
+** reads input (graph info) into a linked list, a line at a time, from STDIN.
+** returns head of the list (first line) after reaching EOF.
 */
 t_input	*read_input(void)
 {
@@ -58,7 +59,12 @@ t_input	*read_input(void)
 }
 
 /*
-** parses input, which contains the all necessary info to construct the graph
+** parses input, which contains all necessary info to construct the graph
+** and frees it after it's been processed and stored.
+**
+** input: pointer to the program input linked list
+** index: pointer to hash table for vertices
+** lem: pointer to a general runtime info struct
 */
 int	parse_input(t_input *input, t_index *index, t_lem *lem)
 {

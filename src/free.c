@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/04 18:52:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/13 15:16:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,10 @@ void	free_index(t_index **index)
 
 void	free_lem(t_lem **lem)
 {
+	if ((*lem)->source)
+		free((*lem)->source);
+	if ((*lem)->sink)
+		free((*lem)->sink);
 	free(*lem);
 }
 

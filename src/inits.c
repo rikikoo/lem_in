@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/04 12:07:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/14 19:13:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ t_lem	*init_lem(void)
 }
 
 /*
-** init_index returns a pointer to t_index, with all vertex pointers
-** initialized to NULL
+** init_index returns a pointer to t_index, all vertex pointers NULL initialized
 */
 t_index	*init_index(void)
 {
@@ -97,6 +96,10 @@ t_edge	*new_edge(const char *src, const char *dst)
 	return (edge);
 }
 
+/*
+** returns a struct containing room for a path as a pointer to vertex names &
+** info about the path (if path reaches sink or not, length of the path, etc.)
+*/
 t_route	*new_route(int vertices, int iteration, char *source)
 {
 	t_route	*route;
@@ -115,7 +118,7 @@ t_route	*new_route(int vertices, int iteration, char *source)
 	route->path[0] = ft_strdup(source);
 	route->i = iteration;
 	route->is_valid = 0;
-	route->len = INT_MAX;
+	route->len = 0;
 	route->next = NULL;
 	return (route);
 }

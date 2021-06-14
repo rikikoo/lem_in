@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/05/30 12:06:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/13 12:59:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** appends new edge to the list of edges coming out of a vertex
 **
-** room: pointer to t_vertex where the edge starts
+** vertex: pointer to t_vertex where the edge starts
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
 */

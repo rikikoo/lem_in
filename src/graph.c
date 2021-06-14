@@ -6,12 +6,20 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/03 18:01:54 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/13 15:09:46 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** for each vertex in the found path, mark all incoming and outgoing edges as
+** filled (== 0 capacity)
+**
+** index: pointer to hash table containing all vertices
+** path: pointer to vertex ids on the path
+** sink: id of the sink as a string
+*/
 static int	send_flow(t_index *index, char **path, char *sink)
 {
 	t_vertex	*vertex;
@@ -41,7 +49,14 @@ static int	send_flow(t_index *index, char **path, char *sink)
 	return (1);
 }
 
-static int	path_found(char *sink, char **path)
+/*
+** loop through vertex names until sink name found.
+** return true if found, false otherwise.
+**
+** sink: id of the sink as a string
+** path: pointer to vertex ids on the path
+*/
+static int	path_found(char **path, char *sink)
 {
 	int	i;
 
@@ -55,6 +70,16 @@ static int	path_found(char *sink, char **path)
 	return (0);
 }
 
+/*
+** WIP
+**
+** init queue for bfs algorithm,
+** perform bfs on graph,
+** check if valid path,
+** update graph capacities
+** store path
+** repeat until no path found
+*/
 t_route	*edm_karp(t_index *index, t_lem *lem)
 {
 	char	**queue;
@@ -73,7 +98,7 @@ t_route	*edm_karp(t_index *index, t_lem *lem)
 	{
 		queue = wipe_array(queue, lem->vertices, lem->source);
 		route->path = bfs(index, lem, queue, route);
-		if (!path_found(lem->sink, route->path))
+		if (!path_found(route->path, lem->sink))
 			break ;
 		route->is_valid = 1;
 		lem->max_flow += send_flow(index, route->path, lem->sink);

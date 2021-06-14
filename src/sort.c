@@ -3,16 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   sort.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/10 13:57:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/14 22:11:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	mark_route_lengths(t_route *route)
+/*
+** counts the amount of steps in a (valid) path.
+**
+** route: pointer to the head of a list of paths
+*/
+static void	mark_route_lengths(t_route *route)
 {
 	while (route->is_valid)
 	{
@@ -21,6 +26,11 @@ void	mark_route_lengths(t_route *route)
 	}
 }
 
+/*
+** swaps places of two paths in the list of paths
+**
+** prev, current, next: pointer to previous, current and next path
+*/
 static void	swap(t_route **prev, t_route **current, t_route **next)
 {
 	t_route	*tmp;
@@ -40,6 +50,12 @@ static void	swap(t_route **prev, t_route **current, t_route **next)
 	}
 }
 
+/*
+** sorts all found paths in ascending order in regards to path length.
+** returns sorted path.
+**
+** route: pointer to the head of a list of paths
+*/
 t_route	*sort_paths(t_route *route)
 {
 	t_route	*prev;
@@ -47,6 +63,7 @@ t_route	*sort_paths(t_route *route)
 	t_route	*next;
 	t_route	*head;
 
+	mark_route_lengths(route);
 	prev = NULL;
 	curr = route;
 	head = curr;

@@ -6,17 +6,19 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/04 20:19:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/14 23:32:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEM_IN_H
 # define LEM_IN_H
 
+/*
+** HT_SIZE: hash table size, or the amount of buckets used by t_index
+*/
 # define HT_SIZE 10000
 # include <stdlib.h>
 # include <unistd.h>
-# include <limits.h>
 # include "libft.h"
 
 /*
@@ -80,11 +82,11 @@ typedef struct s_edge
 }	t_edge;
 
 /*
-** i: corresponding value for each new path
-** is_valid: marked true if stored path can reach sink
-** path: head of a path found in by the breadth-first search algorithm
+** i: corresponding index value for each new path
+** is_valid: true if stored path can reach sink
+** path: head of a path found by the breadth-first search algorithm
 ** len: length of the path
-** next: pointer to the next route
+** next: pointer to the next path
 */
 typedef struct s_route
 {
@@ -119,15 +121,14 @@ char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
 char		**wipe_array(char **arr, const int size, const char *source);
 char		*pop_first(char ***arr);
 void		arr_append(char ***arr, char *vertex);
-int			is_linked(t_edge *curr, t_vertex *prev_vertex, char *sink);
+int			is_linked(t_edge *curr, t_vertex *prev_vertex, const char *sink);
+t_route		*sort_paths(t_route *route);
+int			print_moves(t_route *route, t_lem *lem);
 int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
 void		free_input(t_input **input);
 void		free_index(t_index **index);
 void		free_lem(t_lem **lem);
 void		free_route(t_route **route);
 void		free_queue(char ***queue, int size);
-void		mark_route_lengths(t_route *route);
-t_route		*sort_paths(t_route *route);
-int			print_moves(t_route *route, t_lem *lem);
 
 #endif
