@@ -3,35 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   hash.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/10 13:35:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 17:32:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** returns a hash of the vertex name/id
+** returns a djb2 hash of the vertex name/id
 **
 ** key: name/id of the vertex to be hashed
-**
-** TODO: look up an actual hashing algorithm, don't use this nonsense
 */
-static int	hashof(const char *key)
+static size_t	hashof(const char *key)
 {
-	int	val;
-	int	i;
+	size_t			i;
+	unsigned long	hash;
 
-	val = 42;
 	i = 0;
-	while (i < (int)ft_strlen(key))
+	hash = 5381;
+	while (key[i] != '\0')
 	{
-		val *= key[i] + 89;
+		hash = (((hash << 5) + hash) + key[i]) % HT_SIZE;
 		i++;
 	}
-	return (val % HT_SIZE);
+	return (hash);
 }
 
 /*

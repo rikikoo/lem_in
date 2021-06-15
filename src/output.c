@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/15 00:39:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 16:50:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ int	print_moves(t_route *route, t_lem *lem)
 				break ;
 		}
 		while (--ant >= 0)
-			out[ant] = out[ant] + (out[ant] != NULL);
+			out[ant] = out[ant] + (*out[ant] != NULL);
 	}
 	return (0);
 }

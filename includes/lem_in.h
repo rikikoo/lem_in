@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/14 23:32:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 17:09:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /*
 ** HT_SIZE: hash table size, or the amount of buckets used by t_index
 */
-# define HT_SIZE 10000
+# define HT_SIZE 65535
 # include <stdlib.h>
 # include <unistd.h>
 # include "libft.h"
