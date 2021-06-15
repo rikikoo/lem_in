@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/14 19:15:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 13:47:36 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ t_input	*read_input(void)
 
 /*
 ** parses input, which contains all necessary info to construct the graph
-** and frees it after it's been processed and stored.
 **
 ** input: pointer to the program input linked list
 ** index: pointer to hash table for vertices
@@ -68,23 +67,16 @@ t_input	*read_input(void)
 */
 int	parse_input(t_input *input, t_index *index, t_lem *lem)
 {
-	t_input	*tmp;
-
+	if (!input || !index || !lem)
+		return (-1);
 	lem->ants = ft_atoi(input->line);
 	if (!lem->ants)
 		return (-1);
-	tmp = get_vertices(input->next, index, lem);
-	if (!tmp)
+	input = get_vertices(input->next, index, lem);
+	if (!input)
 		return (-1);
-	lem->edges = get_edges(tmp, index);
+	lem->edges = get_edges(input, index);
 	if (lem->edges < 0)
 		return (-1);
-	while (input != NULL)
-	{
-		tmp = input;
-		input = input->next;
-		free(tmp->line);
-		free(tmp);
-	}
 	return (0);
 }

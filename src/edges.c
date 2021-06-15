@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/13 12:59:58 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 13:33:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,17 @@ int	get_edges(t_input *input, t_index *index)
 	i = 0;
 	while (input->line != NULL)
 	{
-		arr = check_edge(index, input->line);
-		if (arr == NULL)
-			return (-1);
-		src = get(index, arr[0]);
-		edge_append(src, arr[0], arr[1]);
-		src = get(index, arr[1]);
-		edge_append(src, arr[1], arr[0]);
-		i += 1;
+		if (input->line[0] != '#')
+		{
+			arr = check_edge(index, input->line);
+			if (arr == NULL)
+				return (-1);
+			src = get(index, arr[0]);
+			edge_append(src, arr[0], arr[1]);
+			src = get(index, arr[1]);
+			edge_append(src, arr[1], arr[0]);
+			i += 1;
+		}
 		input = input->next;
 	}
 	ft_liberator(3, &arr[0], &arr[1], &arr[2]);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/14 19:15:04 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 13:57:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** vertex info is given in the form "id coord_x coord_y" followed by a newline.
 ** vertex_parse() splits the three attributes into their own strings, validates
-** each one and stores them.
+** each one and stores them into the hash table.
 **
 ** index: pointer to hash table for vertices
 ** str: current input line string
@@ -26,21 +26,14 @@
 static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 {
 	char	**arr;
-	int		i;
-	int		j;
 
 	if (!str)
 		return (-1);
 	arr = ft_strsplit(str, ' ');
 	if (ft_arrlen((void **)arr) != 3)
 		return (-1);
-	i = 0;
-	j = 0;
-	while (ft_isdigit(arr[1][i]))
-		i++;
-	while (ft_isdigit(arr[2][j]))
-		j++;
-	if (arr[1][i] != '\0' || arr[2][j] != '\0' || i < 1 || j < 1)
+	if (arr[0][0] == 'L' || arr[0][0] == '#' || \
+	!ft_digits_only(arr[1]) || !ft_digits_only(arr[2]))
 		return (-1);
 	if (v == 1)
 		lem->sink = ft_strdup(arr[0]);
@@ -54,9 +47,10 @@ static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 
 /*
 ** source and sink are denoted in a preceding line by "##start" or "##end".
-** if the main loop in parse_input() encounters a line with a
-** '#', check_command() will check which command it is and store
-** the following line accordingly to struct t_lem.
+** if the main loop in parse_input() encounters a line that starts with a '#',
+** check_command() will check which command it is and store the following line
+** accordingly to struct t_lem. lines with a comment or an invalid command are
+** skipped.
 **
 ** input: pointer to list of instructions
 ** index: pointer to hast table for vertices
@@ -71,22 +65,20 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	str = input->line;
 	arr = NULL;
 	i = 0;
-	if (ft_strlen(str) < 3 || (str[0] != '#' && str[1] != '#'))
-		return (input->next);
-	if (ft_strequ((str + 2), "start") && lem->source == NULL)
+	if (ft_strequ(str, "##start") && lem->source == NULL)
 	{
 		input = input->next;
 		if (vertex_parse(index, input->line, lem, 0) < 0)
 			return (NULL);
 	}
-	else if (ft_strequ((str + 2), "end") && lem->sink == NULL)
+	else if (ft_strequ(str, "##end") && lem->sink == NULL)
 	{
 		input = input->next;
 		if (vertex_parse(index, input->line, lem, 1) < 0)
 			return (NULL);
 	}
 	else
-		return (NULL);
+		lem->vertices--;
 	return (input->next);
 }
 
@@ -106,7 +98,7 @@ t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 	{
 		if (!input)
 			return (NULL);
-		if (ft_strchr(input->line, '#'))
+		if (input->line[0] == '#')
 		{
 			input = check_command(input, index, lem);
 			if (!input)
