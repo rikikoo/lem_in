@@ -6,20 +6,16 @@
 *lem_in* is a program that directs "ants" through an "antfarm" (i.e. through a graph's nodes/vertices).
 
 ## RULES
-A node or an edge can be occupied by one ant at a time, excluding the source and sink nodes. All of the ants must be transported through the graph using the least amount of turns. Ants need to move on each turn.
- 
+A node or an edge can be occupied by one ant at a time, excluding the source and sink nodes. All of the ants must be transported through the graph using the least amount of turns. Ants on the graph need to move on each turn.
+
 For example, consider the graph below:
 
 ```
-         ---(4)
-        /    |
-   ---(3)    |
+   /--(3)---(4)
   /          |
 (s)---(1)---(2)---(t)
        |          /
-       |    (6)---
-       |    /
-      (5)---
+      (5)---(6)--/
 ```
 
 Least amount of turns in the case of one ant would be using the shortest ("middle") path `s - 1 - 2 -t`,
@@ -37,13 +33,10 @@ Input for the program is given in a text file, in a specific format:
 
 ```
 the_number_of_ants
-vertex_1 x_coord y_coord
-[...]
-vertex_n x_coord y_coord
-vertex_1-vertex_3
-[...]
-vertex_8-vertex_n
+vertex_ids
+edges
 ```
+Source and sink vertices are denoted by a preceding `##start` and `##end`, respectively.
 
 Example input:
 ```
@@ -79,7 +72,7 @@ L1-4 L2-3
 L2-4
 ```
 
-Note that using the left side for both ants would result in the same amount of turns, which is just as fine:
+Note that using the left side for both ants would result in the same amount of turns, which is just as fine as using both paths:
 ```
 L1-1
 L1-4 L2-1
