@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/15 18:08:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/18 22:40:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,6 @@ t_route	*edm_karp(t_index *index, t_lem *lem)
 	{
 		queue = wipe_array(queue, lem->vertices, lem->source);
 		route->path = bfs(index, lem, queue, route);
-
-		for (int x = 0; route->path[x] != NULL; x++)
-			ft_printf("%s\n", route->path[x]);
-
 		if (!path_found(route->path, lem->sink))
 			break ;
 		route->is_valid = 1;
