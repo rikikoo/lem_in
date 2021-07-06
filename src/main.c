@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/29 13:21:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 19:21:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,9 @@ int	main(void)
 	routes = NULL;
 	if (parse_input(input, index, lem) < 0)
 		return (die(&input, &index, &lem, &routes));
-	routes = find_paths(index, lem);
+	routes = find_paths(index, lem, get(index, lem->source));
 	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
-	while (input->next != NULL)
-	{
-		ft_printf("%s\n", input->line);
-		input = input->next;
-	}
-	ft_putchar('\n');
 	if (print_moves(sort_paths(routes), lem) < 0)
 		(die(&input, &index, &lem, &routes));
 	return (0);

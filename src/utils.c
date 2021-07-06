@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/14 23:32:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 19:02:23 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	die(t_input **input, t_index **index, t_lem **lem, t_route **route)
 ** and returns an otherwise empty array of char pointers.
 ** functions as a makeshift queue data structure.
 */
-char	**wipe_array(char **arr, const int size, const char *source)
+char	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 {
 	int		i;
 
@@ -45,26 +45,26 @@ char	**wipe_array(char **arr, const int size, const char *source)
 		arr[i] = NULL;
 		i++;
 	}
-	arr[0] = ft_strdup(source);
+	arr[0] = source;
 	return (arr);
 }
 
 /*
 ** removes first item from queue and returns it (called by bfs)
 */
-char	*pop_first(char ***arr)
+t_vertex	*pop_first(t_vertex ***queue)
 {
-	char	*popped;
-	char	**tmp;
+	t_vertex	*popped;
+	t_vertex	**tmp;
 
 	if (!(*arr)[0])
 		return (NULL);
-	popped = ft_strdup((*arr)[0]);
+	popped = (*arr)[0];
 	tmp = *arr;
 	(*arr)++;
 	if (*tmp != NULL)
 	{
-		free((*tmp));
+		free(*tmp);
 		*tmp = NULL;
 	}
 	return (popped);
@@ -73,25 +73,25 @@ char	*pop_first(char ***arr)
 /*
 ** appends a new vertex to the end of the queue/prev list (called by bfs)
 */
-void	arr_append(char ***arr, char *vertex)
+void	arr_append(t_vertex ***arr, t_vertex *vertex)
 {
 	int	i;
 
 	i = 0;
 	while ((*arr)[i] != NULL)
 	{
-		if (ft_strequ((*arr)[i], vertex))
+		if ((*arr)[i] == vertex)
 			return ;
 		i++;
 	}
-	(*arr)[i] = ft_strdup(vertex);
+	(*arr)[i] = vertex;
 }
 
 /*
-** returns true if current edge source is the same as previous vertex outgoing
+** returns true if the current edge's source is the same as the previous
 ** edge's sink, i.e. if they are linked. returns false otherwise.
 */
-int	is_linked(t_edge *curr, t_vertex *prev_vertex, const char *sink)
+int	is_linked(t_edge *curr, t_vertex *prev_vertex, t_vertex *sink)
 {
 	t_edge	*prev;
 
@@ -100,7 +100,7 @@ int	is_linked(t_edge *curr, t_vertex *prev_vertex, const char *sink)
 	prev = prev_vertex->edge;
 	while (prev)
 	{
-		if ((ft_strequ(prev->to, curr->src) || ft_strequ(prev->to, sink)) && \
+		if (prev->to == curr->src || prev->to == sink) && \
 		curr->fwd_cap > 0 && prev->fwd_cap > 0)
 		{
 			return (1);

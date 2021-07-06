@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/14 19:13:17 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 18:53:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,18 @@ t_vertex	*new_vertex(const char *key, const int x, const int y)
 /*
 ** allocates memory for and returns a pointer to t_edge
 **
-** src: name/id of the edge's source
-** dst: name/id of the edge's sink
+** src: the edge's source vertex
+** dst: the edge's sink vertex
 */
-t_edge	*new_edge(const char *src, const char *dst)
+t_edge	*new_edge(t_vertex *src, t_vertex *dst)
 {
 	t_edge	*edge;
 
 	edge = (t_edge *)malloc(sizeof(t_edge));
 	if (!edge)
 		return (NULL);
-	edge->src = ft_strdup(src);
-	edge->to = ft_strdup(dst);
+	edge->src = src;
+	edge->to = dst;
 	edge->fwd_cap = 1;
 	edge->next = NULL;
 	return (edge);
@@ -100,13 +100,13 @@ t_edge	*new_edge(const char *src, const char *dst)
 ** returns a struct containing room for a path as a pointer to vertex names &
 ** info about the path (if path reaches sink or not, length of the path, etc.)
 */
-t_route	*new_route(int vertices, int iteration, char *source)
+t_route	*new_route(t_vertex *source, int vertices, int iteration)
 {
 	t_route	*route;
 	int		i;
 
 	route = (t_route *)malloc(sizeof(t_route));
-	route->path = (char **)malloc(sizeof(char *) * (vertices + 1));
+	route->path = (t_vertex **)malloc(sizeof(t_vertex *) * (vertices + 1));
 	if (!route || !route->path)
 		return (NULL);
 	i = 0;
@@ -115,7 +115,7 @@ t_route	*new_route(int vertices, int iteration, char *source)
 		route->path[i] = NULL;
 		i++;
 	}
-	route->path[0] = ft_strdup(source);
+	route->path[0] = source;
 	route->i = iteration;
 	route->is_valid = 0;
 	route->len = 0;

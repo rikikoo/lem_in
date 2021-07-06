@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graph.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/30 20:08:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 19:17:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@
 ** for each vertex in the found path, mark all incoming and outgoing edges as
 ** filled (== 0 capacity)
 **
-** index: pointer to hash table containing all vertices
 ** path: pointer to vertex ids on the path
-** sink: id of the sink as a string
+** sink: pointer to the sink vertex
 */
-static int	send_flow(t_index *index, char **path, char *sink)
+static int	send_flow(t_vertex **path, t_vertex *sink)
 {
 	t_vertex	*vertex;
 	t_edge		*edge_out;
@@ -28,18 +27,18 @@ static int	send_flow(t_index *index, char **path, char *sink)
 	int			i;
 
 	i = 1;
-	if (ft_strequ(path[i], sink))
-		(get(index, path[0]))->edge->fwd_cap = 0;
-	while (path[i + 1] != NULL && !ft_strequ(path[i], sink))
+	if (path[i] == sink)
+		path[0]->edge->fwd_cap = 0;
+	while (path[i + 1] != NULL && path[i] != sink)
 	{
-		vertex = get(index, path[i]);
+		vertex = path[i];
 		edge_out = vertex->edge;
 		while (edge_out != NULL)
 		{
 			edge_out->fwd_cap = 0;
-			vertex = get(index, path[i - 1]);
+			vertex = path[i - 1];
 			edge_in = vertex->edge;
-			while (!ft_strequ(edge_in->to, path[i]))
+			while (edge_in->to != path[i])
 				edge_in = edge_in->next;
 			edge_in->fwd_cap = 0;
 			edge_out = edge_out->next;
@@ -53,17 +52,17 @@ static int	send_flow(t_index *index, char **path, char *sink)
 ** loop through vertex names until sink name found.
 ** return true if found, false otherwise.
 **
-** sink: id of the sink as a string
 ** path: pointer to vertex ids on the path
+** sink: pointer to the sink vertex
 */
-static int	path_found(char **path, char *sink)
+static int	path_found(t_vertex **path, t_vertex *sink)
 {
 	int	i;
 
 	i = 0;
 	while (path[i] != NULL)
 	{
-		if (ft_strequ(path[i], sink))
+		if (path[i] == sink)
 			return (1);
 		i++;
 	}
@@ -80,35 +79,30 @@ static int	path_found(char **path, char *sink)
 ** store path
 ** repeat until no path found
 */
-t_route	*find_paths(t_index *index, t_lem *lem)
+t_route	*find_paths(t_index *index, t_lem *lem, t_vertex *source)
 {
-	char	**queue;
-	t_route	*route;
-	t_route	*head;
-	int		i;
+	t_vertex	**queue;
+	t_route		*route;
+	t_route		*head;
+	t_vertex	*sink;
+	int			i;
 
-	queue = (char **)malloc(sizeof(char *) * (lem->vertices + 1));
-	queue[lem->vertices] = NULL;
+	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
 	i = 1;
-	route = new_route(lem->vertices, i, lem->source);
+	route = new_route(source, lem->vertices, i);
 	head = route;
+	sink = get(index, lem->sink);
 	if (!queue || !route)
 		return (NULL);
 	while (1)
 	{
-		queue = wipe_array(queue, lem->vertices, lem->source);
+		queue = wipe_queue(queue, source, lem->vertices);
 		route->path = bfs(index, lem, queue, route);
-
-		ft_printf("bfs returned:\n");
-		for (int iter = 0; route->path[iter] != NULL; iter++)
-			ft_printf("%s ", route->path[iter]);
-		ft_printf("\n");
-
-		if (!path_found(route->path, lem->sink))
+		if (!path_found(route->path, sink))
 			break ;
 		route->is_valid = 1;
-		lem->max_flow += send_flow(index, route->path, lem->sink);
-		route->next = new_route(lem->vertices, ++i, lem->source);
+		lem->max_flow += send_flow(index, route->path, sink);
+		route->next = new_route(source, lem->vertices, ++i);
 		route = route->next;
 	}
 	free_queue(&queue, lem->vertices);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/13 15:16:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 19:22:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void	free_input(t_input **input)
 {
-	t_input	*tmp_ipt;
+	t_input	*tmp;
 
 	while (*input)
 	{
-		tmp_ipt = *input;
+		tmp = *input;
 		if ((*input)->line != NULL)
 			free((*input)->line);
 		*input = (*input)->next;
-		free(tmp_ipt);
+		free(tmp);
 	}
 }
 

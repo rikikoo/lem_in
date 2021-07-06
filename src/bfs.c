@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bfs.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:32:03 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/15 16:04:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 19:05:42 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **
 ** arr: pointer to the head of a list of paths
 */
-static char	*lastof(char **arr)
+static t_vertex	*lastof(t_vertex **arr)
 {
 	int	i;
 
@@ -44,18 +44,21 @@ static char	*lastof(char **arr)
 static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
 {
 	int			ret;
-	t_vertex	*vertex;
+	t_vertex	*source;
+	t_vertex	*sink;
+	t_vertex	*curr;
 
 	ret = 0;
-	vertex = get(index, edge->to);
-	if (vertex->visited < route->i && edge->fwd_cap > 0 && \
-	(!ft_strequ(vertex->id, lem->sink) && !ft_strequ(edge->to, lem->source)))
+	source = get(index, lem->source);
+	sink = get(index, lem->sink);
+	curr = get(index, edge->to);
+	if (curr->visited < route->i && edge->fwd_cap > 0 && curr != sink && \
+	curr != source)
 	{
-		vertex->visited += 1;
-		ret = 1 + is_linked(edge, get(index, lastof(route->path)), lem->sink);
+		curr->visited += 1;
+		ret = 1 + is_linked(edge, lastof(route->path), sink);
 	}
-	else if (ft_strequ(vertex->id, lem->sink) && \
-	is_linked(edge, get(index, lastof(route->path)), lem->sink))
+	else if (curr == sink && is_linked(edge, lastof(route->path), sink))
 	{
 		ret = 3;
 	}
@@ -78,7 +81,7 @@ char	**bfs(t_index *index, t_lem *lem, char **queue, t_route *route)
 	traversable = 0;
 	while (!(*queue == NULL) && traversable != 3)
 	{
-		vertex = get(index, pop_first(&queue));
+		vertex = pop_first(&queue);
 		if (vertex == NULL)
 			break ;
 		edge = vertex->edge;
@@ -90,7 +93,7 @@ char	**bfs(t_index *index, t_lem *lem, char **queue, t_route *route)
 			if (traversable > 1)
 				arr_append(&(route->path), edge->src);
 			if (traversable > 2)
-				arr_append(&(route->path), lem->sink);
+				arr_append(&(route->path), get(index, lem->sink));
 			edge = edge->next;
 		}
 	}

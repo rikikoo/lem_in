@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lem_in.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/29 13:21:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/06 18:54:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct s_vertex
 */
 typedef struct s_edge
 {
-	char			*src;
-	char			*to;
+	struct t_vertex	*src;
+	struct t_vertex	*to;
 	int				fwd_cap;
 	struct s_edge	*next;
 }	t_edge;
@@ -93,7 +93,7 @@ typedef struct s_route
 	int				i;
 	int				is_valid;
 	int				len;
-	char			**path;
+	struct s_vertex	**path;
 	struct s_route	*next;
 }	t_route;
 
@@ -117,11 +117,11 @@ int			get_edges(t_input *input, t_index *index);
 int			parse_input(t_input *input, t_index *index, t_lem *lem);
 t_route		*new_route(int vertices, int iteration, char *source);
 t_route		*find_paths(t_index *index, t_lem *lem);
-char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
-char		**wipe_array(char **arr, const int size, const char *source);
-char		*pop_first(char ***arr);
-void		arr_append(char ***arr, char *vertex);
-int			is_linked(t_edge *curr, t_vertex *prev_vertex, const char *sink);
+char		**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route);
+t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
+t_vertex	*pop_first(t_vertex ***queue);
+void		arr_append(t_vertex ***arr, t_vertex *vertex);
+int			is_linked(t_edge *curr, t_vertex *prev_vertex, t_vertex *sink);
 t_route		*sort_paths(t_route *route);
 int			print_moves(t_route *route, t_lem *lem);
 int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
