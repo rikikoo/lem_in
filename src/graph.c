@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/18 22:40:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/30 20:08:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static int	path_found(char **path, char *sink)
 ** store path
 ** repeat until no path found
 */
-t_route	*edm_karp(t_index *index, t_lem *lem)
+t_route	*find_paths(t_index *index, t_lem *lem)
 {
 	char	**queue;
 	t_route	*route;
@@ -98,6 +98,12 @@ t_route	*edm_karp(t_index *index, t_lem *lem)
 	{
 		queue = wipe_array(queue, lem->vertices, lem->source);
 		route->path = bfs(index, lem, queue, route);
+
+		ft_printf("bfs returned:\n");
+		for (int iter = 0; route->path[iter] != NULL; iter++)
+			ft_printf("%s ", route->path[iter]);
+		ft_printf("\n");
+
 		if (!path_found(route->path, lem->sink))
 			break ;
 		route->is_valid = 1;
