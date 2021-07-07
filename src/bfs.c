@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bfs.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:32:03 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 19:05:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 14:18:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
 	ret = 0;
 	source = get(index, lem->source);
 	sink = get(index, lem->sink);
-	curr = get(index, edge->to);
+	curr = edge->to;
 	if (curr->visited < route->i && edge->fwd_cap > 0 && curr != sink && \
 	curr != source)
 	{
@@ -72,7 +72,7 @@ static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
 **	- append currently examined edge's src vertex to path if not already in it
 **	- repeat until queue empty
 */
-char	**bfs(t_index *index, t_lem *lem, char **queue, t_route *route)
+t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route)
 {
 	t_vertex	*vertex;
 	t_edge		*edge;

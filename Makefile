@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+         #
+#    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/07/06 19:42:19 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/07/07 15:12:22 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,6 @@ SRC =	$(S)main.c \
 		$(S)graph.c \
 		$(S)bfs.c \
 		$(S)utils.c \
-		$(S)utils2.c \
 		$(S)free.c \
 		$(S)sort.c \
 		$(S)output.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 19:21:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 15:02:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	main(void)
 	routes = find_paths(index, lem, get(index, lem->source));
 	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
+	print_input(input);
 	if (print_moves(sort_paths(routes), lem) < 0)
 		(die(&input, &index, &lem, &routes));
 	return (0);

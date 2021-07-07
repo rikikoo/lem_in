@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   edges.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 19:30:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 14:49:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	check_edge(t_index *index, char *line)
 		return (0);
 	edge_append(src, dst);
 	edge_append(dst, src);
-	ft_liberator(3, arr[0], arr[1], arr[2]);
+	ft_liberator(2, &arr[0], &arr[1]);
 	free(arr);
 	return (1);
 }

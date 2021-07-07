@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   graph.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 19:17:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 15:00:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,10 @@ t_route	*find_paths(t_index *index, t_lem *lem, t_vertex *source)
 		if (!path_found(route->path, sink))
 			break ;
 		route->is_valid = 1;
-		lem->max_flow += send_flow(index, route->path, sink);
+		lem->max_flow += send_flow(route->path, sink);
 		route->next = new_route(source, lem->vertices, ++i);
 		route = route->next;
 	}
-	free_queue(&queue, lem->vertices);
+	free(queue);
 	return (head);
 }

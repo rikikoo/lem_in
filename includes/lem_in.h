@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lem_in.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 18:54:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 15:13:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct s_vertex
 */
 typedef struct s_edge
 {
-	struct t_vertex	*src;
-	struct t_vertex	*to;
+	struct s_vertex	*src;
+	struct s_vertex	*to;
 	int				fwd_cap;
 	struct s_edge	*next;
 }	t_edge;
@@ -109,26 +109,22 @@ t_lem		*init_lem(void);
 t_index		*init_index(void);
 t_input		*read_input(void);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
-t_edge		*new_edge(const char *src, const char *dst);
+t_edge		*new_edge(t_vertex *src, t_vertex *dst);
 t_input		*get_vertices(t_input *input, t_index *index, t_lem *lem);
 t_vertex	*get(t_index *index, const char *key);
 void		set(t_index *index, const char *key, const int x, const int y);
 int			get_edges(t_input *input, t_index *index);
 int			parse_input(t_input *input, t_index *index, t_lem *lem);
-t_route		*new_route(int vertices, int iteration, char *source);
-t_route		*find_paths(t_index *index, t_lem *lem);
-char		**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route);
+t_route		*new_route(t_vertex *source, int vertices, int iteration);
+t_route		*find_paths(t_index *index, t_lem *lem, t_vertex *source);
+t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route);
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
 t_vertex	*pop_first(t_vertex ***queue);
 void		arr_append(t_vertex ***arr, t_vertex *vertex);
 int			is_linked(t_edge *curr, t_vertex *prev_vertex, t_vertex *sink);
+void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
 int			print_moves(t_route *route, t_lem *lem);
 int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
-void		free_input(t_input **input);
-void		free_index(t_index **index);
-void		free_lem(t_lem **lem);
-void		free_route(t_route **route);
-void		free_queue(char ***queue, int size);
 
 #endif
