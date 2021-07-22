@@ -6,7 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/06/15 16:50:41 by rkyttala         ###   ########.fr       */
+=======
+/*   Updated: 2021/07/07 14:07:55 by rkyttala         ###   ########.fr       */
+>>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +75,7 @@ static char	***fill_output_arr(t_route *route, t_lem *lem, char ***out)
 	while (ant <= lem->ants)
 	{
 		while (++move < route->len)
-			out[ant - 1][move - 1] = format_move(ant, route->path[move]);
+			out[ant - 1][move - 1] = format_move(ant, route->path[move]->id);
 		if (ant % lem->max_flow > 0)
 			route = route->next;
 		else

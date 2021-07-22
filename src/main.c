@@ -6,7 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/06/15 13:39:00 by rkyttala         ###   ########.fr       */
+=======
+/*   Updated: 2021/07/07 15:02:07 by rkyttala         ###   ########.fr       */
+>>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +45,14 @@ int	main(void)
 	routes = NULL;
 	if (parse_input(input, index, lem) < 0)
 		return (die(&input, &index, &lem, &routes));
+<<<<<<< HEAD
 	routes = edm_karp(index, lem);
+=======
+	routes = find_paths(index, lem, get(index, lem->source));
+>>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
-	while (input->next != NULL)
-	{
-		ft_printf("%s\n", input->line);
-		input = input->next;
-	}
-	ft_putchar('\n');
+	print_input(input);
 	if (print_moves(sort_paths(routes), lem) < 0)
 		(die(&input, &index, &lem, &routes));
 	return (0);

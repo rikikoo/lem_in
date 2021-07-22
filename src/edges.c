@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/15 13:33:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 14:49:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,43 +19,47 @@
 ** src: name/id of the edge's source
 ** dst: name/id of the edge's sink
 */
-static void	edge_append(t_vertex *vertex, char *src, char *dst)
+static void	edge_append(t_vertex *src, t_vertex *dst)
 {
-	if (!vertex || !src || !dst)
+	if (!src || !dst)
 		return ;
-	if (vertex->edge != NULL)
+	if (src->edge != NULL)
 	{
-		while (vertex->edge->next != NULL)
+		while (src->edge->next != NULL)
 		{
-			vertex->edge = vertex->edge->next;
+			src->edge = src->edge->next;
 		}
-		vertex->edge->next = new_edge(src, dst);
+		src->edge->next = new_edge(src, dst);
 	}
 	else
-		vertex->edge = new_edge(src, dst);
+		src->edge = new_edge(src, dst);
 }
 
 /*
 ** splits input line containing the two vertex ids into a string array,
-** checks that the vertices exist and returns the array
+** checks that the vertices exist. if yes, append an edge to both directions.
 **
 ** index: pointer to hash table t_index
 ** line: raw line of program input
 */
-static char	**check_edge(t_index *index, char *line)
+static int	check_edge(t_index *index, char *line)
 {
 	char		**arr;
 	t_vertex	*src;
 	t_vertex	*dst;
 
 	arr = ft_strsplit(line, '-');
-	if (!arr[0] || !arr[1])
-		return (NULL);
+	if (!arr || !arr[0] || !arr[1])
+		return (0);
 	src = get(index, arr[0]);
 	dst = get(index, arr[1]);
 	if (!src || !dst)
-		return (NULL);
-	return (arr);
+		return (0);
+	edge_append(src, dst);
+	edge_append(dst, src);
+	ft_liberator(2, &arr[0], &arr[1]);
+	free(arr);
+	return (1);
 }
 
 /*
@@ -67,8 +71,6 @@ static char	**check_edge(t_index *index, char *line)
 */
 int	get_edges(t_input *input, t_index *index)
 {
-	char		**arr;
-	t_vertex	*src;
 	int			i;
 
 	i = 0;
@@ -76,20 +78,11 @@ int	get_edges(t_input *input, t_index *index)
 	{
 		if (input->line[0] != '#')
 		{
-			arr = check_edge(index, input->line);
-			if (arr == NULL)
+			if (!check_edge(index, input->line))
 				return (-1);
-			src = get(index, arr[0]);
-			edge_append(src, arr[0], arr[1]);
-			src = get(index, arr[1]);
-			edge_append(src, arr[1], arr[0]);
-			i += 1;
+			i++;
 		}
 		input = input->next;
 	}
-	ft_liberator(3, &arr[0], &arr[1], &arr[2]);
-	free(arr);
-	if (src->edge == NULL)
-		return (-1);
 	return (i);
 }

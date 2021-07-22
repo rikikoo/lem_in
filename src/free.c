@@ -6,27 +6,27 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/13 15:16:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/07 15:24:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	free_input(t_input **input)
+static void	free_input(t_input **input)
 {
-	t_input	*tmp_ipt;
+	t_input	*tmp;
 
 	while (*input)
 	{
-		tmp_ipt = *input;
+		tmp = *input;
 		if ((*input)->line != NULL)
 			free((*input)->line);
 		*input = (*input)->next;
-		free(tmp_ipt);
+		free(tmp);
 	}
 }
 
-void	free_index(t_index **index)
+static void	free_index(t_index **index)
 {
 	int			i;
 	t_vertex	*tmp_vertex;
@@ -44,7 +44,7 @@ void	free_index(t_index **index)
 			{
 				tmp_edge = tmp_vertex->edge;
 				tmp_vertex->edge = tmp_edge->next;
-				ft_liberator(3, &(tmp_edge->src), &(tmp_edge->to), &tmp_edge);
+				free(tmp_edge);
 			}
 			(*index)->vertices[i] = (*index)->vertices[i]->next;
 			free(tmp_vertex);
@@ -55,7 +55,7 @@ void	free_index(t_index **index)
 	free(*index);
 }
 
-void	free_lem(t_lem **lem)
+static void	free_lem(t_lem **lem)
 {
 	if ((*lem)->source)
 		free((*lem)->source);
@@ -64,32 +64,20 @@ void	free_lem(t_lem **lem)
 	free(*lem);
 }
 
-void	free_route(t_route **route)
+int	die(t_input **input, t_index **index, t_lem **lem, t_route **route)
 {
-	t_route	*tmp;
-	int		i;
-
-	i = 0;
-	while (*route != NULL)
-	{
-		tmp = *route;
-		while (tmp->path[i] != NULL)
-		{
-			free(tmp->path[i]);
-			i++;
-		}
-		*route = (*route)->next;
-		free(tmp);
-	}
-}
-
-void	free_queue(char ***queue, int size)
-{
-	while (size >= 0)
-	{
-		if ((*queue)[size] != NULL)
-			free((*queue)[size]);
-		size--;
-	}
-	free(*queue);
+	if (*input)
+		free_input(input);
+	if (*index)
+		free_index(index);
+	if (*lem)
+		free_lem(lem);
+	if (*route)
+		free(*route);
+	ft_printf("\nE       R\n");
+	ft_printf("  R   O  \n");
+	ft_printf("    R    \n");
+	ft_printf("  R   O  \n");
+	ft_printf("E       R\n\n");
+	return (-1);
 }

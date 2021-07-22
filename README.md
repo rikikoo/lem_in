@@ -18,8 +18,9 @@ For example, consider the graph below:
       (5)---(6)--/
 ```
 
-Least amount of turns in the case of one ant would be using the shortest ("middle") path `s - 1 - 2 -t`,
-but for 4 ants, the least amount of turns would be accomplished only by using the paths `s - 3 - 4 - 2 - t` and `s - 1 - 5 - 6 - t` like so:
+Least amount of turns in the case of one ant would be using the shortest ("middle") path `s - 1 - 2 - t`,
+
+but for 4 ants the least amount of turns would be accomplished only by using the paths `s - 3 - 4 - 2 - t` and `s - 1 - 5 - 6 - t` like so:
 
 ```
 turn 1: antA s -> 1, antB s -> 3
@@ -29,14 +30,14 @@ turn 4: antA 6 -> t, antB 2 -> t, antC 4 -> 2, antD 5 -> 6
 turn 5: antC 2 -> t, antD 6 -> t
 ```
 
-Input for the program is given in a text file, in a specific format:
+Input for the program is given in a text file in a specific format:
 
 ```
 the_number_of_ants
 vertex_ids
 edges
 ```
-Source and sink vertices are denoted by a preceding `##start` and `##end`, respectively.
+Vertex IDs are followed by two integers, representing their coordinates (used for visualizer only). Source and sink vertices are denoted by a preceding `##start` and `##end`, respectively.
 
 Example input:
 ```
@@ -82,4 +83,4 @@ L2-4
 
 ## NOTES
 The project familiarizes the student with graph-theory and invites them to explore different algorithms best suited for flow optimization.
-At first this project led me astray, as I tried to implement a max flow graph search algorithm. Eventually I figured out that we are not trying to find the max flow, but a little more than that...
+At first this project led me astray, as I tried to implement a max flow graph search algorithm. Eventually I figured out that we are not trying to find the max flow, but something a bit different...
