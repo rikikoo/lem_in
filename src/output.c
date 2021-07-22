@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/29 13:34:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 16:50:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ static char	***prepare_output_arr(t_route *route, t_lem *lem)
 
 /*
 ** prints an ant's move if it's possible.
-** returns -1 if there are moves left but rooms are occupied,
-** returns 1 if an ant was moved and returns 0 when there are no moves left.
+** returns 2 if there are moves left but rooms are occupied,
+** returns 1 if all ants were moved and returns 0 when there are no moves left.
 **
 ** move: one ant's move as a pre-formatted string
 ** lem: pointer to a general runtime info struct

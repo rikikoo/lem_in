@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 12:51:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/06/15 13:57:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 ** the program will exit and return error.
 **
 ** input: pointer to list of instructions
-** index: pointer to hash table of vertices
+** index: pointer to hast table for vertices
 ** lem: pointer to a general runtime info struct
 */
 t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
