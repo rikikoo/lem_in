@@ -6,11 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/15 13:39:00 by rkyttala         ###   ########.fr       */
-=======
-/*   Updated: 2021/07/07 15:02:07 by rkyttala         ###   ########.fr       */
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
+/*   Updated: 2021/07/22 18:54:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +41,7 @@ int	main(void)
 	routes = NULL;
 	if (parse_input(input, index, lem) < 0)
 		return (die(&input, &index, &lem, &routes));
-<<<<<<< HEAD
-	routes = edm_karp(index, lem);
-=======
 	routes = find_paths(index, lem, get(index, lem->source));
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
 	print_input(input);

@@ -6,13 +6,10 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/18 22:40:16 by rkyttala         ###   ########.fr       */
-=======
-/*   Updated: 2021/07/07 15:00:27 by rkyttala         ###   ########.fr       */
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
+/*   Updated: 2021/07/22 18:59:42 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "lem_in.h"
 
@@ -59,14 +56,14 @@ static int	send_flow(t_vertex **path, t_vertex *sink)
 ** path: pointer to vertex ids on the path
 ** sink: pointer to the sink vertex
 */
-static int	path_found(t_vertex **path, t_vertex *sink)
+static int	path_found(t_vertex **path, char *sink)
 {
 	int	i;
 
 	i = 0;
 	while (path[i] != NULL)
 	{
-		if (path[i] == sink)
+		if (ft_strequ(path[i]->id, sink))
 			return (1);
 		i++;
 	}
@@ -83,11 +80,7 @@ static int	path_found(t_vertex **path, t_vertex *sink)
 ** store path
 ** repeat until no path found
 */
-<<<<<<< HEAD
-t_route	*edm_karp(t_index *index, t_lem *lem)
-=======
 t_route	*find_paths(t_index *index, t_lem *lem, t_vertex *source)
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 {
 	t_vertex	**queue;
 	t_route		*route;
@@ -106,11 +99,7 @@ t_route	*find_paths(t_index *index, t_lem *lem, t_vertex *source)
 	{
 		queue = wipe_queue(queue, source, lem->vertices);
 		route->path = bfs(index, lem, queue, route);
-<<<<<<< HEAD
 		if (!path_found(route->path, lem->sink))
-=======
-		if (!path_found(route->path, sink))
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 			break ;
 		route->is_valid = 1;
 		lem->max_flow += send_flow(route->path, sink);

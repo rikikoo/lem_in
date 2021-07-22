@@ -6,11 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/15 17:09:16 by rkyttala         ###   ########.fr       */
-=======
-/*   Updated: 2021/07/07 15:13:28 by rkyttala         ###   ########.fr       */
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
+/*   Updated: 2021/07/22 18:54:45 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,15 +115,6 @@ t_vertex	*get(t_index *index, const char *key);
 void		set(t_index *index, const char *key, const int x, const int y);
 int			get_edges(t_input *input, t_index *index);
 int			parse_input(t_input *input, t_index *index, t_lem *lem);
-<<<<<<< HEAD
-t_route		*new_route(int vertices, int iteration, char *source);
-t_route		*edm_karp(t_index *index, t_lem *lem);
-char		**bfs(t_index *index, t_lem *lem, char **queue, t_route *route);
-char		**wipe_array(char **arr, const int size, const char *source);
-char		*pop_first(char ***arr);
-void		arr_append(char ***arr, char *vertex);
-int			is_linked(t_edge *curr, t_vertex *prev_vertex, const char *sink);
-=======
 t_route		*new_route(t_vertex *source, int vertices, int iteration);
 t_route		*find_paths(t_index *index, t_lem *lem, t_vertex *source);
 t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route);
@@ -136,7 +123,6 @@ t_vertex	*pop_first(t_vertex ***queue);
 void		arr_append(t_vertex ***arr, t_vertex *vertex);
 int			is_linked(t_edge *curr, t_vertex *prev_vertex, t_vertex *sink);
 void		print_input(t_input *input);
->>>>>>> 3cea61acdd1e37c3f589a586f185f448a84fb5c6
 t_route		*sort_paths(t_route *route);
 int			print_moves(t_route *route, t_lem *lem);
 int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
