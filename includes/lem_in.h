@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 18:54:45 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 21:06:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ void		set(t_index *index, const char *key, const int x, const int y);
 int			get_edges(t_input *input, t_index *index);
 int			parse_input(t_input *input, t_index *index, t_lem *lem);
 t_route		*new_route(t_vertex *source, int vertices, int iteration);
-t_route		*find_paths(t_index *index, t_lem *lem, t_vertex *source);
+t_route		*find_paths(t_index *index, t_lem *lem, t_vertex *source, \
+			t_vertex *sink);
 t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route);
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
 t_vertex	*pop_first(t_vertex ***queue);

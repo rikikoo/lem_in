@@ -6,10 +6,9 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 18:59:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 21:29:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "lem_in.h"
 
@@ -56,14 +55,14 @@ static int	send_flow(t_vertex **path, t_vertex *sink)
 ** path: pointer to vertex ids on the path
 ** sink: pointer to the sink vertex
 */
-static int	path_found(t_vertex **path, char *sink)
+static int	path_found(t_vertex **path, t_vertex *sink)
 {
 	int	i;
 
 	i = 0;
 	while (path[i] != NULL)
 	{
-		if (ft_strequ(path[i]->id, sink))
+		if (path[i] == sink)
 			return (1);
 		i++;
 	}
@@ -80,26 +79,32 @@ static int	path_found(t_vertex **path, char *sink)
 ** store path
 ** repeat until no path found
 */
-t_route	*find_paths(t_index *index, t_lem *lem, t_vertex *source)
+t_route	*find_paths(t_index *index, t_lem *lem, t_vertex *source, \
+t_vertex *sink)
 {
 	t_vertex	**queue;
 	t_route		*route;
 	t_route		*head;
-	t_vertex	*sink;
 	int			i;
 
 	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
 	i = 1;
 	route = new_route(source, lem->vertices, i);
 	head = route;
-	sink = get(index, lem->sink);
 	if (!queue || !route)
 		return (NULL);
 	while (1)
 	{
 		queue = wipe_queue(queue, source, lem->vertices);
 		route->path = bfs(index, lem, queue, route);
-		if (!path_found(route->path, lem->sink))
+
+		ft_printf("round %d\n", route->i);
+		for (int x = 0; route->path[x]; x++) {
+			ft_printf("%s\n", route->path[x]->id);
+		}
+		ft_printf("\n");
+		
+		if (!path_found(route->path, sink))
 			break ;
 		route->is_valid = 1;
 		lem->max_flow += send_flow(route->path, sink);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:32:03 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/07 14:18:40 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 20:49:59 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,18 @@ static t_vertex	*lastof(t_vertex **arr)
 static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
 {
 	int			ret;
-	t_vertex	*source;
-	t_vertex	*sink;
 	t_vertex	*curr;
 
 	ret = 0;
-	source = get(index, lem->source);
-	sink = get(index, lem->sink);
 	curr = edge->to;
-	if (curr->visited < route->i && edge->fwd_cap > 0 && curr != sink && \
-	curr != source)
+	if (curr->visited < route->i && edge->fwd_cap > 0 && \
+	!ft_strequ(curr->id, lem->sink) && !ft_strequ(curr->id, lem->source))
 	{
 		curr->visited += 1;
-		ret = 1 + is_linked(edge, lastof(route->path), sink);
+		ret = 1 + is_linked(edge, lastof(route->path), get(index, lem->sink));
 	}
-	else if (curr == sink && is_linked(edge, lastof(route->path), sink))
+	else if (ft_strequ(curr->id, lem->sink) && \
+	is_linked(edge, lastof(route->path), get(index, lem->sink)))
 	{
 		ret = 3;
 	}
@@ -70,7 +67,7 @@ static int	traverse(t_index *index, t_lem *lem, t_edge *edge, t_route *route)
 **	- pop first vertex in queue
 **	- mark all adjacent vertices as visited and add unvisited ones to queue
 **	- append currently examined edge's src vertex to path if not already in it
-**	- repeat until queue empty
+**	- repeat until queue empty or graph's sink found
 */
 t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route)
 {
@@ -82,8 +79,6 @@ t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route)
 	while (!(*queue == NULL) && traversable != 3)
 	{
 		vertex = pop_first(&queue);
-		if (vertex == NULL)
-			break ;
 		edge = vertex->edge;
 		while (edge != NULL)
 		{

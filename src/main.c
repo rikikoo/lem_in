@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 18:54:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 21:20:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	main(void)
 	routes = NULL;
 	if (parse_input(input, index, lem) < 0)
 		return (die(&input, &index, &lem, &routes));
-	routes = find_paths(index, lem, get(index, lem->source));
+	routes = find_paths(index, lem, get(index, lem->source), \
+						get(index, lem->sink));
 	if (!routes->is_valid)
 		return (die(&input, &index, &lem, &routes));
 	print_input(input);
