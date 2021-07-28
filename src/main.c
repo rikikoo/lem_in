@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 21:20:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 12:58:33 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ int	main(void)
 	print_input(input);
 	if (print_moves(sort_paths(routes), lem) < 0)
 		(die(&input, &index, &lem, &routes));
+//	system("leaks lem-in");
 	return (0);
 }

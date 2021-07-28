@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 21:06:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 12:57:48 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,6 @@ void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
 int			print_moves(t_route *route, t_lem *lem);
 int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
+void		free_output(char ****out, t_lem *lem);
 
 #endif

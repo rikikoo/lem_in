@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/07 15:24:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 12:57:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,24 @@ int	die(t_input **input, t_index **index, t_lem **lem, t_route **route)
 	ft_printf("  R   O  \n");
 	ft_printf("E       R\n\n");
 	return (-1);
+}
+
+void	free_output(char ****out, t_lem *lem)
+{
+	int		outer_p;
+	int		inner_p;
+
+	outer_p = 0;
+	inner_p = 0;
+	while (outer_p < lem->ants)
+	{
+		while (**out[inner_p])
+		{
+			free(**out[inner_p]);
+			inner_p++;
+		}
+		free(*out[outer_p]);
+		outer_p++;
+	}
+	free(*out);
 }

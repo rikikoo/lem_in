@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 18:53:33 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 12:58:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,17 +167,17 @@ int	print_moves(t_route *route, t_lem *lem)
 	turn = 0;
 	while (moves_left)
 	{
-		ant = 0;
+		ant = -1;
 		turn++;
-		while (ant < lem->ants)
+		while (++ant < lem->ants)
 		{
 			moves_left = print_a_move(*out[ant], lem, ant + 1, turn);
-			ant++;
 			if (moves_left == -1)
 				break ;
 		}
 		while (--ant >= 0)
 			out[ant] = out[ant] + (*out[ant] != NULL);
 	}
+//	free_output(&out, lem);
 	return (0);
 }
