@@ -6,16 +6,15 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/07 15:11:54 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/12 23:48:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** adds the source vertex id to the start of the previously malloc'd array
-** and returns an otherwise empty array of char pointers.
-** functions as a makeshift queue data structure.
+** adds the source vertex pointer to the start of the previously malloc'd array
+** and returns an otherwise empty array of t_vertex pointers
 */
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 {
@@ -28,11 +27,12 @@ t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 		i++;
 	}
 	queue[0] = source;
+	queue[0]->visited = 1;
 	return (queue);
 }
 
 /*
-** removes first item from queue and returns it (called by bfs)
+** removes first item from @queue and returns it
 */
 t_vertex	*pop_first(t_vertex ***queue)
 {
@@ -46,9 +46,9 @@ t_vertex	*pop_first(t_vertex ***queue)
 }
 
 /*
-** appends a new vertex to the end of the queue/prev list (called by bfs)
+** if not already in queue @arr, appends @vertex to the end of it
 */
-void	arr_append(t_vertex ***arr, t_vertex *vertex)
+void	queue_append(t_vertex ***arr, t_vertex *vertex)
 {
 	int	i;
 
@@ -63,26 +63,15 @@ void	arr_append(t_vertex ***arr, t_vertex *vertex)
 }
 
 /*
-** returns true if the current edge's source is the same as the previous
-** edge's sink, i.e. if they are linked. returns false otherwise.
+** sets @edge to the front of @path
 */
-int	is_linked(t_edge *curr, t_vertex *prev_vertex, t_vertex *sink)
+void	path_prepend(t_edge **path, t_edge *edge)
 {
-	t_edge	*prev;
+	t_edge	*tmp;
 
-	if (prev_vertex == NULL)
-		return (0);
-	prev = prev_vertex->edge;
-	while (prev)
-	{
-		if ((prev->to == curr->src || prev->to == sink) && \
-		curr->fwd_cap > 0 && prev->fwd_cap > 0)
-		{
-			return (1);
-		}
-		prev = prev->next;
-	}
-	return (0);
+	tmp = *path;
+	*path = edge;
+	(*path)->prev_in_path = tmp;
 }
 
 void	print_input(t_input *input)

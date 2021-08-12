@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/07/22 21:25:36 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/08/11 17:44:27 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,10 @@ SRC =	$(S)main.c \
 		$(S)vertices.c \
 		$(S)edges.c \
 		$(S)graph.c \
-		$(S)bfs.c \
 		$(S)utils.c \
 		$(S)free.c \
-		$(S)sort.c \
-		$(S)output.c
+		$(S)sort.c
+#		$(S)output.c
 
 OBJ = $(SRC:$S%=$O%.o)
 INC = $(I)
@@ -49,8 +48,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-	@make -C $(L)
-	@make -C $(L) clean
+#	@make -C $(L)
+#	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:

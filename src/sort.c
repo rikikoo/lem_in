@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/14 22:11:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/11 15:46:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 /*
 ** counts the amount of steps in a (valid) path.
-**
-** route: pointer to the head of a list of paths
 */
 static void	mark_route_lengths(t_route *route)
 {
@@ -28,8 +26,6 @@ static void	mark_route_lengths(t_route *route)
 
 /*
 ** swaps places of two paths in the list of paths
-**
-** prev, current, next: pointer to previous, current and next path
 */
 static void	swap(t_route **prev, t_route **current, t_route **next)
 {
@@ -54,7 +50,7 @@ static void	swap(t_route **prev, t_route **current, t_route **next)
 ** sorts all found paths in ascending order in regards to path length.
 ** returns sorted path.
 **
-** route: pointer to the head of a list of paths
+** @route: pointer to the head of a list of paths
 */
 t_route	*sort_paths(t_route *route)
 {

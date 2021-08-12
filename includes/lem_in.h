@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/28 12:57:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 00:01:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 ** HT_SIZE: hash table size, or the amount of buckets used by t_index
 */
 # define HT_SIZE 65535
+
 # include <stdlib.h>
 # include <unistd.h>
 # include "libft.h"
@@ -24,19 +25,20 @@
 /*
 ** ants: nbr of ants we have to transport through the graph
 ** vertices: nbr of vertices in the graph
-** edges: nbr of edges in the graph		¡¡¡NOTE!!! number useful at any point?
+** edges: nbr of edges in the graph
 ** max_flow: nbr of ants we can send through the graph at once
 ** source: name/id of the source vertex
 ** sink: name/id of the sink vertex
+** error: stores a negative integer in case an error occurs
 */
 typedef struct s_lem
 {
 	int		ants;
 	int		vertices;
 	int		edges;
-	int		max_flow;
 	char	*source;
 	char	*sink;
+	int		error;
 }	t_lem;
 
 /*
@@ -68,32 +70,32 @@ typedef struct s_vertex
 }	t_vertex;
 
 /*
-** src: name/id of the edge's source vertex
-** dst: name/id of the edge's destination vertex
-** fwd_cap & rev_cap: forward and backward capacity of the edge, respectively
-** next: a pointer to the next edge that has the same source vertex
+** @src: the edge's source vertex
+** @dst: the edge's destination vertex
+** @flow: flow along the edge, 0 or 1
+** @cap: capacity of the edge, 0 or 1
+** @reverse: pointer to the edge in the reverse direction (@src and @to flipped)
+** @next_adjacent: a pointer to the next edge that has the same source vertex
+** @prev_in_path: a pointer to the edge before the current one on a path
 */
 typedef struct s_edge
 {
 	struct s_vertex	*src;
 	struct s_vertex	*to;
-	int				fwd_cap;
-	struct s_edge	*next;
+	int				flow;
+	int				cap;
+	struct s_edge	*reverse;
+	struct s_edge	*next_adjacent;
+	struct s_edge	*prev_in_path;
 }	t_edge;
 
-/*
-** i: corresponding index value for each new path
-** is_valid: true if stored path can reach sink
-** path: head of a path found by the breadth-first search algorithm
-** len: length of the path
-** next: pointer to the next path
-*/
 typedef struct s_route
 {
 	int				i;
 	int				is_valid;
+	int				is_unique;
 	int				len;
-	struct s_vertex	**path;
+	struct s_edge	*path;
 	struct s_route	*next;
 }	t_route;
 
@@ -105,7 +107,7 @@ typedef struct s_index
 	struct s_vertex	**vertices;
 }	t_index;
 
-t_lem		*init_lem(void);
+t_lem		init_lem(void);
 t_index		*init_index(void);
 t_input		*read_input(void);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
@@ -115,18 +117,16 @@ t_vertex	*get(t_index *index, const char *key);
 void		set(t_index *index, const char *key, const int x, const int y);
 int			get_edges(t_input *input, t_index *index);
 int			parse_input(t_input *input, t_index *index, t_lem *lem);
-t_route		*new_route(t_vertex *source, int vertices, int iteration);
-t_route		*find_paths(t_index *index, t_lem *lem, t_vertex *source, \
-			t_vertex *sink);
-t_vertex	**bfs(t_index *index, t_lem *lem, t_vertex **queue, t_route *route);
+t_route		*new_route(int iteration);
+t_route		*find_paths(t_lem *lem, t_vertex *s, t_vertex *t);
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
 t_vertex	*pop_first(t_vertex ***queue);
-void		arr_append(t_vertex ***arr, t_vertex *vertex);
-int			is_linked(t_edge *curr, t_vertex *prev_vertex, t_vertex *sink);
+void		queue_append(t_vertex ***arr, t_vertex *vertex);
+void		path_prepend(t_edge **path, t_edge *edge);
 void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
 int			print_moves(t_route *route, t_lem *lem);
-int			die(t_input **input, t_index **index, t_lem **lem, t_route **route);
+int			die(t_input **input, t_index **index, t_lem *lem, t_route **route);
 void		free_output(char ****out, t_lem *lem);
 
 #endif

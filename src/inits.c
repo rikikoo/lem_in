@@ -6,33 +6,30 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/28 12:31:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/12 23:53:04 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** returns a pointer to a zero/NULL initialized t_lem
+** returns a zero/NULL initialized t_lem struct
 */
-t_lem	*init_lem(void)
+t_lem	init_lem(void)
 {
-	t_lem	*lem;
+	t_lem	lem;
 
-	lem = (t_lem *)malloc(sizeof(t_lem));
-	if (!lem)
-		return (NULL);
-	lem->ants = 0;
-	lem->vertices = 0;
-	lem->edges = 0;
-	lem->max_flow = 0;
-	lem->source = NULL;
-	lem->sink = NULL;
+	lem.ants = 0;
+	lem.vertices = 0;
+	lem.edges = 0;
+	lem.source = NULL;
+	lem.sink = NULL;
+	lem.error = 0;
 	return (lem);
 }
 
 /*
-** init_index returns a pointer to t_index, all vertex pointers NULL initialized
+** returns a pointer to t_index, all vertex pointers initialized to NULL
 */
 t_index	*init_index(void)
 {
@@ -57,8 +54,8 @@ t_index	*init_index(void)
 /*
 ** allocates memory for a new vertex and returns a pointer to it
 **
-** key: the name/id of the vertex
-** x, y: the coordinates of the vertex
+** @key: the name/id of the vertex
+** @x, @y: the coordinates of the vertex
 */
 t_vertex	*new_vertex(const char *key, const int x, const int y)
 {
@@ -77,10 +74,10 @@ t_vertex	*new_vertex(const char *key, const int x, const int y)
 }
 
 /*
-** allocates memory for and returns a pointer to t_edge
+** allocates memory for it and returns a pointer to a new edge
 **
-** src: the edge's source vertex
-** dst: the edge's sink vertex
+** @src: the edge's source vertex
+** @dst: the edge's sink vertex
 */
 t_edge	*new_edge(t_vertex *src, t_vertex *dst)
 {
@@ -91,34 +88,31 @@ t_edge	*new_edge(t_vertex *src, t_vertex *dst)
 		return (NULL);
 	edge->src = src;
 	edge->to = dst;
-	edge->fwd_cap = 1;
-	edge->next = NULL;
+	edge->flow = 0;
+	edge->cap = 0;
+	edge->reverse = NULL;
+	edge->next_adjacent = NULL;
+	edge->prev_in_path = NULL;
 	return (edge);
 }
 
 /*
-** returns a struct containing room for a path as a pointer to vertex names &
-** info about the path (if path reaches sink or not, length of the path, etc.)
+** allocates memory for a new struct that'll contain a path + info about it
+**
+** @iteration: the number of the current path (starts initially from 1)
 */
-t_route	*new_route(t_vertex *source, int vertices, int iteration)
+t_route	*new_route(int iteration)
 {
 	t_route	*route;
-	int		i;
 
 	route = (t_route *)malloc(sizeof(t_route));
-	route->path = (t_vertex **)malloc(sizeof(t_vertex *) * (vertices + 1));
-	if (!route || !route->path)
+	if (!route)
 		return (NULL);
-	i = 0;
-	while (i <= vertices)
-	{
-		route->path[i] = NULL;
-		i++;
-	}
-	route->path[0] = source;
 	route->i = iteration;
 	route->is_valid = 0;
+	route->is_unique = 0;
 	route->len = 0;
+	route->path = NULL;
 	route->next = NULL;
 	return (route);
 }

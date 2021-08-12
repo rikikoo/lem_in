@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/28 12:57:49 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/12 23:49:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	free_index(t_index **index)
 			while (tmp_vertex->edge != NULL)
 			{
 				tmp_edge = tmp_vertex->edge;
-				tmp_vertex->edge = tmp_edge->next;
+				tmp_vertex->edge = tmp_edge->next_adjacent;
 				free(tmp_edge);
 			}
 			(*index)->vertices[i] = (*index)->vertices[i]->next;
@@ -55,49 +55,60 @@ static void	free_index(t_index **index)
 	free(*index);
 }
 
-static void	free_lem(t_lem **lem)
+static void	free_route(t_route **route)
 {
-	if ((*lem)->source)
-		free((*lem)->source);
-	if ((*lem)->sink)
-		free((*lem)->sink);
-	free(*lem);
+	t_route	*tmp;
+
+	while (*route)
+	{
+		tmp = *route;
+		*route = (*route)->next;
+		free(tmp);
+	}
+
 }
 
-int	die(t_input **input, t_index **index, t_lem **lem, t_route **route)
+int	die(t_input **input, t_index **index, t_lem *lem, t_route **route)
 {
-	if (*input)
-		free_input(input);
-	if (*index)
-		free_index(index);
-	if (*lem)
-		free_lem(lem);
-	if (*route)
-		free(*route);
-	ft_printf("\nE       R\n");
-	ft_printf("  R   O  \n");
-	ft_printf("    R    \n");
-	ft_printf("  R   O  \n");
-	ft_printf("E       R\n\n");
-	return (-1);
+	int	error;
+
+	if (!input || !index)
+		return (ft_printf("ERROR: Out of memory\n") * -1);
+	error = lem->error;
+	if (error < 0)
+	{
+		if (error == -1)
+			ft_printf("ERROR: No ants specified\n");
+		else if (error == -2)
+			ft_printf("ERROR: Invalid rooms specified\n");
+		else if (error == -3)
+			ft_printf("ERROR: Invalid links in rooms\n");
+		else
+			ft_printf("ERROR: Sink not reachable\n");
+	}
+	free_input(input);
+	free_index(index);
+	free_route(route);
+	ft_liberator(2, lem->source, lem->sink);
+	return (error);
 }
 
 void	free_output(char ****out, t_lem *lem)
 {
-	int		outer_p;
-	int		inner_p;
+	int	outer_ptr;
+	int	inner_ptr;
 
-	outer_p = 0;
-	inner_p = 0;
-	while (outer_p < lem->ants)
+	outer_ptr = 0;
+	inner_ptr = 0;
+	while (outer_ptr < lem->ants)
 	{
-		while (**out[inner_p])
+		while (**out[inner_ptr])
 		{
-			free(**out[inner_p]);
-			inner_p++;
+			free(**out[inner_ptr]);
+			inner_ptr++;
 		}
-		free(*out[outer_p]);
-		outer_p++;
+		free(*out[outer_ptr]);
+		outer_ptr++;
 	}
 	free(*out);
 }

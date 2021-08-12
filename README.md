@@ -59,9 +59,9 @@ which says that we need to transport 2 ants through the following graph:
 ```
     (0) <---- start/source
    /   \
- (1)   (2)
-  |     |
-  |    (3)
+  /    (2)
+(1)     |
+  \    (3)
    \   /
     (4) <---- end/sink
 ```

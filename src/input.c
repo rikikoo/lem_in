@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/06/15 13:47:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/10 19:43:54 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ int	parse_input(t_input *input, t_index *index, t_lem *lem)
 		return (-1);
 	input = get_vertices(input->next, index, lem);
 	if (!input)
-		return (-1);
+		return (-2);
 	lem->edges = get_edges(input, index);
 	if (lem->edges < 0)
-		return (-1);
+		return (-3);
 	return (0);
 }
