@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:01:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:52:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,37 +50,36 @@ static void	print_paths(t_route *olap, t_route *dist, t_vertex *s, t_vertex *t)
 ** invalid or there isn't a connection between the source and the sink.
 **
 **	1. read instructions from STDIN
-**	2. validate and store relevant information into appropriate structs
-**	3. construct graph and find all paths
-**	4. sort paths
+**	2. validate and store graph information
+**	3. saturate graph by doing repeated searches forward
+**	4. find distinct, non-overlapping paths by doing a reverse BFS on the graph
 **	5. distribute ants to paths and prepare output strings
 **	6. print moves per turn
 */
 int	main(int argc, char **argv)
 {
-	t_lem	lem;
-	t_input	*input;
-	t_index	*index;
-	t_route	*overlap;
-	t_route	*distinct;
+	t_lem		lem;
+	t_hashtab	*ht;
+	t_input		*input;
+	t_route		*olap;
+	t_route		*dist;
 
 	lem = init_lem();
+	ht = init_ht();
 	input = read_input();
-	index = init_index();
-	lem.error = parse_input(input, index, &lem);
+	lem.error = parse_input(input, ht, &lem);
 	if (lem.error)
-		return (die(&input, &index, &lem, NULL));
-	overlap = find_paths(&lem, get(index, lem.source), get(index, lem.sink));
+		return (die(&input, &ht, &lem, NULL));
+	olap = sort_paths(find_paths(&lem, get(ht, lem.source), get(ht, lem.sink)));
 	if (lem.error)
-		return (die(&input, &index, &lem, &overlap));
-	overlap = sort_paths(overlap);
-	distinct = find_paths(&lem, get(index, lem.sink), get(index, lem.source));
-	if (!lem.error)
-		distinct = sort_paths(distinct);
-//	print_input(input);
-//	print_moves(overlap, distinct, &lem);
+		return (die(&input, &ht, &lem, &olap));
+	dist = sort_paths(find_paths(&lem, get(ht, lem.sink), get(ht, lem.source)));
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
-		print_paths(overlap, distinct, get(index, lem.source),
-		get(index, lem.sink));
+		print_paths(olap, dist, get(ht, lem.source), get(ht, lem.sink));
+	else
+	{
+//		print_input(input);
+//		print_moves(overlap, distinct, &lem);
+	}
 	return (0);
 }

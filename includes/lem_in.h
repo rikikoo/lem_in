@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 22:54:08 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:09:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define LEM_IN_H
 
 /*
-** HT_SIZE: hash table size, or the amount of buckets used by t_index
+** HT_SIZE: hash table size, or the amount of buckets used by t_hashtab
 */
 # define HT_SIZE 65535
 
@@ -23,12 +23,13 @@
 # include "libft.h"
 
 /*
-** ants: nbr of ants we have to transport through the graph
-** vertices: nbr of vertices in the graph
-** edges: nbr of edges in the graph
-** source: name/id of the source vertex
-** sink: name/id of the sink vertex
-** error: stores a negative integer in case an error occurs
+** @ants: nbr of ants we have to transport through the graph
+** @vertices: nbr of vertices in the graph
+** @edges: nbr of edges in the graph
+** @source: name/id of the source vertex
+** @sink: name/id of the sink vertex
+** @error: stores a negative integer in case an error occurs
+** @n_routes: total number of routes found
 */
 typedef struct s_lem
 {
@@ -52,11 +53,11 @@ typedef struct s_input
 }	t_input;
 
 /*
-** id: name of the vertex
-** x, y: coordinates of the vertex (used only for visualizer)
-** visited: corresponding value for each bfs iteration
-** edge: a pointer to the struct t_list, a list of outgoing edges.
-** next: a pointer to another t_vertex whose id might have the same
+** @id: name of the vertex
+** @x, @y: coordinates of the vertex (used only for visualizer)
+** @visited: corresponding value for each bfs iteration
+** @edge: a pointer to the struct t_list, a list of outgoing edges.
+** @next: a pointer to another t_vertex whose id might have the same
 ** 	hashed value as the one being examined
 */
 typedef struct s_vertex
@@ -98,21 +99,21 @@ typedef struct s_route
 /*
 ** "hash table", aka an array of pointers to vertices
 */
-typedef struct s_index
+typedef struct s_hashtab
 {
 	struct s_vertex	**vertices;
-}	t_index;
+}	t_hashtab;
 
 t_lem		init_lem(void);
-t_index		*init_index(void);
+t_hashtab	*init_ht(void);
 t_input		*read_input(void);
 t_vertex	*new_vertex(const char *key, const int x, const int y);
 t_edge		*new_edge(t_vertex *src, t_vertex *dst);
-t_input		*get_vertices(t_input *input, t_index *index, t_lem *lem);
-t_vertex	*get(t_index *index, const char *key);
-void		set(t_index *index, const char *key, const int x, const int y);
-int			get_edges(t_input *input, t_index *index);
-int			parse_input(t_input *input, t_index *index, t_lem *lem);
+t_input		*get_vertices(t_input *input, t_hashtab *ht, t_lem *lem);
+t_vertex	*get(t_hashtab *ht, const char *key);
+void		set(t_hashtab *ht, const char *key, const int x, const int y);
+int			get_edges(t_input *input, t_hashtab *ht);
+int			parse_input(t_input *input, t_hashtab *ht, t_lem *lem);
 t_route		*new_route(int iteration);
 t_route		*find_paths(t_lem *lem, t_vertex *s, t_vertex *t);
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
@@ -122,7 +123,7 @@ void		path_prepend(t_edge **path, t_edge *edge);
 void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
 int			print_moves(t_route *route, t_lem *lem);
-int			die(t_input **input, t_index **index, t_lem *lem, t_route **route);
+int			die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route);
 void		free_output(char ****out, t_lem *lem);
 
 #endif

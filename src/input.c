@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 15:20:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:14:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,20 @@ t_input	*read_input(void)
 ** parses input, which contains all necessary info to construct the graph
 **
 ** input: pointer to the program input linked list
-** index: pointer to hash table for vertices
+** ht: pointer to hash table for vertices
 ** lem: pointer to a general runtime info struct
 */
-int	parse_input(t_input *input, t_index *index, t_lem *lem)
+int	parse_input(t_input *input, t_hashtab *ht, t_lem *lem)
 {
-	if (!input || !index || !lem)
+	if (!input || !ht || !lem)
 		return (-1);
 	lem->ants = ft_atoi(input->line);
 	if (!lem->ants)
 		return (-1);
-	input = get_vertices(input->next, index, lem);
+	input = get_vertices(input->next, ht, lem);
 	if (!input)
 		return (-2);
-	lem->edges = get_edges(input, index);
+	lem->edges = get_edges(input, ht);
 	if (lem->edges < 0)
 		return (-3);
 	return (0);

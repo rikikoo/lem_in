@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 15:43:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:26:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	free_input(t_input **input)
 	}
 }
 
-static void	free_index(t_index **index)
+static void	free_ht(t_hashtab **ht)
 {
 	int			i;
 	t_vertex	*tmp_vertex;
@@ -35,9 +35,9 @@ static void	free_index(t_index **index)
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		while ((*index)->vertices[i] != NULL)
+		while ((*ht)->vertices[i] != NULL)
 		{
-			tmp_vertex = (*index)->vertices[i];
+			tmp_vertex = (*ht)->vertices[i];
 			if (tmp_vertex->id != NULL)
 				free(tmp_vertex->id);
 			while (tmp_vertex->edge != NULL)
@@ -46,13 +46,13 @@ static void	free_index(t_index **index)
 				tmp_vertex->edge = tmp_edge->next_adjacent;
 				free(tmp_edge);
 			}
-			(*index)->vertices[i] = (*index)->vertices[i]->next;
+			(*ht)->vertices[i] = (*ht)->vertices[i]->next;
 			free(tmp_vertex);
 		}
 		i++;
 	}
-	free((*index)->vertices);
-	free(*index);
+	free((*ht)->vertices);
+	free(*ht);
 }
 
 static void	free_route(t_route **route)
@@ -67,11 +67,11 @@ static void	free_route(t_route **route)
 	}
 }
 
-int	die(t_input **input, t_index **index, t_lem *lem, t_route **route)
+int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
 {
 	int	error;
 
-	if (!input || !index)
+	if (!input || !ht)
 		return (ft_printf("ERROR: Out of memory\n") * -1);
 	error = lem->error;
 	if (error < 0)
@@ -86,10 +86,12 @@ int	die(t_input **input, t_index **index, t_lem *lem, t_route **route)
 			ft_printf("ERROR: Sink not reachable\n");
 	}
 	free_input(input);
-	free_index(index);
+	free_ht(ht);
 	free_route(route);
-	free(lem->source);
-	free(lem->sink);
+	if (lem->source)
+		free(lem->source);
+	if (lem->sink)
+		free(lem->sink);
 	return (error);
 }
 

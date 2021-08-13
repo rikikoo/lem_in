@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 21:19:59 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:18:36 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ static size_t	hashof(const char *key)
 /*
 ** returns the requested vertex pointer if found in the hash table, else NULL
 **
-** index: a pointer to t_index
+** ht: a pointer to t_hashtab
 ** key: name/id of the vertex to get
 */
-t_vertex	*get(t_index *index, const char *key)
+t_vertex	*get(t_hashtab *ht, const char *key)
 {
 	int			i;
 	t_vertex	*vertex;
@@ -46,7 +46,7 @@ t_vertex	*get(t_index *index, const char *key)
 	if (!key)
 		return (NULL);
 	i = hashof(key);
-	vertex = index->vertices[i];
+	vertex = ht->vertices[i];
 	while (vertex != NULL)
 	{
 		if (ft_strequ(key, vertex->id))
@@ -58,23 +58,23 @@ t_vertex	*get(t_index *index, const char *key)
 }
 
 /*
-** inserts a new entry to the hash table (index)
+** inserts a new entry to the hash table @ht
 **
-** index: a pointer to t_index
-** key: name/id of the vertex to insert
-** x, y: coordinates of the vertex
+** @ht: a pointer to t_hashtab
+** @key: name/id of the vertex to insert
+** @x, @y: coordinates of the vertex
 */
-void	set(t_index *index, const char *key, const int x, const int y)
+void	set(t_hashtab *ht, const char *key, const int x, const int y)
 {
 	int			i;
 	t_vertex	*prev;
 	t_vertex	*new;
 
 	i = hashof(key);
-	new = index->vertices[i];
+	new = ht->vertices[i];
 	if (new == NULL)
 	{
-		index->vertices[i] = new_vertex(key, x, y);
+		ht->vertices[i] = new_vertex(key, x, y);
 		return ;
 	}
 	while (new != NULL)

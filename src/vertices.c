@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/06 12:51:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:15:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 ** vertex_parse() splits the three attributes into their own strings, validates
 ** each one and stores them into the hash table.
 **
-** index: pointer to hash table for vertices
+** ht: pointer to hash table for vertices
 ** str: current input line string
 ** lem: pointer to a general runtime info struct
 ** v: deteremines whether str contains source (0), sink (1) or intermediate (2)
 ** 	vertex info
 */
-static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
+static int	vertex_parse(t_hashtab *ht, char *str, t_lem *lem, int v)
 {
 	char	**arr;
 
@@ -39,7 +39,7 @@ static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 		lem->sink = ft_strdup(arr[0]);
 	else if (v == 0)
 		lem->source = ft_strdup(arr[0]);
-	set(index, arr[0], ft_atoi(arr[1]), ft_atoi(arr[2]));
+	set(ht, arr[0], ft_atoi(arr[1]), ft_atoi(arr[2]));
 	ft_liberator(4, &arr[0], &arr[1], &arr[2], &arr[3]);
 	free(arr);
 	return (0);
@@ -53,10 +53,10 @@ static int	vertex_parse(t_index *index, char *str, t_lem *lem, int v)
 ** skipped.
 **
 ** input: pointer to list of instructions
-** index: pointer to hast table for vertices
+** ht: pointer to hast table for vertices
 ** lem: pointer to a general runtime info struct
 */
-static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
+static t_input	*check_command(t_input *input, t_hashtab *ht, t_lem *lem)
 {
 	char	*str;
 	char	**arr;
@@ -68,13 +68,13 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 	if (ft_strequ(str, "##start") && lem->source == NULL)
 	{
 		input = input->next;
-		if (vertex_parse(index, input->line, lem, 0) < 0)
+		if (vertex_parse(ht, input->line, lem, 0) < 0)
 			return (NULL);
 	}
 	else if (ft_strequ(str, "##end") && lem->sink == NULL)
 	{
 		input = input->next;
-		if (vertex_parse(index, input->line, lem, 1) < 0)
+		if (vertex_parse(ht, input->line, lem, 1) < 0)
 			return (NULL);
 	}
 	else
@@ -89,10 +89,10 @@ static t_input	*check_command(t_input *input, t_index *index, t_lem *lem)
 ** the program will exit and return error.
 **
 ** input: pointer to list of instructions
-** index: pointer to hash table of vertices
+** ht: pointer to hash table of vertices
 ** lem: pointer to a general runtime info struct
 */
-t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
+t_input	*get_vertices(t_input *input, t_hashtab *ht, t_lem *lem)
 {
 	while (1)
 	{
@@ -100,7 +100,7 @@ t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 			return (NULL);
 		if (input->line[0] == '#')
 		{
-			input = check_command(input, index, lem);
+			input = check_command(input, ht, lem);
 			if (!input)
 				return (NULL);
 		}
@@ -108,7 +108,7 @@ t_input	*get_vertices(t_input *input, t_index *index, t_lem *lem)
 			break ;
 		else
 		{
-			if (vertex_parse(index, input->line, lem, 2) < 0)
+			if (vertex_parse(ht, input->line, lem, 2) < 0)
 				return (NULL);
 			input = input->next;
 		}

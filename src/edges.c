@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 11:28:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:17:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ static void	edge_append(t_vertex *src, t_vertex *dst)
 ** splits input line containing the two vertex ids into a string array,
 ** checks that the vertices exist. if yes, append an edge to both directions.
 **
-** @index: pointer to the hash table
+** @ht: pointer to the hash table
 ** @line: raw line of program input
 */
-static int	check_edge(t_index *index, char *line)
+static int	check_edge(t_hashtab *ht, char *line)
 {
 	char		**arr;
 	t_vertex	*src;
@@ -51,8 +51,8 @@ static int	check_edge(t_index *index, char *line)
 	arr = ft_strsplit(line, '-');
 	if (ft_arrlen((void **)arr) != 2)
 		return (0);
-	src = get(index, arr[0]);
-	dst = get(index, arr[1]);
+	src = get(ht, arr[0]);
+	dst = get(ht, arr[1]);
 	if (!src || !dst)
 		return (0);
 	edge_append(src, dst);
@@ -67,9 +67,9 @@ static int	check_edge(t_index *index, char *line)
 ** returns number of edges on success, -1 otherwise.
 **
 ** @input: list of input lines, starting from the point where the edges begin
-** @index: pointer to hash table t_index
+** @ht: pointer to hash table t_hashtab
 */
-int	get_edges(t_input *input, t_index *index)
+int	get_edges(t_input *input, t_hashtab *ht)
 {
 	int	edges;
 
@@ -78,7 +78,7 @@ int	get_edges(t_input *input, t_index *index)
 	{
 		if (input->line[0] != '#')
 		{
-			if (!check_edge(index, input->line))
+			if (!check_edge(ht, input->line))
 				return (-1);
 			edges++;
 		}

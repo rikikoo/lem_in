@@ -6,15 +6,15 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 15:07:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:23:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** adds the source vertex pointer to the start of the previously malloc'd array
-** and returns an otherwise NULL'd array of t_vertex pointers
+** adds the source vertex pointer to the start of @queue and returns an
+** otherwise NULL'd array of t_vertex pointers
 */
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 {

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 22:54:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:20:13 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,26 @@ t_lem	init_lem(void)
 }
 
 /*
-** returns a pointer to t_index, all vertex pointers initialized to NULL
+** returns a pointer to hashtab, all vertex pointers initialized to NULL
 */
-t_index	*init_index(void)
+t_hashtab	*init_ht(void)
 {
-	t_index	*index;
-	int		i;
+	t_hashtab	*ht;
+	int			i;
 
-	index = (t_index *)malloc(sizeof(t_index));
-	if (!index)
+	ht = (t_hashtab *)malloc(sizeof(t_hashtab));
+	if (!ht)
 		return (NULL);
-	index->vertices = (t_vertex **)malloc(sizeof(t_vertex *) * HT_SIZE);
-	if (!index->vertices)
+	ht->vertices = (t_vertex **)malloc(sizeof(t_vertex *) * HT_SIZE);
+	if (!ht->vertices)
 		return (NULL);
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		index->vertices[i] = NULL;
+		ht->vertices[i] = NULL;
 		i++;
 	}
-	return (index);
+	return (ht);
 }
 
 /*
