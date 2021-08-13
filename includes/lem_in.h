@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 00:01:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 11:27:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ typedef struct s_vertex
 ** @cap: capacity of the edge, 0 or 1
 ** @reverse: pointer to the edge in the reverse direction (@src and @to flipped)
 ** @next_adjacent: a pointer to the next edge that has the same source vertex
-** @prev_in_path: a pointer to the edge before the current one on a path
+** @prev_in_path: a pointer to the edge before the current one on a path (the
+**	path will be stored in reverse order, from sink to source)
 */
 typedef struct s_edge
 {
@@ -84,7 +85,6 @@ typedef struct s_edge
 	struct s_vertex	*to;
 	int				flow;
 	int				cap;
-	struct s_edge	*reverse;
 	struct s_edge	*next_adjacent;
 	struct s_edge	*prev_in_path;
 }	t_edge;

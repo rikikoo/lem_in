@@ -6,33 +6,42 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 00:35:20 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 14:15:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** increment forward flow and decrement reverse flow in @path
+** increment forward flow and decrement reverse flow of each edge in @path
 */
 static t_edge	*send_flow(t_edge *path, t_vertex *source)
 {
 	t_edge	*head;
+	t_edge	*reverse;
 
 	head = path;
 	while (path->src != source)
 	{
 		path->flow += 1;
-		path->reverse->flow -= 1;
+		reverse = path->to->edge;
+		while (reverse->to != path->src)
+			reverse = reverse->next_adjacent;
+		reverse->flow -= 1;
 		path = path->prev_in_path;
 	}
 	path->flow += 1;
-	path->reverse->flow -= 1;
+	reverse = path->to->edge;
+	while (reverse->to != path->src)
+		reverse = reverse->next_adjacent;
+	reverse->flow -= 1;
 	return (head);
 }
 
 /*
-** marks the path as valid and connects the edges that belong to the actual path
+** counts the length of the path and connects the edges that belong to the
+** actual path and marks the path as valid.
+** returns the head of the path, i.e. the edge connected to sink.
 */
 static t_edge	*store_path(t_route *route, t_vertex *source)
 {

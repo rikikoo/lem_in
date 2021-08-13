@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/12 23:53:04 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 11:28:36 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ t_edge	*new_edge(t_vertex *src, t_vertex *dst)
 	edge->to = dst;
 	edge->flow = 0;
 	edge->cap = 0;
-	edge->reverse = NULL;
 	edge->next_adjacent = NULL;
 	edge->prev_in_path = NULL;
 	return (edge);

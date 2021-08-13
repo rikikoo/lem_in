@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 00:52:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 13:09:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,36 +40,26 @@ int	main(void)
 	index = init_index();
 	route = NULL;
 	lem.error = parse_input(input, index, &lem);
-	if (lem.error < 0)
+	if (lem.error)
 		return (die(&input, &index, &lem, &route));
-
-	for (int x = 0; x < HT_SIZE; x++) {
-		if (index->vertices[x] != NULL) {
-			while (index->vertices[x]->edge) {
-				ft_printf("%p\n", index->vertices[x]->edge->reverse);
-				index->vertices[x]->edge = index->vertices[x]->edge->next_adjacent;
-			}
-		}
-	}
-
 	route = find_paths(&lem, get(index, lem.source), get(index, lem.sink));
-//	if (lem.error < 0)
+//	if (lem.error)
 //		return (die(&input, &index, &lem, &route));
+	route = sort_paths(route);
 
-	ft_printf("paths in reverse order (from sink to source):\n\n");
-	while (route) {
+	ft_printf("reversed paths in increasing order of length:\n\n");
+	while (route->is_valid) {
+		ft_printf("Route length: %i\n", route->len);
 		while (!ft_strequ(route->path->src->id, lem.source)) {
 			ft_printf("%s <- ", route->path->to->id);
 			route->path = route->path->prev_in_path;
 		}
-		ft_printf("%s\n\n", route->path->src->id);
+		ft_printf("%s <- %s\n\n", route->path->to->id, route->path->src->id);
 		route = route->next;
 	}
+	system("leaks lem-in");
 
 //	print_input(input);
 //	print_moves(sort_paths(route), &lem);
-
-//	system("leaks lem-in");
-
 	return (0);
 }

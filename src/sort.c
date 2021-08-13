@@ -6,23 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/11 15:46:24 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 11:31:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** counts the amount of steps in a (valid) path.
-*/
-static void	mark_route_lengths(t_route *route)
-{
-	while (route->is_valid)
-	{
-		route->len = ft_arrlen((void **)route->path);
-		route = route->next;
-	}
-}
 
 /*
 ** swaps places of two paths in the list of paths
@@ -59,7 +47,6 @@ t_route	*sort_paths(t_route *route)
 	t_route	*next;
 	t_route	*head;
 
-	mark_route_lengths(route);
 	prev = NULL;
 	curr = route;
 	head = curr;
