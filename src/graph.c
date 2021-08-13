@@ -6,50 +6,38 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 14:15:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 23:25:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** increment forward flow and decrement reverse flow of each edge in @path
+** remove capacity from the edges along @path and count its length
 */
-static t_edge	*send_flow(t_edge *path, t_vertex *source)
+static t_edge	*send_flow(t_route *route)
 {
 	t_edge	*head;
-	t_edge	*reverse;
 
-	head = path;
-	while (path->src != source)
+	head = route->path;
+	while (route->path)
 	{
-		path->flow += 1;
-		reverse = path->to->edge;
-		while (reverse->to != path->src)
-			reverse = reverse->next_adjacent;
-		reverse->flow -= 1;
-		path = path->prev_in_path;
+		route->len++;
+		route->path->cap = 0;
+		route->path = route->path->prev_in_path;
 	}
-	path->flow += 1;
-	reverse = path->to->edge;
-	while (reverse->to != path->src)
-		reverse = reverse->next_adjacent;
-	reverse->flow -= 1;
 	return (head);
 }
 
 /*
-** counts the length of the path and connects the edges that belong to the
-** actual path and marks the path as valid.
-** returns the head of the path, i.e. the edge connected to sink.
+** connects the edges that belong to the actual path and marks the path as valid
+** returns the head of the path
 */
-static t_edge	*store_path(t_route *route, t_vertex *source)
+static t_edge	*store_path(t_route *route, t_vertex *source, t_lem *lem)
 {
-	int		len;
 	t_edge	*head;
 	t_edge	*prev;
 
-	len = 1;
 	head = route->path;
 	while (route->path->src != source)
 	{
@@ -58,14 +46,12 @@ static t_edge	*store_path(t_route *route, t_vertex *source)
 		{
 			prev = prev->prev_in_path;
 		}
-		len++;
 		route->path->prev_in_path = prev;
 		route->path = route->path->prev_in_path;
 	}
-	len++;
-	route->path = route->path->prev_in_path;
-	route->len = len;
+	route->path->prev_in_path = NULL;
 	route->is_valid = 1;
+	lem->n_routes++;
 	return (head);
 }
 
@@ -87,7 +73,7 @@ static int	bfs(t_vertex **queue, t_route *route, t_vertex *sink)
 		edge = vertex->edge;
 		while (edge != NULL)
 		{
-			if (edge->to->visited < route->i && edge->flow < 1)
+			if (edge->to->visited < route->i && edge->cap != 0)
 			{
 				edge->to->visited = route->i;
 				queue_append(&queue, edge->to);
@@ -113,7 +99,8 @@ t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 	int			bfs_iteration;
 
 	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
-	bfs_iteration = 1;
+	sink->visited--;
+	bfs_iteration = lem->n_routes + 1;
 	route = new_route(bfs_iteration);
 	head = route;
 	if (!queue || !route)
@@ -123,8 +110,8 @@ t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 		queue = wipe_queue(queue, source, lem->vertices);
 		if (!bfs(queue, route, sink))
 			break ;
-		route->path = store_path(route, source);
-		route->path = send_flow(route->path, source);
+		route->path = store_path(route, source, lem);
+		route->path = send_flow(route);
 		route->next = new_route(++bfs_iteration);
 		route = route->next;
 	}

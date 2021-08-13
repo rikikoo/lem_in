@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/12 23:49:40 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 15:43:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ static void	free_route(t_route **route)
 		*route = (*route)->next;
 		free(tmp);
 	}
-
 }
 
 int	die(t_input **input, t_index **index, t_lem *lem, t_route **route)
@@ -82,14 +81,15 @@ int	die(t_input **input, t_index **index, t_lem *lem, t_route **route)
 		else if (error == -2)
 			ft_printf("ERROR: Invalid rooms specified\n");
 		else if (error == -3)
-			ft_printf("ERROR: Invalid links in rooms\n");
+			ft_printf("ERROR: Invalid rooms in links\n");
 		else
 			ft_printf("ERROR: Sink not reachable\n");
 	}
 	free_input(input);
 	free_index(index);
 	free_route(route);
-	ft_liberator(2, lem->source, lem->sink);
+	free(lem->source);
+	free(lem->sink);
 	return (error);
 }
 

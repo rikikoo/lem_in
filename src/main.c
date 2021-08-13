@@ -6,11 +6,39 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 13:09:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/14 00:01:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
+
+static void	print_paths(t_route *olap, t_route *dist, t_vertex *s, t_vertex *t)
+{
+	ft_printf("reversed, possibly overlapping paths:\n\n");
+	while (olap->is_valid)
+	{
+		ft_printf("Route length: %i\n", olap->len);
+		while (olap->path->src != s)
+		{
+			ft_printf("%s <- ", olap->path->to->id);
+			olap->path = olap->path->prev_in_path;
+		}
+		ft_printf("%s <- %s\n\n", olap->path->to->id, olap->path->src->id);
+		olap = olap->next;
+	}
+
+	ft_printf("distinct paths:\n\n");
+	while (dist->is_valid) {
+		ft_printf("Route length: %i\n", dist->len);
+		while (dist->path->src != t)
+		{
+			ft_printf("%s -> ", dist->path->to->id);
+			dist->path = dist->path->prev_in_path;
+		}
+		ft_printf("%s -> %s\n\n", dist->path->to->id, dist->path->src->id);
+		dist = dist->next;
+	}
+}
 
 /*
 ** lem_in is a program that finds all paths in an undirected graph for n ants
@@ -28,38 +56,31 @@
 **	5. distribute ants to paths and prepare output strings
 **	6. print moves per turn
 */
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_lem	lem;
 	t_input	*input;
 	t_index	*index;
-	t_route	*route;
+	t_route	*overlap;
+	t_route	*distinct;
 
 	lem = init_lem();
 	input = read_input();
 	index = init_index();
-	route = NULL;
 	lem.error = parse_input(input, index, &lem);
 	if (lem.error)
-		return (die(&input, &index, &lem, &route));
-	route = find_paths(&lem, get(index, lem.source), get(index, lem.sink));
-//	if (lem.error)
-//		return (die(&input, &index, &lem, &route));
-	route = sort_paths(route);
-
-	ft_printf("reversed paths in increasing order of length:\n\n");
-	while (route->is_valid) {
-		ft_printf("Route length: %i\n", route->len);
-		while (!ft_strequ(route->path->src->id, lem.source)) {
-			ft_printf("%s <- ", route->path->to->id);
-			route->path = route->path->prev_in_path;
-		}
-		ft_printf("%s <- %s\n\n", route->path->to->id, route->path->src->id);
-		route = route->next;
-	}
-	system("leaks lem-in");
-
+		return (die(&input, &index, &lem, NULL));
+	overlap = find_paths(&lem, get(index, lem.source), get(index, lem.sink));
+	if (lem.error)
+		return (die(&input, &index, &lem, &overlap));
+	overlap = sort_paths(overlap);
+	distinct = find_paths(&lem, get(index, lem.sink), get(index, lem.source));
+	if (!lem.error)
+		distinct = sort_paths(distinct);
 //	print_input(input);
-//	print_moves(sort_paths(route), &lem);
+//	print_moves(overlap, distinct, &lem);
+	if (argc > 1 && ft_strequ(argv[1], "--paths"))
+		print_paths(overlap, distinct, get(index, lem.source),
+		get(index, lem.sink));
 	return (0);
 }

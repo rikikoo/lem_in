@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 11:28:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 22:54:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_lem	init_lem(void)
 	lem.source = NULL;
 	lem.sink = NULL;
 	lem.error = 0;
+	lem.n_routes = 0;
 	return (lem);
 }
 
@@ -88,8 +89,7 @@ t_edge	*new_edge(t_vertex *src, t_vertex *dst)
 		return (NULL);
 	edge->src = src;
 	edge->to = dst;
-	edge->flow = 0;
-	edge->cap = 0;
+	edge->cap = 1;
 	edge->next_adjacent = NULL;
 	edge->prev_in_path = NULL;
 	return (edge);
@@ -109,7 +109,6 @@ t_route	*new_route(int iteration)
 		return (NULL);
 	route->i = iteration;
 	route->is_valid = 0;
-	route->is_unique = 0;
 	route->len = 0;
 	route->path = NULL;
 	route->next = NULL;

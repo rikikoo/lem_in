@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 11:31:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 23:42:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_route	*sort_paths(t_route *route)
 	prev = NULL;
 	curr = route;
 	head = curr;
-	while (curr->next->is_valid)
+	while (curr->is_valid)
 	{
 		next = curr->next;
 		while (next->is_valid)

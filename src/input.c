@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/10 19:43:54 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 15:20:57 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ t_input	*read_input(void)
 	input = new_node();
 	if (!input)
 		return (NULL);
-	input->line = NULL;
-	input->next = NULL;
 	head = input;
 	while (1)
 	{

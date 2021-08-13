@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 11:27:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 22:54:08 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 ** ants: nbr of ants we have to transport through the graph
 ** vertices: nbr of vertices in the graph
 ** edges: nbr of edges in the graph
-** max_flow: nbr of ants we can send through the graph at once
 ** source: name/id of the source vertex
 ** sink: name/id of the sink vertex
 ** error: stores a negative integer in case an error occurs
@@ -39,6 +38,7 @@ typedef struct s_lem
 	char	*source;
 	char	*sink;
 	int		error;
+	int		n_routes;
 }	t_lem;
 
 /*
@@ -72,9 +72,7 @@ typedef struct s_vertex
 /*
 ** @src: the edge's source vertex
 ** @dst: the edge's destination vertex
-** @flow: flow along the edge, 0 or 1
 ** @cap: capacity of the edge, 0 or 1
-** @reverse: pointer to the edge in the reverse direction (@src and @to flipped)
 ** @next_adjacent: a pointer to the next edge that has the same source vertex
 ** @prev_in_path: a pointer to the edge before the current one on a path (the
 **	path will be stored in reverse order, from sink to source)
@@ -83,7 +81,6 @@ typedef struct s_edge
 {
 	struct s_vertex	*src;
 	struct s_vertex	*to;
-	int				flow;
 	int				cap;
 	struct s_edge	*next_adjacent;
 	struct s_edge	*prev_in_path;
@@ -93,7 +90,6 @@ typedef struct s_route
 {
 	int				i;
 	int				is_valid;
-	int				is_unique;
 	int				len;
 	struct s_edge	*path;
 	struct s_route	*next;

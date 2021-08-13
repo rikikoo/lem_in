@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/12 23:48:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/13 15:07:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 /*
 ** adds the source vertex pointer to the start of the previously malloc'd array
-** and returns an otherwise empty array of t_vertex pointers
+** and returns an otherwise NULL'd array of t_vertex pointers
 */
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < size)
