@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:20:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/16 21:12:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_lem	init_lem(void)
 	lem.source = NULL;
 	lem.sink = NULL;
 	lem.error = 0;
-	lem.n_routes = 0;
+	lem.n_paths = 0;
 	return (lem);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/13 23:25:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/16 23:10:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static t_edge	*store_path(t_route *route, t_vertex *source, t_lem *lem)
 	}
 	route->path->prev_in_path = NULL;
 	route->is_valid = 1;
-	lem->n_routes++;
+	lem->n_paths++;
 	return (head);
 }
 
@@ -100,7 +100,7 @@ t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 
 	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
 	sink->visited--;
-	bfs_iteration = lem->n_routes + 1;
+	bfs_iteration = lem->n_paths + 1;
 	route = new_route(bfs_iteration);
 	head = route;
 	if (!queue || !route)

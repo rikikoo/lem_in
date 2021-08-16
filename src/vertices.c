@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:15:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/16 22:29:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ static int	vertex_parse(t_hashtab *ht, char *str, t_lem *lem, int v)
 	if (arr[0][0] == 'L' || arr[0][0] == '#' || \
 	!ft_digits_only(arr[1]) || !ft_digits_only(arr[2]))
 		return (-1);
-	if (v == 1)
-		lem->sink = ft_strdup(arr[0]);
-	else if (v == 0)
-		lem->source = ft_strdup(arr[0]);
 	set(ht, arr[0], ft_atoi(arr[1]), ft_atoi(arr[2]));
+	if (v == 1)
+		lem->sink = get(ht, arr[0]);
+	else if (v == 0)
+		lem->source = get(ht, arr[0]);
 	ft_liberator(4, &arr[0], &arr[1], &arr[2], &arr[3]);
 	free(arr);
 	return (0);

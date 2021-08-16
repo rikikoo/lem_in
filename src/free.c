@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:26:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/16 22:28:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,6 @@ int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
 	free_input(input);
 	free_ht(ht);
 	free_route(route);
-	if (lem->source)
-		free(lem->source);
-	if (lem->sink)
-		free(lem->sink);
 	return (error);
 }
 
