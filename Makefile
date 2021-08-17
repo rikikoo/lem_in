@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/08/16 23:10:40 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/08/17 17:35:36 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC =	$(S)main.c \
 		$(S)utils.c \
 		$(S)free.c \
 		$(S)sort.c \
+		$(S)prep.c \
 		$(S)output.c
 
 OBJ = $(SRC:$S%=$O%.o)

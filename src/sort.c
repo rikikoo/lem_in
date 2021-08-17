@@ -6,31 +6,60 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/16 21:44:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/17 23:10:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-int	sort_ants(t_route *overlap, t_route *disjoint, int ants)
+static t_route	*path_reverse(t_route *route)
+{
+	t_route	*new;
+	t_edge	*head;
+
+	new = new_route(1);
+	if (!new)
+		return (NULL);
+	new->is_valid = 1;
+	new->len = route->len;
+	head = route->path;
+	while (route->path)
+	{
+		path_prepend(&new->path, route->path);
+		route->path = route->path->prev_in_path;
+	}
+	free_route(&route);
+	return (new);
+}
+
+t_route	*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem)
 {
 	int		paths_needed;
 	int		minimum_turns;
+	int		least_turns;
+	t_route	*head;
 
+	lem->n_paths = 1;
 	if (!disjoint->is_valid)
-		return (0);
+		return (path_reverse(overlap));
 	paths_needed = 0;
-	minimum_turns = overlap->len - 1 + ants;
+	minimum_turns = overlap->len - 1 + lem->ants;
+	head = disjoint;
+	least_turns = ~paths_needed;
 	while (disjoint != NULL && disjoint->is_valid)
 	{
 		paths_needed++;
-		if ((ants / paths_needed) + disjoint->len < minimum_turns)
-				break;
+		if ((lem->ants / paths_needed) + disjoint->len < minimum_turns && \
+		least_turns == (lem->ants / paths_needed) + disjoint->len)
+			break ;
+		least_turns = (lem->ants / paths_needed) + disjoint->len;
 		disjoint = disjoint->next;
 	}
 	if (paths_needed < 2)
-		return (0);
-	return (paths_needed);
+		return (path_reverse(overlap));
+	lem->n_paths = paths_needed;
+	free_route(&overlap);
+	return (head);
 }
 
 /*

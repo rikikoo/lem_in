@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/16 22:28:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/17 22:44:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	free_ht(t_hashtab **ht)
 	free(*ht);
 }
 
-static void	free_route(t_route **route)
+void	free_route(t_route **route)
 {
 	t_route	*tmp;
 
@@ -65,6 +65,26 @@ static void	free_route(t_route **route)
 		*route = (*route)->next;
 		free(tmp);
 	}
+}
+
+void	free_output(char ****out)
+{
+	int	outer_ptr;
+	int	inner_ptr;
+
+	outer_ptr = 0;
+	inner_ptr = 0;
+	while ((*out)[outer_ptr])
+	{
+		while ((**out)[inner_ptr])
+		{
+			free((**out)[inner_ptr]);
+			inner_ptr++;
+		}
+		free((*out)[outer_ptr]);
+		outer_ptr++;
+	}
+	free(*out);
 }
 
 int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
@@ -77,7 +97,7 @@ int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
 	if (error < 0)
 	{
 		if (error == -1)
-			ft_printf("ERROR: No ants specified\n");
+			ft_printf("ERROR: Number of ants not specified\n");
 		else if (error == -2)
 			ft_printf("ERROR: Invalid rooms specified\n");
 		else if (error == -3)
@@ -89,24 +109,4 @@ int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
 	free_ht(ht);
 	free_route(route);
 	return (error);
-}
-
-void	free_output(char ****out, t_lem *lem)
-{
-	int	outer_ptr;
-	int	inner_ptr;
-
-	outer_ptr = 0;
-	inner_ptr = 0;
-	while (outer_ptr < lem->ants)
-	{
-		while (**out[inner_ptr])
-		{
-			free(**out[inner_ptr]);
-			inner_ptr++;
-		}
-		free(*out[outer_ptr]);
-		outer_ptr++;
-	}
-	free(*out);
 }

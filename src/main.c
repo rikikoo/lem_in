@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/16 22:37:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/17 22:28:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
 {
-	ft_printf("**** Reversed, possibly overlapping paths: ****\n\n");
+	ft_printf("**** Reversed, likely overlapping paths: ****\n\n");
 	while (olap->is_valid)
 	{
 		ft_printf("Path length: %i\n", olap->len);
@@ -79,9 +79,6 @@ int	main(int argc, char **argv)
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(olap, disj, lem.source, lem.sink);
 	else
-	{
-		print_input(input);
-		print_moves(olap, disj, lem, sort_ants(olap, disj, lem.ants));
-	}
+		print_moves(sort_ants(olap, disj, &lem), lem, input);
 	return (0);
 }
