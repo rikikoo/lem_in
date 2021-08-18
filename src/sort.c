@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/17 23:10:49 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/18 18:46:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,19 @@
 static t_route	*path_reverse(t_route *route)
 {
 	t_route	*new;
-	t_edge	*head;
+	t_edge	*tmp;
 
 	new = new_route(1);
 	if (!new)
 		return (NULL);
 	new->is_valid = 1;
 	new->len = route->len;
-	head = route->path;
 	while (route->path)
 	{
-		path_prepend(&new->path, route->path);
+		tmp = new->path;
+		new->path = route->path;
 		route->path = route->path->prev_in_path;
+		new->path->prev_in_path = tmp;
 	}
 	free_route(&route);
 	return (new);
@@ -34,31 +35,27 @@ static t_route	*path_reverse(t_route *route)
 
 t_route	*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem)
 {
-	int		paths_needed;
-	int		minimum_turns;
-	int		least_turns;
+	int		turns_floor;
+	int		turns_least;
+	int		turns;
 	t_route	*head;
 
 	lem->n_paths = 1;
-	if (!disjoint->is_valid)
-		return (path_reverse(overlap));
-	paths_needed = 0;
-	minimum_turns = overlap->len - 1 + lem->ants;
+	turns_floor = overlap->len - 1 + lem->ants;
+	turns_least = turns_floor;
+	turns = (lem->ants / lem->n_paths) + disjoint->len;
 	head = disjoint;
-	least_turns = ~paths_needed;
-	while (disjoint != NULL && disjoint->is_valid)
+	while (disjoint->is_valid && (turns >= turns_floor || turns <= turns_least))
 	{
-		paths_needed++;
-		if ((lem->ants / paths_needed) + disjoint->len < minimum_turns && \
-		least_turns == (lem->ants / paths_needed) + disjoint->len)
-			break ;
-		least_turns = (lem->ants / paths_needed) + disjoint->len;
+		turns_least = (lem->ants / lem->n_paths) + disjoint->len;
+		lem->n_paths++;
 		disjoint = disjoint->next;
+		turns = (lem->ants / lem->n_paths) + disjoint->len;
 	}
-	if (paths_needed < 2)
+	if (lem->n_paths < 2)
 		return (path_reverse(overlap));
-	lem->n_paths = paths_needed;
 	free_route(&overlap);
+	lem->n_paths--;
 	return (head);
 }
 
