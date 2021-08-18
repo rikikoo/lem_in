@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/08/17 17:35:36 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/08/18 22:28:40 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,10 @@ LIB = $(L)libft.a
 LIBINC = $(L)$(I)
 CCOMP = gcc
 CFLAGS = -Wall -Wextra -Werror
+DFLAGS = -g -fsanitize=address
 NAME = lem-in
+
+MAKEFLAGS += --silent
 
 .PHONY: all clean fclean re
 
@@ -49,12 +52,12 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-#	@make -C $(L)
-#	@make -C $(L) clean
+	@make -C $(L)
+	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:
-	gcc -g -fsanitize=address src/*.c libft/libft.a -I $(INC) -I $(LIBINC)
+	$(CCOMP) $(DFLAGS) $(SRC) $(LIB) -I $(INC) -I $(LIBINC)
 
 clean:
 	rm -rf $O
