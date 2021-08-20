@@ -6,12 +6,17 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/17 22:28:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 18:12:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** prints all paths if program got --paths as an argument
+**
+** if there wasn't a 25 line restriction, both paths would be freed here
+*/
 static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
 {
 	ft_printf("**** Reversed, likely overlapping paths: ****\n\n");
@@ -55,7 +60,7 @@ static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
 **		each run
 **	4. find disjoint, non-overlapping paths by doing a reverse BFS on the graph
 **	5. calculate how many paths are needed and prepare output strings
-**	6. print moves per turn
+**	6. print ant movements
 */
 int	main(int argc, char **argv)
 {
@@ -79,6 +84,8 @@ int	main(int argc, char **argv)
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(olap, disj, lem.source, lem.sink);
 	else
-		print_moves(sort_ants(olap, disj, &lem), lem, input);
+		print_output(sort_ants(olap, disj, &lem), lem, input);
+	free_input(&input);
+	free_ht(&ht);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:14:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 16:53:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,11 @@ t_input	*read_input(void)
 
 /*
 ** parses input, which contains all necessary info to construct the graph
+** i.e. 1) number of ants 2) vertex names and coordinates 3) graph's edges
 **
-** input: pointer to the program input linked list
-** ht: pointer to hash table for vertices
-** lem: pointer to a general runtime info struct
+** @input: pointer to the program input linked list
+** @ht: pointer to hash table for vertices
+** @lem: pointer to a general runtime info struct
 */
 int	parse_input(t_input *input, t_hashtab *ht, t_lem *lem)
 {
@@ -74,7 +75,7 @@ int	parse_input(t_input *input, t_hashtab *ht, t_lem *lem)
 	if (!input)
 		return (-2);
 	lem->edges = get_edges(input, ht);
-	if (lem->edges < 0)
+	if (lem->edges <= 0)
 		return (-3);
 	return (0);
 }

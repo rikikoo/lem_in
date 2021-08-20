@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/17 22:26:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 18:12:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*format_move(int ant, char *vertex)
 		return (NULL);
 	i = 0;
 	move[i] = 'L';
-	while (++i < (ant_len + 1))
+	while (++i <= ant_len)
 		move[i] = ant_str[i - 1];
 	move[i] = '-';
 	while (++i < (ant_len + vertex_len + 2))
@@ -84,35 +84,37 @@ char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 }
 
 /*
-** creates an empty path (int j) for each ant (int i). every path is an array of
-** strings and their length is as long as the longest path used.
-** returns a pointer to the newly allocated array of strings in an array.
+** creates an empty path (int i) for each ant and each move (int j) per path.
+** every path is an array of strings.
+** returns a pointer to the array of strings.
 **
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct
 */
 char	***prepare_output_arr(t_route *route, t_lem lem)
 {
+	t_route	*head;
 	char	***out;
 	int		i;
 	int		j;
 
+	head = route;
 	out = (char ***)malloc(sizeof(char **) * (lem.ants + 1));
 	if (!out)
 		return (NULL);
-	i = 0;
-	while (++i < lem.n_paths)
-		route = route->next;
-	i = 0;
-	while (i < lem.ants)
+	i = -1;
+	while (++i < lem.ants)
 	{
-		j = -1;
 		out[i] = (char **)malloc(sizeof(char *) * (route->len + 1));
 		if (!out[i])
 			return (NULL);
+		j = -1;
 		while (++j <= route->len)
 			out[i][j] = NULL;
-		i++;
+		if ((i + 1) % lem.n_paths > 0)
+			route = route->next;
+		else
+			route = head;
 	}
 	out[i] = NULL;
 	return (out);

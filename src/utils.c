@@ -6,15 +6,15 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:23:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 18:02:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** adds the source vertex pointer to the start of @queue and returns an
-** otherwise NULL'd array of t_vertex pointers
+** adds the @source vertex pointer to the start of @queue and returns an
+** otherwise NULL'd array of t_vertex pointers of the size @size
 */
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 {
@@ -32,7 +32,7 @@ t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 }
 
 /*
-** removes first item from @queue and returns it
+** "removes" first item from @queue (by incrementing the pointer) and returns it
 */
 t_vertex	*pop_first(t_vertex ***queue)
 {
@@ -46,20 +46,20 @@ t_vertex	*pop_first(t_vertex ***queue)
 }
 
 /*
-** if not already in queue @arr, appends @vertex to the end of it
+** if not already in @queue, appends @vertex to the end of it
 */
-void	queue_append(t_vertex ***arr, t_vertex *vertex)
+void	queue_append(t_vertex ***queue, t_vertex *vertex)
 {
 	int	i;
 
 	i = 0;
-	while ((*arr)[i] != NULL)
+	while ((*queue)[i] != NULL)
 	{
-		if ((*arr)[i] == vertex)
+		if ((*queue)[i] == vertex)
 			return ;
 		i++;
 	}
-	(*arr)[i] = vertex;
+	(*queue)[i] = vertex;
 }
 
 /*

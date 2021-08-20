@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/16 23:10:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 17:03:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** remove capacity from the edges along @path and count its length
+** remove capacity from the edges along @route->path and count its length
 */
 static t_edge	*send_flow(t_route *route)
 {
@@ -89,7 +89,13 @@ static int	bfs(t_vertex **queue, t_route *route, t_vertex *sink)
 
 /*
 ** finds a path from @source to @sink, stores it and updates its flow.
-** repeats until no more paths are found. returns the list of found paths.
+** repeats until no more paths are found.
+** returns the list of found paths. if the sink could not be reached, an error
+** code is stored in @lem.
+**
+** @lem: pointer to a general runtime info struct
+** @source: pointer to the graph's source vertex
+** @sink: pointer to the graph's sink vertex
 */
 t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 {

@@ -6,19 +6,19 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:17:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 16:52:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** appends new edge to the list of edges coming out of a vertex
+** appends a new edge to the list of edges coming out of a vertex
 **
 ** @src: pointer to the edge's source vertex
-** @dst: pointer to the edge's sink vertex
+** @to: pointer to the edge's sink vertex
 */
-static void	edge_append(t_vertex *src, t_vertex *dst)
+static void	edge_append(t_vertex *src, t_vertex *to)
 {
 	t_edge	*edge;
 
@@ -29,41 +29,40 @@ static void	edge_append(t_vertex *src, t_vertex *dst)
 		{
 			edge = edge->next_adjacent;
 		}
-		edge->next_adjacent = new_edge(src, dst);
+		edge->next_adjacent = new_edge(src, to);
 	}
 	else
-		src->edge = new_edge(src, dst);
+		src->edge = new_edge(src, to);
 }
 
 /*
 ** splits input line containing the two vertex ids into a string array,
 ** checks that the vertices exist. if yes, append an edge to both directions.
 **
-** @ht: pointer to the hash table
 ** @line: raw line of program input
 */
 static int	check_edge(t_hashtab *ht, char *line)
 {
 	char		**arr;
 	t_vertex	*src;
-	t_vertex	*dst;
+	t_vertex	*to;
 
 	arr = ft_strsplit(line, '-');
 	if (ft_arrlen((void **)arr) != 2)
 		return (0);
 	src = get(ht, arr[0]);
-	dst = get(ht, arr[1]);
-	if (!src || !dst)
+	to = get(ht, arr[1]);
+	if (!src || !to)
 		return (0);
-	edge_append(src, dst);
-	edge_append(dst, src);
+	edge_append(src, to);
+	edge_append(to, src);
 	ft_liberator(2, &arr[0], &arr[1]);
 	free(arr);
 	return (1);
 }
 
 /*
-** parses raw input for graph edges.
+** parses raw input for graph edges. Skips comment lines (that start with '#').
 ** returns number of edges on success, -1 otherwise.
 **
 ** @input: list of input lines, starting from the point where the edges begin

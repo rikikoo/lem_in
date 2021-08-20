@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/18 15:18:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 17:10:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 ** @edges: nbr of edges in the graph
 ** @source: pointer to the source vertex
 ** @sink: pointer to the sink vertex
-** @error: stores a negative integer in case an error occurs
+** @error: stores an error code (negative integer) in case an error occurs
 ** @n_paths: initially the total number of paths found, later overwritten by the
 **	number of paths the ants will be distributed to
 */
@@ -45,7 +45,7 @@ typedef struct s_lem
 
 /*
 ** linked list for the program's input, containing the data for constructing
-** the graph
+** the graph. each list element contains a single line of input.
 */
 typedef struct s_input
 {
@@ -91,7 +91,7 @@ typedef struct s_edge
 /*
 ** @i: route's ordinal number, used to compare whether a vertex has been visited
 **	during a breadth-first search iteration
-** @is_valid: marked True (1) if this path reached the sink
+** @is_valid: marked True (1) if the path in this instance reached the sink
 ** @len: length of this path
 ** @path: pointer to the head of the path
 ** @next: next route/path
@@ -127,16 +127,18 @@ t_route		*new_route(int iteration);
 t_route		*find_paths(t_lem *lem, t_vertex *s, t_vertex *t);
 t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
 t_vertex	*pop_first(t_vertex ***queue);
-void		queue_append(t_vertex ***arr, t_vertex *vertex);
+void		queue_append(t_vertex ***queue, t_vertex *vertex);
 void		path_prepend(t_edge **path, t_edge *edge);
 void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
 t_route		*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem);
 char		***prepare_output_arr(t_route *route, t_lem lem);
 char		***fill_output_arr(t_route *route, t_lem lem, char ***out);
-void		print_moves(t_route *route, t_lem lem, t_input *input);
+void		print_output(t_route *route, t_lem lem, t_input *input);
+void		free_input(t_input **input);
+void		free_ht(t_hashtab **ht);
 void		free_route(t_route **route);
-void		free_output(char ****out);
+void		free_output(char ***out);
 int			die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route);
 
 #endif

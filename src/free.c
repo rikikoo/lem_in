@@ -6,13 +6,13 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/17 22:44:24 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 16:10:50 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static void	free_input(t_input **input)
+void	free_input(t_input **input)
 {
 	t_input	*tmp;
 
@@ -26,7 +26,7 @@ static void	free_input(t_input **input)
 	}
 }
 
-static void	free_ht(t_hashtab **ht)
+void	free_ht(t_hashtab **ht)
 {
 	int			i;
 	t_vertex	*tmp_vertex;
@@ -59,7 +59,7 @@ void	free_route(t_route **route)
 {
 	t_route	*tmp;
 
-	while (*route)
+	while (*route != NULL)
 	{
 		tmp = *route;
 		*route = (*route)->next;
@@ -67,24 +67,25 @@ void	free_route(t_route **route)
 	}
 }
 
-void	free_output(char ****out)
+void	free_output(char ***out)
 {
-	int	outer_ptr;
-	int	inner_ptr;
+	int		i_path;
+	int		i_move;
 
-	outer_ptr = 0;
-	inner_ptr = 0;
-	while ((*out)[outer_ptr])
+	i_path = 0;
+	i_move = 0;
+	while (out[i_path] != NULL)
 	{
-		while ((**out)[inner_ptr])
+		while (out[i_path][i_move] != NULL)
 		{
-			free((**out)[inner_ptr]);
-			inner_ptr++;
+			free(out[i_path][i_move]);
+			i_move++;
 		}
-		free((*out)[outer_ptr]);
-		outer_ptr++;
+		i_move = 0;
+		free(out[i_path]);
+		i_path++;
 	}
-	free(*out);
+	free(out);
 }
 
 int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)

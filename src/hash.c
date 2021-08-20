@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/14 00:18:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 16:55:33 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** returns a djb2 hash of the vertex name/id
 **
-** key: name/id of the vertex to be hashed
+** @key: name/id of the vertex to be hashed
 */
 static size_t	hashof(const char *key)
 {
@@ -35,8 +35,8 @@ static size_t	hashof(const char *key)
 /*
 ** returns the requested vertex pointer if found in the hash table, else NULL
 **
-** ht: a pointer to t_hashtab
-** key: name/id of the vertex to get
+** @ht: a pointer to t_hashtab
+** @key: name/id of the vertex to get
 */
 t_vertex	*get(t_hashtab *ht, const char *key)
 {

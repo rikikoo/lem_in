@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/16 21:12:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 16:53:36 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ t_vertex	*new_vertex(const char *key, const int x, const int y)
 ** allocates memory for it and returns a pointer to a new edge
 **
 ** @src: the edge's source vertex
-** @dst: the edge's sink vertex
+** @to: the edge's sink vertex
 */
-t_edge	*new_edge(t_vertex *src, t_vertex *dst)
+t_edge	*new_edge(t_vertex *src, t_vertex *to)
 {
 	t_edge	*edge;
 
@@ -88,7 +88,7 @@ t_edge	*new_edge(t_vertex *src, t_vertex *dst)
 	if (!edge)
 		return (NULL);
 	edge->src = src;
-	edge->to = dst;
+	edge->to = to;
 	edge->cap = 1;
 	edge->next_adjacent = NULL;
 	edge->prev_in_path = NULL;

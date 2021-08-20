@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/16 22:29:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/20 16:48:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 ** vertex_parse() splits the three attributes into their own strings, validates
 ** each one and stores them into the hash table.
 **
-** ht: pointer to hash table for vertices
-** str: current input line string
-** lem: pointer to a general runtime info struct
-** v: deteremines whether str contains source (0), sink (1) or intermediate (2)
+** @str: current input line string
+** @v: deteremines whether str contains source (0), sink (1) or intermediate (2)
 ** 	vertex info
 */
 static int	vertex_parse(t_hashtab *ht, char *str, t_lem *lem, int v)
@@ -47,14 +45,10 @@ static int	vertex_parse(t_hashtab *ht, char *str, t_lem *lem, int v)
 
 /*
 ** source and sink are denoted in a preceding line by "##start" or "##end".
-** if the main loop in parse_input() encounters a line that starts with a '#',
+** if the main loop in get_vertices() encounters a line that starts with a '#',
 ** check_command() will check which command it is and store the following line
 ** accordingly to struct t_lem. lines with a comment or an invalid command are
 ** skipped.
-**
-** input: pointer to list of instructions
-** ht: pointer to hast table for vertices
-** lem: pointer to a general runtime info struct
 */
 static t_input	*check_command(t_input *input, t_hashtab *ht, t_lem *lem)
 {
@@ -88,9 +82,9 @@ static t_input	*check_command(t_input *input, t_hashtab *ht, t_lem *lem)
 ** and identify source and sink vertices. if both source and sink weren't found,
 ** the program will exit and return error.
 **
-** input: pointer to list of instructions
-** ht: pointer to hash table of vertices
-** lem: pointer to a general runtime info struct
+** @input: pointer to list of instructions
+** @ht: pointer to hash table of vertices
+** @lem: pointer to a general runtime info struct
 */
 t_input	*get_vertices(t_input *input, t_hashtab *ht, t_lem *lem)
 {

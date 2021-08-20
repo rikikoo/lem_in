@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/18 18:46:58 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/19 18:51:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ t_route	*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem)
 		turns = (lem->ants / lem->n_paths) + disjoint->len;
 	}
 	if (lem->n_paths < 2)
+	{
+		free_route(&head);
 		return (path_reverse(overlap));
+	}
 	free_route(&overlap);
 	lem->n_paths--;
 	return (head);
