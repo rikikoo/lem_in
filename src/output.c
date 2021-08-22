@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/22 20:09:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/22 20:16:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	print_a_move(char *move, int ant, int *has_finished)
 		has_finished[ant] = 1;
 		return (1);
 	}
-	ft_printf("%s", move);
+	ft_putstr("%s", move);
 	return (0);
 }
 
