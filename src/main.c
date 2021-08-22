@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 18:12:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/21 20:03:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** prints all paths if program got --paths as an argument
+** prints all paths if program got "--paths" as an argument
 **
 ** if there wasn't a 25 line restriction, both paths would be freed here
 */
