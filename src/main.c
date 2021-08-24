@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/21 20:03:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/24 19:05:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,25 @@
 **
 ** if there wasn't a 25 line restriction, both paths would be freed here
 */
-static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
+static void	print_paths(t_route *olap, t_route *disj, t_vertex *sink)
 {
-	ft_printf("**** Reversed, likely overlapping paths: ****\n\n");
-	while (olap->is_valid)
+	ft_printf("**** Likely overlapping paths: ****\n\n");
+	while (olap && olap->is_valid)
 	{
 		ft_printf("Path length: %i\n", olap->len);
-		while (olap->path->src != s)
+		while (olap->path->to != sink)
 		{
-			ft_printf("%s <- ", olap->path->to->id);
+			ft_printf("%s -> ", olap->path->src->id);
 			olap->path = olap->path->prev_in_path;
 		}
-		ft_printf("%s <- %s\n\n", olap->path->to->id, olap->path->src->id);
+		ft_printf("%s -> %s\n\n", olap->path->src->id, olap->path->to->id);
 		olap = olap->next;
 	}
 	ft_printf("**** Disjoint paths: ****\n\n");
-	while (disj->is_valid)
+	while (disj && disj->is_valid)
 	{
 		ft_printf("Path length: %i\n", disj->len);
-		while (disj->path->src != t)
+		while (disj->path->src != sink)
 		{
 			ft_printf("%s -> ", disj->path->to->id);
 			disj->path = disj->path->prev_in_path;
@@ -58,9 +58,10 @@ static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
 **	2. validate and store graph information
 **	3. saturate graph by doing repeated searches forward, updating flow after
 **		each run
-**	4. find disjoint, non-overlapping paths by doing a reverse BFS on the graph
-**	5. calculate how many paths are needed and prepare output strings
-**	6. print ant movements
+**	4. separate disjoint, non-overlapping paths from overlapping paths
+**	5. find disjoint paths by doing a reverse BFS on the graph
+**	6. calculate how many paths are needed and prepare output strings
+**	7. print ant movements
 */
 int	main(int argc, char **argv)
 {
@@ -80,9 +81,10 @@ int	main(int argc, char **argv)
 	olap = sort_paths(find_paths(&lem, lem.source, lem.sink));
 	if (lem.error)
 		return (die(&input, &ht, &lem, &olap));
+	olap = find_distinct(olap, lem);
 	disj = sort_paths(find_paths(&lem, lem.sink, lem.source));
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
-		print_paths(olap, disj, lem.source, lem.sink);
+		print_paths(olap, disj, lem.sink);
 	else
 		print_output(sort_ants(olap, disj, &lem), lem, input);
 	free_input(&input);

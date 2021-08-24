@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 18:02:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/22 20:25:01 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	print_input(t_input *input)
 {
 	while (input->next)
 	{
-		ft_printf("%s\n", input->line);
+		ft_putendl(input->line);
 		input = input->next;
 	}
 	ft_putchar('\n');

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 17:10:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/24 13:49:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ void		queue_append(t_vertex ***queue, t_vertex *vertex);
 void		path_prepend(t_edge **path, t_edge *edge);
 void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
+t_route		*find_distinct(t_route *route, t_lem lem);
+t_route		*path_reverse(t_route *route);
 t_route		*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem);
 char		***prepare_output_arr(t_route *route, t_lem lem);
 char		***fill_output_arr(t_route *route, t_lem lem, char ***out);

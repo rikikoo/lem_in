@@ -6,21 +6,21 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/19 18:51:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/24 18:59:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static t_route	*path_reverse(t_route *route)
+t_route	*path_reverse(t_route *route)
 {
 	t_route	*new;
 	t_edge	*tmp;
 
-	new = new_route(1);
+	new = new_route(route->i);
 	if (!new)
 		return (NULL);
-	new->is_valid = 1;
+	new->is_valid = route->is_valid;
 	new->len = route->len;
 	while (route->path)
 	{
@@ -29,7 +29,6 @@ static t_route	*path_reverse(t_route *route)
 		route->path = route->path->prev_in_path;
 		new->path->prev_in_path = tmp;
 	}
-	free_route(&route);
 	return (new);
 }
 
