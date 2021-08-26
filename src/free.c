@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 16:10:50 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/24 22:03:33 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,11 @@ void	free_output(char ***out)
 	free(out);
 }
 
-int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
+int	die_if_error(int error, t_input **input, t_hashtab **ht, t_route **route)
 {
-	int	error;
-
-	if (!input || !ht)
-		return (ft_printf("ERROR: Out of memory\n") * -1);
-	error = lem->error;
-	if (error < 0)
+	if (!error)
+		return (0);
+	else
 	{
 		if (error == -1)
 			ft_printf("ERROR: Number of ants not specified\n");
@@ -103,11 +100,13 @@ int	die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route)
 			ft_printf("ERROR: Invalid rooms specified\n");
 		else if (error == -3)
 			ft_printf("ERROR: Invalid rooms in links\n");
-		else
+		else if (error == -4)
 			ft_printf("ERROR: Sink not reachable\n");
+		else
+			ft_printf("ERROR: Out of memory\n");
 	}
 	free_input(input);
 	free_ht(ht);
 	free_route(route);
-	return (error);
+	exit(error);
 }

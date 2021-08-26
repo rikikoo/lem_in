@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prep.c                                             :+:      :+:    :+:   */
+/*   prep_output.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 18:12:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/25 19:40:20 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static char	*format_move(int ant, char *vertex)
 ** @lem: a general runtime info struct
 ** @out: pointer to an array of empty paths, prepared by prepare_output_arr()
 */
-char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
+char	***fill_output_arr(t_route *route, t_lem *lem, char ***out)
 {
 	int		move;
 	int		ant;
@@ -65,16 +65,16 @@ char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 	move = 0;
 	ant = 0;
 	head = route;
-	while (++ant <= lem.ants)
+	while (++ant <= lem->ants)
 	{
 		path_head = route->path;
 		while (++move <= route->len)
 		{
-			out[ant - 1][move - 1] = format_move(ant, route->path->src->id);
+			out[ant - 1][move - 1] = format_move(ant, route->path->to->id);
 			route->path = route->path->prev_in_path;
 		}
 		route->path = path_head;
-		if (ant % lem.n_paths > 0)
+		if (ant % lem->n_paths > 0)
 			route = route->next;
 		else
 			route = head;
@@ -91,7 +91,7 @@ char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct
 */
-char	***prepare_output_arr(t_route *route, t_lem lem)
+char	***prepare_output_arr(t_route *route, t_lem *lem)
 {
 	t_route	*head;
 	char	***out;
@@ -99,11 +99,11 @@ char	***prepare_output_arr(t_route *route, t_lem lem)
 	int		j;
 
 	head = route;
-	out = (char ***)malloc(sizeof(char **) * (lem.ants + 1));
+	out = (char ***)malloc(sizeof(char **) * (lem->ants + 1));
 	if (!out)
 		return (NULL);
 	i = -1;
-	while (++i < lem.ants)
+	while (++i < lem->ants)
 	{
 		out[i] = (char **)malloc(sizeof(char *) * (route->len + 1));
 		if (!out[i])
@@ -111,7 +111,7 @@ char	***prepare_output_arr(t_route *route, t_lem lem)
 		j = -1;
 		while (++j <= route->len)
 			out[i][j] = NULL;
-		if ((i + 1) % lem.n_paths > 0)
+		if ((i + 1) % lem->n_paths > 0)
 			route = route->next;
 		else
 			route = head;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   graph_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/22 20:25:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/25 17:55:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,4 @@ void	path_prepend(t_edge **path, t_edge *edge)
 	tmp = *path;
 	*path = edge;
 	(*path)->prev_in_path = tmp;
-}
-
-void	print_input(t_input *input)
-{
-	while (input->next)
-	{
-		ft_putendl(input->line);
-		input = input->next;
-	}
-	ft_putchar('\n');
 }

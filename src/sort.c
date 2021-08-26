@@ -6,58 +6,34 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/24 18:59:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/26 12:21:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-t_route	*path_reverse(t_route *route)
+t_route	*sort_ants(t_route *route, t_lem *lem)
 {
-	t_route	*new;
-	t_edge	*tmp;
-
-	new = new_route(route->i);
-	if (!new)
-		return (NULL);
-	new->is_valid = route->is_valid;
-	new->len = route->len;
-	while (route->path)
-	{
-		tmp = new->path;
-		new->path = route->path;
-		route->path = route->path->prev_in_path;
-		new->path->prev_in_path = tmp;
-	}
-	return (new);
-}
-
-t_route	*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem)
-{
-	int		turns_floor;
 	int		turns_least;
 	int		turns;
+	int		paths;
 	t_route	*head;
 
-	lem->n_paths = 1;
-	turns_floor = overlap->len - 1 + lem->ants;
-	turns_least = turns_floor;
-	turns = (lem->ants / lem->n_paths) + disjoint->len;
-	head = disjoint;
-	while (disjoint->is_valid && (turns >= turns_floor || turns <= turns_least))
+	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
+	head = route;
+	while (route->is_valid)
 	{
-		turns_least = (lem->ants / lem->n_paths) + disjoint->len;
-		lem->n_paths++;
-		disjoint = disjoint->next;
-		turns = (lem->ants / lem->n_paths) + disjoint->len;
+		turns = compare_combinations(route, lem, turns_least);
+		if (turns <= turns_least)
+		{
+			turns_least = turns;
+			head = route;
+			paths = lem->n_paths;
+		}
+		route = route->next;
 	}
-	if (lem->n_paths < 2)
-	{
-		free_route(&head);
-		return (path_reverse(overlap));
-	}
-	free_route(&overlap);
-	lem->n_paths--;
+	ft_printf("Route %d with its %d compatible routes is the shortest with %d turns\n", \
+	head->i, lem->n_paths, turns_least);
 	return (head);
 }
 
@@ -92,27 +68,25 @@ static void	swap(t_route **prev, t_route **current, t_route **next)
 t_route	*sort_paths(t_route *route)
 {
 	t_route	*prev;
-	t_route	*curr;
 	t_route	*next;
 	t_route	*head;
 
 	prev = NULL;
-	curr = route;
-	head = curr;
-	while (curr->is_valid)
+	head = route;
+	while (route->is_valid)
 	{
-		next = curr->next;
+		next = route->next;
 		while (next->is_valid)
 		{
-			if (curr->len > next->len)
+			if (route->len > next->len)
 			{
-				swap(&prev, &curr, &next);
-				head = curr;
+				swap(&prev, &route, &next);
+				head = route;
 			}
 			next = next->next;
 		}
-		prev = curr;
-		curr = curr->next;
+		prev = route;
+		route = route->next;
 	}
 	return (head);
 }

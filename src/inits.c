@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 16:53:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/25 15:45:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ t_route	*new_route(int iteration)
 	route->i = iteration;
 	route->is_valid = 0;
 	route->len = 0;
+	route->compatible_with = NULL;
 	route->path = NULL;
 	route->next = NULL;
 	return (route);

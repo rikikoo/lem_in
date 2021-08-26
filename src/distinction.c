@@ -6,31 +6,17 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/24 19:02:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/25 21:19:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static int	**init_clash(int size)
-{
-	int	**clash;
-	int	i;
-
-	clash = (int **)malloc(sizeof(int *) * size);
-	if (!clash)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		clash[i] = (int *)ft_zeros(size);
-		if (!clash[i])
-			return (NULL);
-		i++;
-	}
-	return (clash);
-}
-
+/*
+** checks @path's each vertex against @cmp's all vertices. if a match is
+** encountered, @cmp cannot be used simultaneously with @path and 0 is returned,
+** otherwise 1.
+*/
 static int	paths_are_distinct(t_edge *path, t_edge *cmp, t_vertex *sink)
 {
 	t_edge	*cmp_head;
@@ -50,80 +36,57 @@ static int	paths_are_distinct(t_edge *path, t_edge *cmp, t_vertex *sink)
 	return (1);
 }
 
-static int	**get_distinct_paths(t_route *route, t_lem lem)
+/*
+** for each route, mark compatibility with all other routes (i.e. do the paths
+** share vertices (False) or not (True)) in the route's "compatible_with" array
+*/
+static int	path_combinations(t_route *route, t_lem *lem)
 {
 	t_route	*next;
-	int		**clash;
 
+	if (!route)
+		return (-5);
 	next = route->next;
-	clash = init_clash(lem.n_paths);
-	if (!clash)
-		return (NULL);
 	while (route->is_valid)
 	{
+		route->compatible_with = (int *)ft_zeros(lem->n_paths);
+		if (!route->compatible_with)
+			return (-5);
 		next = route->next;
 		while (next->is_valid)
 		{
-			if (!paths_are_distinct(route->path, next->path, lem.sink))
-			{
-				clash[route->i - 1][next->i - 1] = 1;
-				ft_printf("Route %d clashes with %d\n", route->i-1, next->i-1);
-			}
+			if (paths_are_distinct(route->path, next->path, lem->sink))
+				route->compatible_with[next->i - 1] = 1;
 			next = next->next;
 		}
 		route = route->next;
 	}
-	return (clash);
-}
-
-static t_route	*revalidate_paths(t_route *route, t_lem lem, int **clash)
-{
-	int		n;
-	int		m;
-	t_route	*head;
-
-	if (!route || !clash)
-		return (NULL);
-	n = 0;
-	head = route;
-	while (n < lem.n_paths)
-	{
-		m = 0;
-		while (m < lem.n_paths)
-		{
-			if (clash[n][m])
-			{
-				route->is_valid = 0;
-				break ;
-			}
-			m++;
-		}
-		route = route->next;
-		n++;
-	}
-	return (head);
+	return (0);
 }
 
 /*
-** reverses all paths and sends them forward for parsing before returning a list
-** of distinct paths
+** reverses all paths (so that they're the right way around) and marks down
+** paths that do not intersect
 */
-t_route	*find_distinct(t_route *route, t_lem lem)
+t_route	*find_distinct(t_route *route, t_lem *lem)
 {
 	t_route	*reversed;
 	t_route	*rev_head;
 	t_route	*head;
 
+	if (lem->error)
+		return (route);
 	reversed = path_reverse(route);
 	rev_head = reversed;
 	head = route;
 	route = route->next;
-	while (route)
+	while (route && reversed)
 	{
 		reversed->next = path_reverse(route);
 		reversed = reversed->next;
 		route = route->next;
 	}
 	free_route(&head);
-	return (revalidate_paths(rev_head, lem, get_distinct_paths(rev_head, lem)));
+	lem->error = path_combinations(rev_head, lem);
+	return (rev_head);
 }

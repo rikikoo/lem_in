@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/24 13:49:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/26 12:19:22 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct s_route
 	int				i;
 	int				is_valid;
 	int				len;
+	int				*compatible_with;
 	struct s_edge	*path;
 	struct s_route	*next;
 }	t_route;
@@ -131,16 +132,18 @@ void		queue_append(t_vertex ***queue, t_vertex *vertex);
 void		path_prepend(t_edge **path, t_edge *edge);
 void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
-t_route		*find_distinct(t_route *route, t_lem lem);
+t_route		*find_distinct(t_route *route, t_lem *lem);
 t_route		*path_reverse(t_route *route);
-t_route		*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem);
-char		***prepare_output_arr(t_route *route, t_lem lem);
-char		***fill_output_arr(t_route *route, t_lem lem, char ***out);
-void		print_output(t_route *route, t_lem lem, t_input *input);
+int			compare_combinations(t_route *route, t_lem *lem, int turns_least);
+t_route		*sort_ants(t_route *disjoint, t_lem *lem);
+char		***prepare_output_arr(t_route *route, t_lem *lem);
+char		***fill_output_arr(t_route *route, t_lem *lem, char ***out);
+void		print_output(t_route *route, t_lem *lem, t_input *input);
 void		free_input(t_input **input);
 void		free_ht(t_hashtab **ht);
 void		free_route(t_route **route);
 void		free_output(char ***out);
-int			die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route);
+int			die_if_error(int error, t_input **input, t_hashtab **ht, \
+			t_route **route);
 
 #endif

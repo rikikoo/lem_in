@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/24 19:05:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/25 20:51:04 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,19 @@
 
 /*
 ** prints all paths if program got "--paths" as an argument
-**
-** if there wasn't a 25 line restriction, both paths would be freed here
 */
-static void	print_paths(t_route *olap, t_route *disj, t_vertex *sink)
+static void	print_paths(t_route *route, t_vertex *sink)
 {
-	ft_printf("**** Likely overlapping paths: ****\n\n");
-	while (olap && olap->is_valid)
+	while (route->is_valid)
 	{
-		ft_printf("Path length: %i\n", olap->len);
-		while (olap->path->to != sink)
+		ft_printf("Path length: %i\n", route->len);
+		while (route->path->to != sink)
 		{
-			ft_printf("%s -> ", olap->path->src->id);
-			olap->path = olap->path->prev_in_path;
+			ft_printf("%s -> ", route->path->src->id);
+			route->path = route->path->prev_in_path;
 		}
-		ft_printf("%s -> %s\n\n", olap->path->src->id, olap->path->to->id);
-		olap = olap->next;
-	}
-	ft_printf("**** Disjoint paths: ****\n\n");
-	while (disj && disj->is_valid)
-	{
-		ft_printf("Path length: %i\n", disj->len);
-		while (disj->path->src != sink)
-		{
-			ft_printf("%s -> ", disj->path->to->id);
-			disj->path = disj->path->prev_in_path;
-		}
-		ft_printf("%s -> %s\n\n", disj->path->to->id, disj->path->src->id);
-		disj = disj->next;
+		ft_printf("%s -> %s\n\n", route->path->src->id, route->path->to->id);
+		route = route->next;
 	}
 }
 
@@ -56,37 +41,46 @@ static void	print_paths(t_route *olap, t_route *disj, t_vertex *sink)
 **
 **	1. read instructions from STDIN
 **	2. validate and store graph information
-**	3. saturate graph by doing repeated searches forward, updating flow after
+**	3. saturate graph by doing repeated searches, updating edge capacities after
 **		each run
 **	4. separate disjoint, non-overlapping paths from overlapping paths
-**	5. find disjoint paths by doing a reverse BFS on the graph
-**	6. calculate how many paths are needed and prepare output strings
-**	7. print ant movements
+**	5. calculate how many paths are needed and prepare output strings
+**	6. print ant movements
 */
 int	main(int argc, char **argv)
 {
 	t_lem		lem;
 	t_hashtab	*ht;
 	t_input		*input;
-	t_route		*olap;
-	t_route		*disj;
+	t_route		*route;
 
 	lem = init_lem();
 	ht = init_ht();
 	input = read_input();
-	olap = NULL;
+	route = NULL;
 	lem.error = parse_input(input, ht, &lem);
-	if (lem.error)
-		return (die(&input, &ht, &lem, &olap));
-	olap = sort_paths(find_paths(&lem, lem.source, lem.sink));
-	if (lem.error)
-		return (die(&input, &ht, &lem, &olap));
-	olap = find_distinct(olap, lem);
-	disj = sort_paths(find_paths(&lem, lem.sink, lem.source));
+	die_if_error(lem.error, &input, &ht, &route);
+	route = sort_paths(find_paths(&lem, lem.source, lem.sink));
+	route = find_distinct(route, &lem);
+	die_if_error(lem.error, &input, &ht, &route);
+/*
+	t_route *head = route;
+	for (;route->is_valid; route = route->next) {
+		ft_printf("Route %d (len %d) is comaptible with:\n", route->i, route->len);
+		for (int i = 0; i < lem.n_paths; i++) {
+			if (route->compatible_with[i])
+				ft_printf("%d, ", i + 1);
+		}
+		ft_putchar('\n');
+	}
+	route = head;
+*/
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
-		print_paths(olap, disj, lem.sink);
+		print_paths(route, lem.sink);
 	else
-		print_output(sort_ants(olap, disj, &lem), lem, input);
+		print_output(sort_ants(route, &lem), &lem, input);
+	die_if_error(lem.error, &input, &ht, &route);
+	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);
 	return (0);
