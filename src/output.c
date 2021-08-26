@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/22 20:16:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/26 13:01:00 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 ** @has_finished: a "boolean" array where the value is True for ants that have
 **	reached the sink
 */
-static int	print_a_move(char *move, int ant, int *has_finished)
+static int	print_a_move(char *move, int ant, int *has_finished, int turn_limit)
 {
 	if (!move)
 	{
@@ -31,7 +31,11 @@ static int	print_a_move(char *move, int ant, int *has_finished)
 		has_finished[ant] = 1;
 		return (1);
 	}
-	ft_putstr("%s", move);
+	ft_putstr(move);
+	if (ant < turn_limit - 1)
+		ft_putchar(' ');
+	else
+		ft_putchar('\n');
 	return (0);
 }
 
@@ -62,14 +66,10 @@ static void	print_moves(char ***out, t_lem lem, int	*mov, int *fin)
 			turn_limit = lem.ants;
 		while (++ant < turn_limit)
 		{
-			ants_left -= print_a_move(out[ant][mov[ant]], ant, fin);
+			ants_left -= print_a_move(out[ant][mov[ant]], ant, fin, turn_limit);
 			if (out[ant][mov[ant]] != NULL)
-			{
 				mov[ant]++;
-				ft_putchar(' ');
-			}
 		}
-		ft_putchar('\n');
 	}
 }
 
