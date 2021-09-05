@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/25 19:40:20 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/05 18:50:46 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	***prepare_output_arr(t_route *route, t_lem *lem)
 
 	head = route;
 	out = (char ***)malloc(sizeof(char **) * (lem->ants + 1));
-	if (!out)
+	if (!out || !route)
 		return (NULL);
 	i = -1;
 	while (++i < lem->ants)

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/24 22:03:33 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/27 19:54:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	free_route(t_route **route)
 
 	while (*route != NULL)
 	{
+		if ((*route)->compatible_with)
+			free((*route)->compatible_with);
 		tmp = *route;
 		*route = (*route)->next;
 		free(tmp);

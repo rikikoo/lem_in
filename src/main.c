@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/26 13:11:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/27 20:09:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 /*
 ** prints all paths if program got "--paths" as an argument
 */
-static void	print_paths(t_route *route, t_vertex *sink)
+static void	print_paths(t_route *route, t_lem *lem)
 {
+	if (lem->error)
+		return ;
 	while (route->is_valid)
 	{
 		ft_printf("Path length: %i\n", route->len);
-		while (route->path->to != sink)
+		while (route->path->to != lem->sink)
 		{
 			ft_printf("%s -> ", route->path->src->id);
 			route->path = route->path->prev_in_path;
@@ -53,30 +55,18 @@ int	main(int argc, char **argv)
 	t_hashtab	*ht;
 	t_input		*input;
 	t_route		*route;
+	t_route		*bw_route;
 
 	lem = init_lem();
 	ht = init_ht();
 	input = read_input();
-	route = NULL;
 	lem.error = parse_input(input, ht, &lem);
+	route = find_paths(&lem, lem.source, lem.sink);
 	die_if_error(lem.error, &input, &ht, &route);
-	route = sort_paths(find_paths(&lem, lem.source, lem.sink));
-	route = find_distinct(route, &lem);
-	die_if_error(lem.error, &input, &ht, &route);
-/*
-	t_route *head = route;
-	for (;route->is_valid; route = route->next) {
-		ft_printf("Route %d (len %d) is comaptible with:\n", route->i, route->len);
-		for (int i = 0; i < lem.n_paths; i++) {
-			if (route->compatible_with[i])
-				ft_printf("%d, ", i + 1);
-		}
-		ft_putchar('\n');
-	}
-	route = head;
-*/
+	bw_route = find_paths(&lem, lem.sink, lem.source);
+	route = find_distinct(route, bw_route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
-		print_paths(route, lem.sink);
+		print_paths(route, &lem);
 	else
 		print_output(sort_ants(route, &lem), &lem, input);
 	die_if_error(lem.error, &input, &ht, &route);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rand_utils.c                                       :+:      :+:    :+:   */
+/*   misc_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/26 12:19:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/05 20:08:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,43 @@ int	compare_combinations(t_route *route, t_lem *lem, int turns_least)
 		next = next->next;
 	}
 	return (turns_least);
+}
+
+int	is_duplicate(t_edge *p0, t_edge *p1)
+{
+	int	same;
+
+	same = 0;
+	while (p0)
+	{
+		same += (p0->to == p1->to);
+		p0 = p0->prev_in_path;
+		p1 = p1->prev_in_path;
+	}
+	return (same);
+}
+
+void	remove_duplicates(t_route *route, t_lem *lem)
+{
+	t_route	*next;
+
+	route->i = 1;
+	lem->n_paths = 1;
+	next = route->next;
+	while (next->is_valid)
+	{
+		if (route->len == next->len)
+		{
+			if (is_duplicate(route->path, next->path))
+			{
+				route->next = next->next;
+			}
+		}
+		route->next->i = route->i + 1;
+		lem->n_paths++;
+		route = route->next;
+		next = route->next;
+	}
 }
 
 t_route	*path_reverse(t_route *route)

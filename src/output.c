@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/25 21:07:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/27 19:45:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	print_output(t_route *route, t_lem *lem, t_input *input)
 	int		*move_index;
 	int		*finished_ants;
 
+	if (lem->error)
+		return ;
 	out = fill_output_arr(route, lem, prepare_output_arr(route, lem));
 	move_index = (int *)ft_zeros(lem->ants);
 	finished_ants = (int *)ft_zeros(lem->ants);

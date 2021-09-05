@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 17:03:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/27 19:50:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 	bfs_iteration = lem->n_paths + 1;
 	route = new_route(bfs_iteration);
 	head = route;
-	if (!queue || !route)
+	if (lem->error || !queue || !route)
 		return (NULL);
 	while (1)
 	{
@@ -122,6 +122,6 @@ t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 		route = route->next;
 	}
 	free(queue);
-	lem->error = !(head->is_valid) * -4;
+	lem->error = (!(head->is_valid) && sink == lem->sink) * -4;
 	return (head);
 }
