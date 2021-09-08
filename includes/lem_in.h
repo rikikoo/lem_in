@@ -137,7 +137,7 @@ t_route		*path_reverse(t_route *route);
 void		remove_duplicates(t_route *route, t_lem *lem);
 int			is_duplicate(t_edge *p0, t_edge *p1);
 int			compare_combinations(t_route *route, t_lem *lem, int turns_least);
-t_route		*sort_ants(t_route *disjoint, t_lem *lem);
+t_route		*sort_ants(t_route *route, t_lem *lem);
 char		***prepare_output_arr(t_route *route, t_lem *lem);
 char		***fill_output_arr(t_route *route, t_lem *lem, char ***out);
 void		print_output(t_route *route, t_lem *lem, t_input *input);

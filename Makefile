@@ -54,8 +54,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-#	@make -C $(L)
-#	@make -C $(L) clean
+	@make -C $(L)
+	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:
