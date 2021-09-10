@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/05 18:50:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 23:07:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	*format_move(int ant, char *vertex)
 **
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct
-** @out: pointer to an array of empty paths, prepared by prepare_output_arr()
+** @out: pointer to an array of empty paths
 */
 char	***fill_output_arr(t_route *route, t_lem *lem, char ***out)
 {
@@ -68,7 +68,7 @@ char	***fill_output_arr(t_route *route, t_lem *lem, char ***out)
 	while (++ant <= lem->ants)
 	{
 		path_head = route->path;
-		while (++move <= route->len)
+		while (++move <= route->len && route->path)
 		{
 			out[ant - 1][move - 1] = format_move(ant, route->path->to->id);
 			route->path = route->path->prev_in_path;

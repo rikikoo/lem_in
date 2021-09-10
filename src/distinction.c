@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/05 20:31:18 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 17:10:42 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static t_route	*join_paths(t_route *r0, t_route *r1)
 	if (!r0)
 		return (NULL);
 	head = r0;
-	while (r0->next->is_valid)
+	while (r0->next && r0->next->is_valid)
 		r0 = r0->next;
 	while (r1 && r1->is_valid)
 	{

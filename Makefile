@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/08/27 20:18:43 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/09/10 23:23:54 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRC =	$(S)main.c \
 		$(S)process_edges.c \
 		$(S)graph.c \
 		$(S)graph_utils.c \
-		$(S)misc_utils.c \
+		$(S)sort_utils.c \
 		$(S)free.c \
 		$(S)sort.c \
 		$(S)distinction.c \
@@ -54,8 +54,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-	@make -C $(L)
-	@make -C $(L) clean
+#	@make -C $(L)
+#	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:

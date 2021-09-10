@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/29 18:56:24 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 23:15:13 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,13 +130,10 @@ t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
 t_vertex	*pop_first(t_vertex ***queue);
 void		queue_append(t_vertex ***queue, t_vertex *vertex);
 void		path_prepend(t_edge **path, t_edge *edge);
-void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
 t_route		*find_distinct(t_route *route, t_route *bw_route, t_lem *lem);
 t_route		*path_reverse(t_route *route);
 void		remove_duplicates(t_route *route, t_lem *lem);
-int			is_duplicate(t_edge *p0, t_edge *p1);
-int			compare_combinations(t_route *route, t_lem *lem, int turns_least);
 t_route		*sort_ants(t_route *route, t_lem *lem);
 char		***prepare_output_arr(t_route *route, t_lem *lem);
 char		***fill_output_arr(t_route *route, t_lem *lem, char ***out);

@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/27 19:50:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 23:05:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** remove capacity from the edges along @route->path and count its length
+** remove directional capacity from the edges along path and count its length
 */
 static t_edge	*send_flow(t_route *route)
 {
@@ -56,8 +56,8 @@ static t_edge	*store_path(t_route *route, t_vertex *source, t_lem *lem)
 }
 
 /*
-** performs a breadth-first search on the graph starting from the source vertex.
-** utilises @queue for queueing the visited nodes and adding the found edges
+** performs a breadth-first search on the graph starting from the source vertex,
+** which is contained in @queue. queues visited nodes and adds the found edges
 ** to a path list, whose head is stored in @route.
 ** returns 1 if @sink was found, 0 otherwise.
 */
@@ -105,12 +105,12 @@ t_route	*find_paths(t_lem *lem, t_vertex *source, t_vertex *sink)
 	int			bfs_iteration;
 
 	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
-	sink->visited--;
 	bfs_iteration = lem->n_paths + 1;
 	route = new_route(bfs_iteration);
 	head = route;
 	if (lem->error || !queue || !route)
 		return (NULL);
+	sink->visited--;
 	while (1)
 	{
 		queue = wipe_queue(queue, source, lem->vertices);

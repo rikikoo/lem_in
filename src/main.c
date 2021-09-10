@@ -6,11 +6,41 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/27 20:09:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 22:56:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
+
+/*
+** prints a boolean identity matrix of compatible paths
+*/
+static void	print_compatibles(t_route *route, int n_paths)
+{
+	int	i;
+
+	i = 0;
+	while (++i < n_paths)
+		ft_printf("%d ", i);
+	ft_putchar('\n');
+	while (route->is_valid)
+	{
+		i = 0;
+		while (i < n_paths)
+		{
+			if (route->compatible_with[i] == 1)
+				ft_printf("\033[0;32m%d\033[0m ", route->compatible_with[i]);
+			else if (route->i == i + 1)
+				ft_printf("\033[0;33m%d\033[0m ", route->compatible_with[i]);
+			else
+				ft_printf("%d ", route->compatible_with[i]);
+			i++;
+		}
+		ft_putchar('\n');
+		route = route->next;
+	}
+	ft_putchar('\n');
+}
 
 /*
 ** prints all paths if program got "--paths" as an argument
@@ -19,6 +49,7 @@ static void	print_paths(t_route *route, t_lem *lem)
 {
 	if (lem->error)
 		return ;
+	print_compatibles(route, lem->n_paths);
 	while (route->is_valid)
 	{
 		ft_printf("Path length: %i\n", route->len);
@@ -69,9 +100,8 @@ int	main(int argc, char **argv)
 		print_paths(route, &lem);
 	else
 		print_output(sort_ants(route, &lem), &lem, input);
-	die_if_error(lem.error, &input, &ht, &route);
 	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);
-	return (0);
+	return (lem.error);
 }

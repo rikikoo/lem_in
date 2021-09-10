@@ -6,52 +6,63 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/05 20:35:45 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 23:04:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static t_route	*final_path_combo(t_route *route, int n_paths)
+static int	calculate_turns(t_route *route, t_lem *lem, int turns_least)
 {
-	t_route	*head;
+	int		turns;
+	int		paths;
 	t_route	*next;
-	int		i;
 
-	head = route;
 	next = route->next;
-	i = 0;
-	while (i < n_paths)
+	paths = 1;
+	ft_printf("\n\nTurns with route %d and...\n", route->i);
+	while (next->is_valid)
 	{
-		while (!route->compatible_with[next->i - 1])
-			next = next->next;
-		route->next = next;
-		i++;
+		if (route->compatible_with[next->i - 1])
+		{
+			paths++;
+			turns = (lem->ants / paths) + next->len - 2;
+			if (turns < turns_least)
+			{
+				turns_least = turns;
+				lem->n_paths = paths;
+			}
+		}
+		next = next->next;
 	}
-	return (head);
+	return (turns_least);
 }
 
 t_route	*sort_ants(t_route *route, t_lem *lem)
 {
 	int		turns_least;
 	int		turns;
+	int		paths;
 	t_route	*head;
 
 	if (lem->error)
 		return (NULL);
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
 	head = route;
+	paths = 1;
 	while (route->is_valid)
 	{
-		turns = compare_combinations(route, lem, turns_least);
+		turns = calculate_turns(route, lem, turns_least);
 		if (turns < turns_least)
 		{
 			turns_least = turns;
 			head = route;
+			paths = lem->n_paths;
 		}
 		route = route->next;
 	}
-	return (final_path_combo(head, lem->n_paths));
+	lem->n_paths = paths;
+	return (head);
 }
 
 /*

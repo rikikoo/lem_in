@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/27 19:45:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/10 23:14:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ static int	print_a_move(char *move, int ant, int *has_finished, int turn_limit)
 	ft_putstr(move);
 	if (ant < turn_limit - 1)
 		ft_putchar(' ');
-	else
-		ft_putchar('\n');
 	return (0);
 }
 
@@ -70,7 +68,18 @@ static void	print_moves(char ***out, t_lem *lem, int *mov, int *fin)
 			if (out[ant][mov[ant]] != NULL)
 				mov[ant]++;
 		}
+		ft_putchar('\n');
 	}
+}
+
+static void	print_input(t_input *input)
+{
+	while (input->next)
+	{
+		ft_putendl(input->line);
+		input = input->next;
+	}
+	ft_putchar('\n');
 }
 
 /*

@@ -5,7 +5,7 @@ i=0
 while [ $i -lt 5 ]
 do
 
-	echo "********** ITERATION $i **********"
+	printf "\033[0;33m********** ITERATION $i **********\033[0m"
 
 	echo ""
 	echo "generating maps..."
