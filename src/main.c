@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/10 22:56:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/13 16:15:08 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** prints a boolean identity matrix of compatible paths
+** prints a boolean matrix of compatible paths
 */
 static void	print_compatibles(t_route *route, int n_paths)
 {
@@ -96,10 +96,11 @@ int	main(int argc, char **argv)
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
 	route = find_distinct(route, bw_route, &lem);
+	sort_ants(route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, &lem);
 	else
-		print_output(sort_ants(route, &lem), &lem, input);
+		print_output(route, &lem, input);
 	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);

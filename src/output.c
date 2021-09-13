@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/10 23:14:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/13 16:31:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ static void	print_moves(char ***out, t_lem *lem, int *mov, int *fin)
 			if (out[ant][mov[ant]] != NULL)
 				mov[ant]++;
 		}
-		ft_putchar('\n');
+		if (ants_left)
+			ft_putchar('\n');
 	}
 }
 
@@ -102,6 +103,12 @@ void	print_output(t_route *route, t_lem *lem, t_input *input)
 	finished_ants = (int *)ft_zeros(lem->ants);
 	if (!out || !move_index || !finished_ants)
 	{
+		if (out)
+			free_output(out);
+		if (move_index)
+			free(move_index);
+		if (finished_ants)
+			free(finished_ants);
 		lem->error = -5;
 		return ;
 	}

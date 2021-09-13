@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/10 23:15:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/13 17:06:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct s_route
 	int				i;
 	int				is_valid;
 	int				len;
+	int				ants;
 	int				*compatible_with;
 	struct s_edge	*path;
 	struct s_route	*next;
@@ -133,8 +134,10 @@ void		path_prepend(t_edge **path, t_edge *edge);
 t_route		*sort_paths(t_route *route);
 t_route		*find_distinct(t_route *route, t_route *bw_route, t_lem *lem);
 t_route		*path_reverse(t_route *route);
+t_route		*next_compatible(t_route *route);
 void		remove_duplicates(t_route *route, t_lem *lem);
-t_route		*sort_ants(t_route *route, t_lem *lem);
+void		distribute_ants(t_route *route, int ants, int limit);
+void		sort_ants(t_route *route, t_lem *lem);
 char		***prepare_output_arr(t_route *route, t_lem *lem);
 char		***fill_output_arr(t_route *route, t_lem *lem, char ***out);
 void		print_output(t_route *route, t_lem *lem, t_input *input);

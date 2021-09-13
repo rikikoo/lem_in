@@ -6,63 +6,72 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/10 23:04:58 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/13 17:08:43 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static int	calculate_turns(t_route *route, t_lem *lem, int turns_least)
+static int	calculate_differences(t_route *route, t_route *cmp, int ants)
 {
-	int		turns;
-	int		paths;
-	t_route	*next;
+	int	diff;
 
-	next = route->next;
-	paths = 1;
-	ft_printf("\n\nTurns with route %d and...\n", route->i);
-	while (next->is_valid)
+	while (cmp && cmp->i <= route->i && ants)
 	{
-		if (route->compatible_with[next->i - 1])
-		{
-			paths++;
-			turns = (lem->ants / paths) + next->len - 2;
-			if (turns < turns_least)
-			{
-				turns_least = turns;
-				lem->n_paths = paths;
-			}
-		}
-		next = next->next;
+		diff = cmp->len - route->len;
+		if (diff > ants)
+			cmp->ants = ants;
+		else
+			cmp->ants = diff;
+		ants -= cmp->ants;
+		cmp = next_compatible(cmp);
 	}
-	return (turns_least);
+	return (ants);
 }
 
-t_route	*sort_ants(t_route *route, t_lem *lem)
+static int	calculate_turns(t_route *route, int limit)
 {
+	int	turns;
+	int	turns_max;
+
+	turns_max = 0;
+	while (route && route->i <= limit)
+	{
+		turns = route->len + route->ants;
+		if (turns > turns_max)
+			turns_max = turns;
+		route = next_compatible(route);
+	}
+	return (turns_max);
+}
+
+void	sort_ants(t_route *route, t_lem *lem)
+{
+	t_route	*head;
+	t_route	*cmp;
+	int		ants;
 	int		turns_least;
 	int		turns;
-	int		paths;
-	t_route	*head;
 
 	if (lem->error)
-		return (NULL);
-	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
+		return ;
 	head = route;
-	paths = 1;
-	while (route->is_valid)
+	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
+	while (route && route->is_valid)
 	{
-		turns = calculate_turns(route, lem, turns_least);
-		if (turns < turns_least)
-		{
-			turns_least = turns;
-			head = route;
-			paths = lem->n_paths;
-		}
-		route = route->next;
+		ants = lem->ants;
+		cmp = head;
+		ants = calculate_differences(route, cmp, ants);
+		distribute_ants(head, ants, route->i);
+		turns = calculate_turns(head, route->i);
+		if (turns > turns_least)
+			break ;
+		turns_least = turns;
+		lem->n_paths = route->i;
+		route = next_compatible(route);
 	}
-	lem->n_paths = paths;
-	return (head);
+	ft_printf("Paths: %d\nTurns: %d\n", lem->n_paths, turns_least);
+	exit(0);
 }
 
 /*

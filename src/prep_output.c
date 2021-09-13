@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/10 23:07:49 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/13 17:07:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	***fill_output_arr(t_route *route, t_lem *lem, char ***out)
 	while (++ant <= lem->ants)
 	{
 		path_head = route->path;
-		while (++move <= route->len && route->path)
+		while (out && ++move <= route->len && route->path)
 		{
 			out[ant - 1][move - 1] = format_move(ant, route->path->to->id);
 			route->path = route->path->prev_in_path;
