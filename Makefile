@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/09/10 23:23:54 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/09/14 17:59:14 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ SRC =	$(S)main.c \
 		$(S)process_edges.c \
 		$(S)graph.c \
 		$(S)graph_utils.c \
-		$(S)sort_utils.c \
+		$(S)ant_sort_utils.c \
+		$(S)path_utils.c \
 		$(S)free.c \
 		$(S)sort.c \
 		$(S)distinction.c \

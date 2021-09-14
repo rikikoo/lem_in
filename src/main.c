@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/13 16:15:08 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/14 18:02:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static void	print_compatibles(t_route *route, int n_paths)
 	int	i;
 
 	i = 0;
-	while (++i < n_paths)
-		ft_printf("%d ", i);
+	while (++i <= n_paths)
+		ft_printf("%-3d", i);
 	ft_putchar('\n');
 	while (route->is_valid)
 	{
@@ -29,11 +29,11 @@ static void	print_compatibles(t_route *route, int n_paths)
 		while (i < n_paths)
 		{
 			if (route->compatible_with[i] == 1)
-				ft_printf("\033[0;32m%d\033[0m ", route->compatible_with[i]);
+				ft_printf("\033[0;32m%-3d\033[0m", route->compatible_with[i]);
 			else if (route->i == i + 1)
-				ft_printf("\033[0;33m%d\033[0m ", route->compatible_with[i]);
+				ft_printf("\033[0;33m%-3d\033[0m", route->compatible_with[i]);
 			else
-				ft_printf("%d ", route->compatible_with[i]);
+				ft_printf("%-3d", route->compatible_with[i]);
 			i++;
 		}
 		ft_putchar('\n');
@@ -45,15 +45,15 @@ static void	print_compatibles(t_route *route, int n_paths)
 /*
 ** prints all paths if program got "--paths" as an argument
 */
-static void	print_paths(t_route *route, t_lem *lem)
+static void	print_paths(t_route *route, t_lem lem)
 {
-	if (lem->error)
+	if (lem.error)
 		return ;
-	print_compatibles(route, lem->n_paths);
+	print_compatibles(route, lem.n_paths);
 	while (route->is_valid)
 	{
 		ft_printf("Path length: %i\n", route->len);
-		while (route->path->to != lem->sink)
+		while (route->path->to != lem.sink)
 		{
 			ft_printf("%s -> ", route->path->src->id);
 			route->path = route->path->prev_in_path;
@@ -96,11 +96,11 @@ int	main(int argc, char **argv)
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
 	route = find_distinct(route, bw_route, &lem);
-	sort_ants(route, &lem);
+	lem.error = sort_ants(route, &lem, lem.ants, (int *)ft_zeros(lem.n_paths));
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
-		print_paths(route, &lem);
+		print_paths(route, lem);
 	else
-		print_output(route, &lem, input);
+		lem.error = print_output(route, lem, input);
 	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);

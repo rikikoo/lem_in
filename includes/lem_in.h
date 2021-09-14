@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/13 17:06:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/14 18:06:42 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_lem
 	struct s_vertex	*sink;
 	int				error;
 	int				n_paths;
+	int				max_flow;
 }	t_lem;
 
 /*
@@ -134,13 +135,15 @@ void		path_prepend(t_edge **path, t_edge *edge);
 t_route		*sort_paths(t_route *route);
 t_route		*find_distinct(t_route *route, t_route *bw_route, t_lem *lem);
 t_route		*path_reverse(t_route *route);
+t_route		*join_paths(t_route *r0, t_route *r1);
 t_route		*next_compatible(t_route *route);
-void		remove_duplicates(t_route *route, t_lem *lem);
-void		distribute_ants(t_route *route, int ants, int limit);
-void		sort_ants(t_route *route, t_lem *lem);
-char		***prepare_output_arr(t_route *route, t_lem *lem);
-char		***fill_output_arr(t_route *route, t_lem *lem, char ***out);
-void		print_output(t_route *route, t_lem *lem, t_input *input);
+void		remove_duplicate_paths(t_route *route, t_lem *lem);
+void		distribute_ants(t_route *route, int limit, int ants, int *pants);
+void		store_ant_count(t_route *route, int *pants, int limit, int n_paths);
+int			sort_ants(t_route *route, t_lem *lem, int ants, int *pants);
+char		***prepare_output_arr(t_route *route, t_lem lem);
+char		***fill_output_arr(t_route *route, t_lem lem, char ***out);
+int			print_output(t_route *route, t_lem lem, t_input *input);
 void		free_input(t_input **input);
 void		free_ht(t_hashtab **ht);
 void		free_route(t_route **route);

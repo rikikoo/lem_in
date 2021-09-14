@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/10 17:10:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/14 17:55:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,24 +63,6 @@ static int	path_combinations(t_route *route, t_lem *lem)
 	return (0);
 }
 
-static t_route	*join_paths(t_route *r0, t_route *r1)
-{
-	t_route	*head;
-
-	if (!r0)
-		return (NULL);
-	head = r0;
-	while (r0->next && r0->next->is_valid)
-		r0 = r0->next;
-	while (r1 && r1->is_valid)
-	{
-		r0->next = r1;
-		r0 = r0->next;
-		r1 = r1->next;
-	}
-	return (head);
-}
-
 static void	flip_bw_route_edges(t_route *route)
 {
 	t_vertex	*tmp;
@@ -129,7 +111,7 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	free_route(&head);
 	flip_bw_route_edges(bw_route);
 	route = sort_paths(join_paths(rev_head, bw_route));
-	remove_duplicates(route, lem);
+	remove_duplicate_paths(route, lem);
 	lem->error = path_combinations(route, lem);
 	return (route);
 }

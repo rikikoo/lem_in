@@ -6,30 +6,13 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/13 17:08:43 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/14 18:52:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static int	calculate_differences(t_route *route, t_route *cmp, int ants)
-{
-	int	diff;
-
-	while (cmp && cmp->i <= route->i && ants)
-	{
-		diff = cmp->len - route->len;
-		if (diff > ants)
-			cmp->ants = ants;
-		else
-			cmp->ants = diff;
-		ants -= cmp->ants;
-		cmp = next_compatible(cmp);
-	}
-	return (ants);
-}
-
-static int	calculate_turns(t_route *route, int limit)
+static int	calculate_turns(t_route *route, int limit, int *pants)
 {
 	int	turns;
 	int	turns_max;
@@ -37,7 +20,7 @@ static int	calculate_turns(t_route *route, int limit)
 	turns_max = 0;
 	while (route && route->i <= limit)
 	{
-		turns = route->len + route->ants;
+		turns = route->len + pants[route->i - 1];
 		if (turns > turns_max)
 			turns_max = turns;
 		route = next_compatible(route);
@@ -45,33 +28,58 @@ static int	calculate_turns(t_route *route, int limit)
 	return (turns_max);
 }
 
-void	sort_ants(t_route *route, t_lem *lem)
+static int	calculate_diff(t_route *route, t_route *cmp, int ants, int *pants)
+{
+	int	diff;
+
+	while (cmp && cmp->i <= route->i && ants)
+	{
+		diff = route->len - cmp->len;
+		if (diff > ants)
+			pants[cmp->i - 1] = ants;
+		else
+			pants[cmp->i - 1] = diff;
+		ants -= pants[cmp->i - 1];
+		cmp = next_compatible(cmp);
+	}
+	return (ants);
+}
+
+int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 {
 	t_route	*head;
 	t_route	*cmp;
-	int		ants;
 	int		turns_least;
 	int		turns;
 
 	if (lem->error)
-		return ;
+		return (lem->error);
+	if (!pants)
+		return (-5);
 	head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
 	while (route && route->is_valid)
 	{
-		ants = lem->ants;
 		cmp = head;
-		ants = calculate_differences(route, cmp, ants);
-		distribute_ants(head, ants, route->i);
-		turns = calculate_turns(head, route->i);
+		ants = calculate_diff(route, cmp, lem->ants, pants);
+		distribute_ants(head, route->i, ants, pants);
+		turns = calculate_turns(head, route->i, pants);
 		if (turns > turns_least)
 			break ;
 		turns_least = turns;
-		lem->n_paths = route->i;
+		lem->max_flow = route->i;
+		store_ant_count(head, pants, route->i, lem->n_paths);
 		route = next_compatible(route);
 	}
-	ft_printf("Paths: %d\nTurns: %d\n", lem->n_paths, turns_least);
+	// debug start
+	ft_printf("Number of the longest path used: %d\n\n", lem->max_flow);
+	while (head->i <= lem->max_flow) {
+		ft_printf("Path %d\n   length: %d\n   ants: %d\n", head->i, head->len, head->ants);
+		head = next_compatible(head);
+	}
 	exit(0);
+	// debug end
+	return (0);
 }
 
 /*
