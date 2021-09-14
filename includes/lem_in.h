@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 18:06:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/14 21:26:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,10 @@ t_route		*join_paths(t_route *r0, t_route *r1);
 t_route		*next_compatible(t_route *route);
 void		remove_duplicate_paths(t_route *route, t_lem *lem);
 void		distribute_ants(t_route *route, int limit, int ants, int *pants);
-void		store_ant_count(t_route *route, int *pants, int limit, int n_paths);
+void		store_ant_count(t_route *route, int *pants, int limit, t_lem *lem);
 int			sort_ants(t_route *route, t_lem *lem, int ants, int *pants);
-char		***prepare_output_arr(t_route *route, t_lem lem);
+int			*fill_pants(t_route *route, t_lem lem);
+char		***prepare_output_arr(t_route *route, t_lem lem, int *pants);
 char		***fill_output_arr(t_route *route, t_lem lem, char ***out);
 int			print_output(t_route *route, t_lem lem, t_input *input);
 void		free_input(t_input **input);

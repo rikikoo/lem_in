@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 14:11:51 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/14 21:47:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	print_moves(char ***out, t_lem lem, int *mov, int *fin)
 	while (ants_left)
 	{
 		ant = -1;
-		turn_limit = ++turn * lem.n_paths;
+		turn_limit = ++turn * lem.max_flow;
 		if (turn_limit > lem.ants)
 			turn_limit = lem.ants;
 		while (++ant < turn_limit)
@@ -96,9 +96,20 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	int		*move_index;
 	int		*finished_ants;
 
-	if (lem.error)
-		return (lem.error);
-	out = fill_output_arr(route, lem, prepare_output_arr(route, lem));
+	out = prepare_output_arr(route, lem, fill_pants(route, lem));
+	out = fill_output_arr(route, lem, out);
+
+	// debug
+	ft_printf("ants: %d\tpaths: %d\n\n", lem.ants, lem.max_flow);
+	for (int i = 0; out[i]; i++) {
+		ft_printf("ant %d:\n", i + 1);
+		for (int j = 0; out[i][j]; j++) {
+			ft_printf("%s ", out[i][j]);
+		}
+		ft_printf("\n\n");
+	}
+	// debug
+	
 	move_index = (int *)ft_zeros(lem.ants);
 	finished_ants = (int *)ft_zeros(lem.ants);
 	if (!out || !move_index || !finished_ants)

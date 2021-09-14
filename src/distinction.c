@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 17:55:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 01:26:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	free_route(&head);
 	flip_bw_route_edges(bw_route);
 	route = sort_paths(join_paths(rev_head, bw_route));
+	route->i = 1;
+	lem->n_paths = 1;
 	remove_duplicate_paths(route, lem);
 	lem->error = path_combinations(route, lem);
 	return (route);
