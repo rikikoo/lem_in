@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/15 20:01:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/16 00:08:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	print_paths(t_route *route, t_lem lem)
 	print_compatibles(route, lem.n_paths);
 	while (route->is_valid)
 	{
-		ft_printf("Path length: %i\n", route->len);
+		ft_printf("Path no. %d length: %i\n", route->i, route->len);
 		while (route->path->to != lem.sink)
 		{
 			ft_printf("%s -> ", route->path->src->id);
@@ -95,29 +95,12 @@ int	main(int argc, char **argv)
 	route = find_paths(&lem, lem.source, lem.sink);
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
-
-	/* debug
-	t_route *bw_head = bw_route;
-	while (bw_route->i != 37)
-		bw_route = bw_route->next;
-	t_edge *p_head = bw_route->path;
-	ft_printf("Path %d length: %i\n", bw_route->i, bw_route->len);
-	while (bw_route->path->src != lem.sink)
-	{
-		ft_printf("%s -> ", bw_route->path->to->id);
-		bw_route->path = bw_route->path->prev_in_path;
-	}
-	ft_printf("%s -> %s\n\n", bw_route->path->to->id, bw_route->path->src->id);
-	bw_route->path = p_head;
-	bw_route = bw_head;
-	debug end */
-
 	route = find_distinct(route, bw_route, &lem);
 	lem.error = sort_ants(route, &lem, lem.ants, (int *)ft_zeros(lem.n_paths));
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
 	else
-		lem.error = print_output(route, lem, input);
+		lem.error = print_output(route, lem, input, fill_pants(route, lem));
 	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);

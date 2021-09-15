@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/15 20:15:27 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/16 00:03:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 **
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct
+** @pants: int array storing the number of ants per path
 */
 char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 {

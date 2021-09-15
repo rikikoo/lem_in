@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 21:26:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/16 00:04:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int			sort_ants(t_route *route, t_lem *lem, int ants, int *pants);
 int			*fill_pants(t_route *route, t_lem lem);
 char		***prepare_output_arr(t_route *route, t_lem lem, int *pants);
 char		***fill_output_arr(t_route *route, t_lem lem, char ***out);
-int			print_output(t_route *route, t_lem lem, t_input *input);
+int			print_output(t_route *route, t_lem lem, t_input *input, int *pants);
 void		free_input(t_input **input);
 void		free_ht(t_hashtab **ht);
 void		free_route(t_route **route);

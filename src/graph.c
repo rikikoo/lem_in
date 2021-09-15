@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/15 19:13:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 23:25:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,6 @@ static t_edge	*store_path(t_route *route, t_vertex *source, t_lem *lem)
 		route->path = route->path->prev_in_path;
 	}
 	route->path->prev_in_path = NULL;
-
-	/* debug
-	t_edge *tmp = head;
-	if (route->i == 40) {
-		while (head) {
-			ft_printf("%s %s\n", head->to->id, head->src->id);
-			head = head->prev_in_path;
-		}
-	}
-	head = tmp;
-	debug end */
-
 	route->is_valid = 1;
 	lem->n_paths++;
 	return (head);

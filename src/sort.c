@@ -6,12 +6,19 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/15 20:17:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 23:46:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
+/*
+** after distributing ants to all paths currently being tested, we find and
+** return the maximum amount of turns by adding the amount of ants distributed
+** to each path + that path's length.
+**
+** @limit: index of the longest path in this iteration of path combinations
+*/
 static int	calculate_turns(t_route *route, int limit, int *pants)
 {
 	int	turns;
@@ -28,6 +35,11 @@ static int	calculate_turns(t_route *route, int limit, int *pants)
 	return (turns_max);
 }
 
+/*
+** calculates the difference of the current path's length (@route) and the paths
+** following it (@cmp). This difference is the amount of ants that can be passed
+** to the current path before using more paths is necessary.
+*/
 static int	calculate_diff(t_route *route, t_route *cmp, int ants, int *pants)
 {
 	int	diff;
@@ -45,6 +57,18 @@ static int	calculate_diff(t_route *route, t_route *cmp, int ants, int *pants)
 	return (ants);
 }
 
+/*
+** starting from the shortest path, distribute ants to consequtive paths by
+** adding one path at a time and calculating the turns it would take to
+** transport all ants using these paths. we know the amount of paths needed to
+** minimize turns after the calculated amount of turns starts eventually rising
+** after first going down.
+**
+** @route: pointer to the head (shortest) of a list of paths
+** @lem: a general runtime info struct
+** @ants: total amount of ants
+** @pants: an int array where the amount of ants needed per path is stored
+*/
 int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 {
 	t_route	*head;
@@ -64,7 +88,6 @@ int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 		ants = calculate_diff(route, cmp, lem->ants, pants);
 		distribute_ants(head, route->i, ants, pants);
 		turns = calculate_turns(head, route->i, pants);
-//		ft_printf("Route no. %d turns: %d\n", route->i, turns);	// debug
 		if (turns > turns_least)
 			break ;
 		turns_least = turns;
@@ -72,14 +95,6 @@ int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 		route = next_compatible(route);
 	}
 	free(pants);
-	/* debug start
-	ft_printf("Number of the longest path used: %d\n\n", lem->max_flow);
-	while (head && head->i <= lem->max_flow) {
-		ft_printf("Path %d\n   length: %d\n   ants: %d\n", head->i, head->len, head->ants);
-		head = next_compatible(head);
-	}
-	ft_putchar('\n');
-	debug end */
 	return (0);
 }
 
