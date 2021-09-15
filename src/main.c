@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 18:02:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 20:01:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,23 @@ int	main(int argc, char **argv)
 	route = find_paths(&lem, lem.source, lem.sink);
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
+
+	/* debug
+	t_route *bw_head = bw_route;
+	while (bw_route->i != 37)
+		bw_route = bw_route->next;
+	t_edge *p_head = bw_route->path;
+	ft_printf("Path %d length: %i\n", bw_route->i, bw_route->len);
+	while (bw_route->path->src != lem.sink)
+	{
+		ft_printf("%s -> ", bw_route->path->to->id);
+		bw_route->path = bw_route->path->prev_in_path;
+	}
+	ft_printf("%s -> %s\n\n", bw_route->path->to->id, bw_route->path->src->id);
+	bw_route->path = p_head;
+	bw_route = bw_head;
+	debug end */
+
 	route = find_distinct(route, bw_route, &lem);
 	lem.error = sort_ants(route, &lem, lem.ants, (int *)ft_zeros(lem.n_paths));
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))

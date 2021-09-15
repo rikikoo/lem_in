@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 21:25:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 20:17:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	calculate_turns(t_route *route, int limit, int *pants)
 	turns_max = 0;
 	while (route && route->i <= limit)
 	{
-		turns = route->len + pants[route->i - 1];
+		turns = route->len + pants[route->i - 1] - 1;
 		if (turns > turns_max)
 			turns_max = turns;
 		route = next_compatible(route);
@@ -64,7 +64,7 @@ int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 		ants = calculate_diff(route, cmp, lem->ants, pants);
 		distribute_ants(head, route->i, ants, pants);
 		turns = calculate_turns(head, route->i, pants);
-		ft_printf("Route no. %d turns: %d\n", route->i, turns);
+//		ft_printf("Route no. %d turns: %d\n", route->i, turns);	// debug
 		if (turns > turns_least)
 			break ;
 		turns_least = turns;
@@ -72,14 +72,14 @@ int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 		route = next_compatible(route);
 	}
 	free(pants);
-	// debug start
+	/* debug start
 	ft_printf("Number of the longest path used: %d\n\n", lem->max_flow);
-	while (head->i <= lem->max_flow) {
+	while (head && head->i <= lem->max_flow) {
 		ft_printf("Path %d\n   length: %d\n   ants: %d\n", head->i, head->len, head->ants);
 		head = next_compatible(head);
 	}
-	// exit(0);
-	// debug end
+	ft_putchar('\n');
+	debug end */
 	return (0);
 }
 

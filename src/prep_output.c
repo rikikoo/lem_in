@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 21:03:54 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 20:15:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 			out[i][j] = NULL;
 		pants[route->i - 1]--;
 		route = next_compatible(route);
-		if (!route || pants[route->i] <= 0 || route->i > lem.max_flow)
+		if (!route || pants[route->i - 1] <= 0 || route->i > lem.max_flow)
 			route = head;
 	}
 	out[i] = NULL;

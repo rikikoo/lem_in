@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/14 21:47:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/15 20:16:51 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	out = prepare_output_arr(route, lem, fill_pants(route, lem));
 	out = fill_output_arr(route, lem, out);
 
-	// debug
+	/* debug
 	ft_printf("ants: %d\tpaths: %d\n\n", lem.ants, lem.max_flow);
 	for (int i = 0; out[i]; i++) {
 		ft_printf("ant %d:\n", i + 1);
@@ -108,8 +108,8 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 		}
 		ft_printf("\n\n");
 	}
-	// debug
-	
+	debug */
+
 	move_index = (int *)ft_zeros(lem.ants);
 	finished_ants = (int *)ft_zeros(lem.ants);
 	if (!out || !move_index || !finished_ants)
