@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/16 00:08:27 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/17 14:58:56 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	main(int argc, char **argv)
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
 	route = find_distinct(route, bw_route, &lem);
-	lem.error = sort_ants(route, &lem, lem.ants, (int *)ft_zeros(lem.n_paths));
+	route = find_path_combo(route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
 	else

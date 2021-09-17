@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lem_in.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/16 00:04:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/17 12:33:02 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ t_vertex	*pop_first(t_vertex ***queue);
 void		queue_append(t_vertex ***queue, t_vertex *vertex);
 void		path_prepend(t_edge **path, t_edge *edge);
 t_route		*sort_paths(t_route *route);
+t_route		*find_path_combo(t_route *route, t_lem *lem);
 t_route		*find_distinct(t_route *route, t_route *bw_route, t_lem *lem);
 t_route		*path_reverse(t_route *route);
 t_route		*join_paths(t_route *r0, t_route *r1);
