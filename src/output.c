@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/26 13:01:00 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/16 00:04:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 **
 ** @move: one ant's move as a pre-formatted string
 ** @ant: current ant's index
-** @turn_limit: the number of ants possible to move on this turn
 ** @has_finished: a "boolean" array where the value is True for ants that have
 **	reached the sink
+** @turn_limit: the ant's index which is the last to be printed on this turn
 */
 static int	print_a_move(char *move, int ant, int *has_finished, int turn_limit)
 {
@@ -34,8 +34,6 @@ static int	print_a_move(char *move, int ant, int *has_finished, int turn_limit)
 	ft_putstr(move);
 	if (ant < turn_limit - 1)
 		ft_putchar(' ');
-	else
-		ft_putchar('\n');
 	return (0);
 }
 
@@ -49,7 +47,7 @@ static int	print_a_move(char *move, int ant, int *has_finished, int turn_limit)
 ** @fin: a "boolean" array where the value is True for ants that have reached
 **	the sink
 */
-static void	print_moves(char ***out, t_lem lem, int	*mov, int *fin)
+static void	print_moves(char ***out, t_lem lem, int *mov, int *fin)
 {
 	int	ant;
 	int	turn;
@@ -61,7 +59,7 @@ static void	print_moves(char ***out, t_lem lem, int	*mov, int *fin)
 	while (ants_left)
 	{
 		ant = -1;
-		turn_limit = ++turn * lem.n_paths;
+		turn_limit = ++turn * lem.max_flow;
 		if (turn_limit > lem.ants)
 			turn_limit = lem.ants;
 		while (++ant < turn_limit)
@@ -70,7 +68,19 @@ static void	print_moves(char ***out, t_lem lem, int	*mov, int *fin)
 			if (out[ant][mov[ant]] != NULL)
 				mov[ant]++;
 		}
+		if (ants_left)
+			ft_putchar('\n');
 	}
+}
+
+static void	print_input(t_input *input)
+{
+	while (input->next)
+	{
+		ft_putendl(input->line);
+		input = input->next;
+	}
+	ft_putchar('\n');
 }
 
 /*
@@ -80,21 +90,31 @@ static void	print_moves(char ***out, t_lem lem, int	*mov, int *fin)
 ** @lem: a general runtime info struct
 ** @input: pointer to a linked list containing the program input
 */
-void	print_output(t_route *route, t_lem lem, t_input *input)
+int	print_output(t_route *route, t_lem lem, t_input *input, int *pants)
 {
 	char	***out;
 	int		*move_index;
 	int		*finished_ants;
 
-	out = fill_output_arr(route, lem, prepare_output_arr(route, lem));
-	free_route(&route);
+	out = prepare_output_arr(route, lem, pants);
+	out = fill_output_arr(route, lem, out);
+	free(pants);
 	move_index = (int *)ft_zeros(lem.ants);
 	finished_ants = (int *)ft_zeros(lem.ants);
 	if (!out || !move_index || !finished_ants)
-		return ;
+	{
+		if (out)
+			free_output(out);
+		if (move_index)
+			free(move_index);
+		if (finished_ants)
+			free(finished_ants);
+		return (-5);
+	}
 	print_input(input);
 	print_moves(out, lem, move_index, finished_ants);
 	free_output(out);
 	free(move_index);
 	free(finished_ants);
+	return (0);
 }

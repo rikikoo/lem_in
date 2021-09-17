@@ -3,45 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/21 20:03:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/17 14:58:56 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** prints all paths if program got "--paths" as an argument
-**
-** if there wasn't a 25 line restriction, both paths would be freed here
+** prints a boolean matrix of compatible paths
 */
-static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
+static void	print_compatibles(t_route *route, int n_paths)
 {
-	ft_printf("**** Reversed, likely overlapping paths: ****\n\n");
-	while (olap->is_valid)
+	int	i;
+
+	i = 0;
+	while (++i <= n_paths)
+		ft_printf("%-3d", i);
+	ft_putchar('\n');
+	while (route->is_valid)
 	{
-		ft_printf("Path length: %i\n", olap->len);
-		while (olap->path->src != s)
+		i = 0;
+		while (i < n_paths)
 		{
-			ft_printf("%s <- ", olap->path->to->id);
-			olap->path = olap->path->prev_in_path;
+			if (route->compatible_with[i] == 1)
+				ft_printf("\033[0;32m%-3d\033[0m", route->compatible_with[i]);
+			else if (route->i == i + 1)
+				ft_printf("\033[0;33m%-3d\033[0m", route->compatible_with[i]);
+			else
+				ft_printf("%-3d", route->compatible_with[i]);
+			i++;
 		}
-		ft_printf("%s <- %s\n\n", olap->path->to->id, olap->path->src->id);
-		olap = olap->next;
+		ft_putchar('\n');
+		route = route->next;
 	}
-	ft_printf("**** Disjoint paths: ****\n\n");
-	while (disj->is_valid)
+	ft_putchar('\n');
+}
+
+/*
+** prints all paths if program got "--paths" as an argument
+*/
+static void	print_paths(t_route *route, t_lem lem)
+{
+	if (lem.error)
+		return ;
+	print_compatibles(route, lem.n_paths);
+	while (route->is_valid)
 	{
-		ft_printf("Path length: %i\n", disj->len);
-		while (disj->path->src != t)
+		ft_printf("Path no. %d length: %i\n", route->i, route->len);
+		while (route->path->to != lem.sink)
 		{
-			ft_printf("%s -> ", disj->path->to->id);
-			disj->path = disj->path->prev_in_path;
+			ft_printf("%s -> ", route->path->src->id);
+			route->path = route->path->prev_in_path;
 		}
-		ft_printf("%s -> %s\n\n", disj->path->to->id, disj->path->src->id);
-		disj = disj->next;
+		ft_printf("%s -> %s\n\n", route->path->src->id, route->path->to->id);
+		route = route->next;
 	}
 }
 
@@ -56,9 +74,9 @@ static void	print_paths(t_route *olap, t_route *disj, t_vertex *s, t_vertex *t)
 **
 **	1. read instructions from STDIN
 **	2. validate and store graph information
-**	3. saturate graph by doing repeated searches forward, updating flow after
+**	3. saturate graph by doing repeated searches, updating edge capacities after
 **		each run
-**	4. find disjoint, non-overlapping paths by doing a reverse BFS on the graph
+**	4. separate disjoint, non-overlapping paths from overlapping paths
 **	5. calculate how many paths are needed and prepare output strings
 **	6. print ant movements
 */
@@ -67,25 +85,24 @@ int	main(int argc, char **argv)
 	t_lem		lem;
 	t_hashtab	*ht;
 	t_input		*input;
-	t_route		*olap;
-	t_route		*disj;
+	t_route		*route;
+	t_route		*bw_route;
 
 	lem = init_lem();
 	ht = init_ht();
 	input = read_input();
-	olap = NULL;
 	lem.error = parse_input(input, ht, &lem);
-	if (lem.error)
-		return (die(&input, &ht, &lem, &olap));
-	olap = sort_paths(find_paths(&lem, lem.source, lem.sink));
-	if (lem.error)
-		return (die(&input, &ht, &lem, &olap));
-	disj = sort_paths(find_paths(&lem, lem.sink, lem.source));
+	route = find_paths(&lem, lem.source, lem.sink);
+	die_if_error(lem.error, &input, &ht, &route);
+	bw_route = find_paths(&lem, lem.sink, lem.source);
+	route = find_distinct(route, bw_route, &lem);
+	route = find_path_combo(route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
-		print_paths(olap, disj, lem.source, lem.sink);
+		print_paths(route, lem);
 	else
-		print_output(sort_ants(olap, disj, &lem), lem, input);
+		lem.error = print_output(route, lem, input, fill_pants(route, lem));
+	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);
-	return (0);
+	return (lem.error);
 }

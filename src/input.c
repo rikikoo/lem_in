@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 16:53:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/24 21:57:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_input	*read_input(void)
 int	parse_input(t_input *input, t_hashtab *ht, t_lem *lem)
 {
 	if (!input || !ht || !lem)
-		return (-1);
+		return (-5);
 	lem->ants = ft_atoi(input->line);
 	if (!lem->ants)
 		return (-1);

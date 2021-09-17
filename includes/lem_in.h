@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lem_in.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 17:10:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/17 12:33:02 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_lem
 	struct s_vertex	*sink;
 	int				error;
 	int				n_paths;
+	int				max_flow;
 }	t_lem;
 
 /*
@@ -101,6 +102,8 @@ typedef struct s_route
 	int				i;
 	int				is_valid;
 	int				len;
+	int				ants;
+	int				*compatible_with;
 	struct s_edge	*path;
 	struct s_route	*next;
 }	t_route;
@@ -129,16 +132,25 @@ t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
 t_vertex	*pop_first(t_vertex ***queue);
 void		queue_append(t_vertex ***queue, t_vertex *vertex);
 void		path_prepend(t_edge **path, t_edge *edge);
-void		print_input(t_input *input);
 t_route		*sort_paths(t_route *route);
-t_route		*sort_ants(t_route *overlap, t_route *disjoint, t_lem *lem);
-char		***prepare_output_arr(t_route *route, t_lem lem);
+t_route		*find_path_combo(t_route *route, t_lem *lem);
+t_route		*find_distinct(t_route *route, t_route *bw_route, t_lem *lem);
+t_route		*path_reverse(t_route *route);
+t_route		*join_paths(t_route *r0, t_route *r1);
+t_route		*next_compatible(t_route *route);
+void		remove_duplicate_paths(t_route *route, t_lem *lem);
+void		distribute_ants(t_route *route, int limit, int ants, int *pants);
+void		store_ant_count(t_route *route, int *pants, int limit, t_lem *lem);
+int			sort_ants(t_route *route, t_lem *lem, int ants, int *pants);
+int			*fill_pants(t_route *route, t_lem lem);
+char		***prepare_output_arr(t_route *route, t_lem lem, int *pants);
 char		***fill_output_arr(t_route *route, t_lem lem, char ***out);
-void		print_output(t_route *route, t_lem lem, t_input *input);
+int			print_output(t_route *route, t_lem lem, t_input *input, int *pants);
 void		free_input(t_input **input);
 void		free_ht(t_hashtab **ht);
 void		free_route(t_route **route);
 void		free_output(char ***out);
-int			die(t_input **input, t_hashtab **ht, t_lem *lem, t_route **route);
+int			die_if_error(int error, t_input **input, t_hashtab **ht, \
+			t_route **route);
 
 #endif
