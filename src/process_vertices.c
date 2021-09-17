@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vertices.c                                         :+:      :+:    :+:   */
+/*   process_vertices.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 17:35:22 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 16:48:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/17 15:47:19 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ static t_input	*check_command(t_input *input, t_hashtab *ht, t_lem *lem)
 		if (vertex_parse(ht, input->line, lem, 1) < 0)
 			return (NULL);
 	}
+	else if ((ft_strequ(str, "##end") && lem->sink != NULL) || \
+	(ft_strequ(str, "##start") && lem->source != NULL))
+		return (NULL);
 	else
 		lem->vertices--;
 	return (input->next);
