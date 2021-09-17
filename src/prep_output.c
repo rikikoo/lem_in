@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prep.c                                             :+:      :+:    :+:   */
+/*   prep_output.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 18:12:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/16 00:03:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	*format_move(int ant, char *vertex)
 **
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct
-** @out: pointer to an array of empty paths, prepared by prepare_output_arr()
+** @out: pointer to an array of empty paths
 */
 char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 {
@@ -62,23 +62,24 @@ char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 	t_route	*head;
 	t_edge	*path_head;
 
-	move = 0;
+	if (!out)
+		return (NULL);
 	ant = 0;
 	head = route;
 	while (++ant <= lem.ants)
 	{
+		move = 0;
 		path_head = route->path;
-		while (++move <= route->len)
+		while (out && ++move <= route->len && route->path)
 		{
-			out[ant - 1][move - 1] = format_move(ant, route->path->src->id);
+			out[ant - 1][move - 1] = format_move(ant, route->path->to->id);
 			route->path = route->path->prev_in_path;
 		}
 		route->path = path_head;
-		if (ant % lem.n_paths > 0)
-			route = route->next;
-		else
+		route->ants--;
+		route = next_compatible(route);
+		if (!route || route->ants <= 0 || route->i > lem.max_flow)
 			route = head;
-		move = 0;
 	}
 	return (out);
 }
@@ -90,8 +91,9 @@ char	***fill_output_arr(t_route *route, t_lem lem, char ***out)
 **
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct
+** @pants: int array storing the number of ants per path
 */
-char	***prepare_output_arr(t_route *route, t_lem lem)
+char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 {
 	t_route	*head;
 	char	***out;
@@ -100,7 +102,7 @@ char	***prepare_output_arr(t_route *route, t_lem lem)
 
 	head = route;
 	out = (char ***)malloc(sizeof(char **) * (lem.ants + 1));
-	if (!out)
+	if (!out || !route || !pants || lem.error)
 		return (NULL);
 	i = -1;
 	while (++i < lem.ants)
@@ -111,9 +113,9 @@ char	***prepare_output_arr(t_route *route, t_lem lem)
 		j = -1;
 		while (++j <= route->len)
 			out[i][j] = NULL;
-		if ((i + 1) % lem.n_paths > 0)
-			route = route->next;
-		else
+		pants[route->i - 1]--;
+		route = next_compatible(route);
+		if (!route || pants[route->i - 1] <= 0 || route->i > lem.max_flow)
 			route = head;
 	}
 	out[i] = NULL;

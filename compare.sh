@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 i=0
+declare -i res=0
 
 while [ $i -lt 5 ]
 do
-
-	echo "********** ITERATION $i **********"
+	printf "\033[0;33m********** ITERATION $i **********\033[0m"
 
 	echo ""
 	echo "generating maps..."
@@ -44,7 +44,13 @@ do
 	./lem-in < bigSuper > out
 	echo "$(grep -m 1 "#Here" out | awk '{ print $8 }') $(grep ^L out | wc -l)"
 
+	declare -i actual=$(grep ^L out | wc -l)
+	declare -i expected=$(grep -m 1 "#Here" out | awk '{ print $8 }')
+	((res = res + actual - expected))
 	echo ""
 
 	((i++))
 done
+
+((result = res / i))
+echo "Average superposition difference: $result"
