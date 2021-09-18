@@ -177,12 +177,14 @@ Once the combo with the minimum amount of turns has been found, we print the mov
 
 The formula for calculating the amount of ants to send down one path before the same amount of turns would be achieved by using also the next path is
 `<next_path_length> - <current_path_length>`, i.e. the difference of the pathlengths.
+
 After calculating those differences for each following path in the current combination and subtracting the sum of differences from the total ant count, the rest of the ants are allocated to all paths in the combo, cycling through them in order until no ants are left.
+
 The formula for calculating the amount of turns it will take with the current path combo and the amount of ants allocated for each path is `<current_path_length> + <number_of_ants_on_current_path> - 2` for all paths in the combo.
 
 example:
 ```
-
+```
 
 ## NOTES
 The project familiarizes the student with graph-theory and invites them to explore different algorithms best suited for flow optimization.
