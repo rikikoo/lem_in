@@ -95,7 +95,7 @@ L2-4
 Turns out that the easiest approach for most students and for me as well was to tweak the [Edmonds-Karp algorithm](https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm).
 In a nutshell, the EK algo performs a breadth-first search repeatedly on the graph, updating the graph's capacities on each run until the graph is fully saturated so that the sink can no longer be reached. The found paths are stored along the way.
 
-My implementation does this repeated bfs from source to sink and then backwards, from sink to source, because the graph is bidirectional, hence the edges have a capacity for both directions. The backward-bfs also ensures we won't use overlapping paths, as the fw-bfs has now blocked the edges of the paths we traversed in both directions.
+My implementation does this repeated bfs from source to sink and then backwards, from sink to source, because the graph is bidirectional, hence the edges have a capacity for both directions. The backward-bfs also ensures we won't use overlapping paths, as the fw-bfs has now blocked the edges of the paths were traversed in both directions.
 
 Using the first graph example again, this is how the path-finding algo progresses:
 
@@ -136,7 +136,7 @@ There are no more outgoing edges from the source vertex that have capacity, so t
 path found:
 t - 2 - 4 - 3 - s
 
-Notice how from the 2nd run the edge `2-1` already has flow going through it in the rerverse direction, so it's untraversable.
+Notice how from the 2nd run the edge `2-1` already has flow going through it in both directions, so it's untraversable.
 
 **4th run**
 ```
@@ -176,17 +176,30 @@ Starting from the shortest path, we try adding one (compatible) path at a time a
 Once the combo with the minimum amount of turns has been found, we print the moves out using those paths.
 
 The formula for calculating the amount of ants to send down one path before the same amount of turns would be achieved by using also the next path is
-`<next_path_length> - <current_path_length>`, i.e. the difference of the pathlengths.
+`<next_path_length> - <current_path_length>`, i.e. the difference of the path lengths.
 
 After calculating those differences for each following path in the current combination and subtracting the sum of differences from the total ant count, the rest of the ants are allocated to all paths in the combo, cycling through them in order until no ants are left.
 
-The formula for calculating the amount of turns it will take with the current path combo and the amount of ants allocated for each path is `<current_path_length> + <number_of_ants_on_current_path> - 2` for all paths in the combo.
+The formula for calculating the amount of turns it will take with the current path combo and the amount of ants allocated for each path is the maximum value of `<current_path_length> + <number_of_ants_on_current_path> - 2` for all paths in the combo.
 
-example:
-```
-```
+example, assuming we have 4 ants:
+1. with path1 as our base path, try to allocate the differences of compatible paths --> there are none, so we allocate all ants to path 1 --> `turns = 4 (path length) + 4 (ants on the path) - 2 = 6`
+2. using path2 as the base path, allocate difference of following paths --> `5 (path2 length) - 5 (path3 length) = 0`
+3. allocate remaining ants (in this case all ants, since the paths are the same length) evenly to all paths --> `path2_ants = 2` `path3_ants = 2`
+4. calculate turns with this path combo --> ` path2_turns = 5 + 2 - 2 = 5` `path3_turns = 5 + 2 - 2 = 5` --> max value is 5
+5. path3 not comaptible with following paths --> `turns = 5 + 4 - 2 = 7`
+6. path4 same as path3 --> `turns = 8 + 4 - 2 = 10`
+7. path2 together with path3 yields the least amount of turns (5), so we will use them.
 
-## NOTES
+## THOUGHTS
 The project familiarizes the student with graph-theory and invites them to explore different algorithms best suited for flow optimization.
 At first I misunderstood the goal of this project and I tried to implement a max flow graph search algorithm. Eventually I figured out that we are not trying to find the max flow, but something more.
 
+I wasted a ton of time trying to figure out why the supposedly best choice algo (Edmonds-Karp) didn't yield results that worked, until I started to really think what's going on and what we're actually trying to achieve here.
+It turned out that the EK algo assumes some graph attributes that don't apply to this project, such as vertices having an infinite capacity.
+Also EK implementations usually have the edges having a reverse edge and that they are used to update the residual graph, which all over-complicated the problem; in lem_in, we can only have 1 ant occupy an edge or a vertex at a time. We do not need reverse edges or residual graphs. Once an ant has passed through an edge, it's no longer usable in that direction.
+
+More than anything else, I learned that I should not trust blindly on suggestions like "the EK algo is the way to go here". Yeah, it eventually turned out to be a variation of EK, but before I had thought through the problem myself and tried to implement it without understanding what it produces or what we are even trying to produce, a lot of time and motivation was wasted.
+
+Overall a great project that taught about optimization, graphs and algorithms through research and of course writing them out and getting it to work. But also the toughest yet.
+I completed over half of the next, supposedly "harder" project before I finished this one, while also doing extra-curricular side-projects. Definitely harder than it should be at this point of learning algorithms.
