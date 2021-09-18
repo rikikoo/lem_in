@@ -1,12 +1,11 @@
 # lem_in
-**school project**: a project about graph traversing algorithm implementation.
+a graph traversing algorithm implementation
 
 ## ABOUT
-*** WIP ***
 *lem_in* is a program that directs "ants" through an "antfarm" (i.e. through a graph's nodes/vertices).
 
 ## RULES
-A node or an edge can be occupied by one ant at a time, excluding the source and sink nodes. All of the ants must be transported through the graph using the least amount of turns. Ants on the graph need to move on each turn.
+A node or an edge can be occupied by one ant at a time, excluding the source and sink nodes. In graph theory terms, all vertices and edges have a capacity of one. All of the ants must be transported through the graph using the least amount of turns. Ants on the graph need to move on each turn.
 
 For example, consider the graph below:
 
@@ -30,32 +29,39 @@ turn 4: antA 6 -> t, antB 2 -> t, antC 4 -> 2, antD 5 -> 6
 turn 5: antC 2 -> t, antD 6 -> t
 ```
 
-Input for the program is given in a text file in a specific format:
+### Program input
+Input for the program is given in a text file in a specific order and format:
 
 ```
-the_number_of_ants
+number_of_ants
 vertex_ids
 edges
 ```
-Vertex IDs are followed by two integers, representing their coordinates (used for visualizer only). Source and sink vertices are denoted by a preceding `##start` and `##end`, respectively.
++ the first line of the input is `number_of_ants`, an integer
++ `vertex_ids` are arbitrary alphanumerical strings, followed by two space separated integers, which represent their coordinates (useful only when visualizing the graph). a `vertex_id` can't start with an 'L'.
++ source and sink vertices are denoted by a preceding `##start` and `##end`, respectively
++ `edges` are two `vertex-ids` separated by a '-' (dash)
++ The input can have comments (lines that start with a '#') anywhere, which are ignored by the parser
 
 Example input:
 ```
 2
 1 0 2
 ##start
-0 2 0
+0 1 0
 ##end
-4 2 6
-2 4 2
-3 4 4
+4 1 4
+2 2 1
+# this is a comment
+3 2 3
 0-2
 2-3
 3-4
+# this as well
 4-1
 0-1
 ```
-which says that we need to transport 2 ants through the following graph:
+This input tells us that we need to transport 2 ants through the following graph:
 ```
     (0) <---- start/source
    /   \
@@ -66,7 +72,12 @@ which says that we need to transport 2 ants through the following graph:
     (4) <---- end/sink
 ```
 
-Example output for the above graph:
+### Program output
+The program will output the input it received, followed by the ants' moves.
+
+Moves of each ant will be printed in the format `L<ant_number>-<vertex_id>`.
+
+Example output of the moves for the above graph:
 ```
 L1-1 L2-2
 L1-4 L2-3
@@ -80,7 +91,100 @@ L1-4 L2-1
 L2-4
 ```
 
+## THE ALGORITHM
+Turns out that the easiest approach for most students and for me as well was to tweak the [Edmonds-Karp algorithm](https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm).
+In a nutshell, the EK algo performs a breadth-first search repeatedly on the graph, updating the graph's capacities on each run until the graph is fully saturated so that the sink can no longer be reached. The found paths are stored along the way.
+
+My implementation does this repeated bfs from source to sink and then backwards, from sink to source, because the graph is bidirectional, hence the edges have a capacity for both directions. The backward-bfs also ensures we won't use overlapping paths, as the fw-bfs has now blocked the edges of the paths we traversed in both directions.
+
+Using the first graph example again, this is how the path-finding algo progresses:
+
+**1st run**
+```
+   /--(3)---(4)
+  /          |
+(s)>>>(1)>>>(2)>>>(t)
+       |          /
+      (5)---(6)--/
+```
+path found:
+s - 1 - 2 - t
+
+The found path is now blocked to the direction of the arrows.
+
+**2nd run**
+```
+   >>>(3)>>>(4)
+  >          v
+(s)---(1)<<<(2)---(t)
+       v          >
+      (5)>>>(6)>>>
+```
+path found:
+s - 3 - 4 - 2 - 1 - 5 - 6 - t
+
+There are no more outgoing edges from the source vertex that have capacity, so the forward-bfs is finished. Now we find all paths from sink to source.
+
+**3rd run**
+```
+   <<<(3)<<<(4)
+  <          ^
+(s)---(1)xxx(2)<<<(t)
+       |          /
+      (5)---(6)--/
+```
+path found:
+t - 2 - 4 - 3 - s
+
+Notice how from the 2nd run the edge `2-1` already has flow going through it in the rerverse direction, so it's untraversable.
+
+**4th run**
+```
+   /--(3)---(4)
+  /          |
+(s)<<<(1)---(2)---(t)
+       ^          <
+      (5)<<<(6)<<<
+```
+path found:
+t - 6 - 5 - 1 - s
+
+Now all outgoing edges of the sink vertex are saturated and the bw-bfs ends.
+
+Now the 4 found paths are sorted in ascending order of length and reversed so that all go from source to sink. Then each path is marked compatible with all other paths that they do not intersect/share an edge with.
+
+```
+path1:
+s - 1 - 2 - t
+compatible with no other path
+
+path2:
+s - 3 - 4 - 2 - t
+compatible with path3
+
+path3:
+s - 1 - 5 - 6 - t
+compatible with path2
+
+path 4:
+s - 3 - 4 - 2 - 1 - 5 - 6 - t
+compatible with no other path
+```
+
+## ANT DISTRIBUTION
+Starting from the shortest path, we try adding one (compatible) path at a time and calculate the amount of turns for every path combination.
+Once the combo with the minimum amount of turns has been found, we print the moves out using those paths.
+
+The formula for calculating the amount of ants to send down one path before the same amount of turns would be achieved by using also the next path is
+`<next_path_length> - <current_path_length>`, i.e. the difference of the pathlengths.
+After calculating those differences for each following path in the current combination and subtracting the sum of differences from the total ant count, the rest of the ants are allocated to all paths in the combo, cycling through them in order until no ants are left.
+The formula for calculating the amount of turns it will take with the current path combo and the amount of ants allocated for each path is `<current_path_length> + <number_of_ants_on_current_path> - 2` for all paths in the combo.
+
+example:
+```
+
 
 ## NOTES
 The project familiarizes the student with graph-theory and invites them to explore different algorithms best suited for flow optimization.
-At first this project led me astray, as I tried to implement a max flow graph search algorithm. Eventually I figured out that we are not trying to find the max flow, but something a bit different...
+At first I misunderstood the goal of this project and I tried to implement a max flow graph search algorithm. Eventually I figured out that we are not trying to find the max flow, but something more.
+
