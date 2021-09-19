@@ -57,3 +57,17 @@ np=1
 4. cost    = plen+tants      = 4+5     = 9
 5. maxcost = max(cost)       = 13      = 13
 
+
+
+new
+    ->path = 0xA
+    ->prev = 0x9
+    ->prev = 0x1
+    ->prev = NULL
+old
+    ->path = NULL
+    ->prev = NULL
+
+tmp = 0x9
+
+

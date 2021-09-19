@@ -38,10 +38,10 @@ vertex_ids
 edges
 ```
 + the first line of the input is `number_of_ants`, an integer
-+ `vertex_ids` are arbitrary alphanumerical strings, followed by two space separated integers, which represent their coordinates (useful only when visualizing the graph). a `vertex_id` can't start with an 'L'.
++ `vertex_ids` are lines with arbitrary alphanumerical strings, followed by two space separated integers, which represent their coordinates (useful only when visualizing the graph). a `vertex_id` can't start with an `L`.
 + source and sink vertices are denoted by a preceding `##start` and `##end`, respectively
-+ `edges` are two `vertex-ids` separated by a '-' (dash)
-+ The input can have comments (lines that start with a '#') anywhere, which are ignored by the parser
++ `edges` are two `vertex-ids` separated by a `-` (dash)
++ The input can have comments (lines that start with a `#`) anywhere, which are ignored by the parser
 
 Example input:
 ```
@@ -92,6 +92,7 @@ L2-4
 ```
 
 ## THE ALGORITHM
+### Pathfinder
 Turns out that the easiest approach for most students and for me as well was to tweak the [Edmonds-Karp algorithm](https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm).
 In a nutshell, the EK algo performs a breadth-first search repeatedly on the graph, updating the graph's capacities on each run until the graph is fully saturated so that the sink can no longer be reached. The found paths are stored along the way.
 
@@ -156,7 +157,7 @@ Now the 4 found paths are sorted in ascending order of length and reversed so th
 ```
 path1:
 s - 1 - 2 - t
-compatible with no other path
+compatible with none of the following paths
 
 path2:
 s - 3 - 4 - 2 - t
@@ -164,14 +165,14 @@ compatible with path3
 
 path3:
 s - 1 - 5 - 6 - t
-compatible with path2
+compatible with none of the following paths
 
 path 4:
 s - 3 - 4 - 2 - 1 - 5 - 6 - t
-compatible with no other path
+compatible with none of the following paths
 ```
 
-## ANT DISTRIBUTION
+### Ant distribution
 Starting from the shortest path, we try adding one (compatible) path at a time and calculate the amount of turns for every path combination.
 Once the combo with the minimum amount of turns has been found, we print the moves out using those paths.
 
@@ -201,5 +202,5 @@ Also EK implementations usually have the edges having a reverse edge and that th
 
 More than anything else, I learned that I should not trust blindly on suggestions like "the EK algo is the way to go here". Yeah, it eventually turned out to be a variation of EK, but before I had thought through the problem myself and tried to implement it without understanding what it produces or what we are even trying to produce, a lot of time and motivation was wasted.
 
-Overall a great project that taught about optimization, graphs and algorithms through research and of course writing them out and getting it to work. But also the toughest yet.
+Overall a great project that taught optimization, graphs and algorithms through research and of course writing them out and getting it to work. But also the toughest yet.
 I completed over half of the next, supposedly "harder" project before I finished this one, while also doing extra-curricular side-projects. Definitely harder than it should be at this point of learning algorithms.

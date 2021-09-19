@@ -6,13 +6,13 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/17 15:20:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/19 19:51:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	update_compatitbility_arr(t_route *route, int n_paths, int k)
+static void	update_compatitbility_arr(t_route *route, int n_paths, int k)
 {
 	int	j;
 	int	*new_cmp;

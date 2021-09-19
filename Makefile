@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+         #
+#    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/09/17 15:26:02 by rikikyttala      ###   ########.fr        #
+#    Updated: 2021/09/19 19:56:11 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,12 +23,12 @@ SRC =	$(S)main.c \
 		$(S)process_edges.c \
 		$(S)graph.c \
 		$(S)graph_utils.c \
-		$(S)ant_sort_utils.c \
-		$(S)path_utils.c \
-		$(S)path_combinations.c \
-		$(S)free.c \
-		$(S)sort.c \
 		$(S)distinction.c \
+		$(S)path_combinations.c \
+		$(S)path_utils.c \
+		$(S)sort.c \
+		$(S)ant_sort_utils.c \
+		$(S)free.c \
 		$(S)prep_output.c \
 		$(S)output.c
 
