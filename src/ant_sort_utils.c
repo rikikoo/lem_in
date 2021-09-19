@@ -6,14 +6,14 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/17 15:20:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/19 19:49:00 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** makes a copy of ants per path, so that we won't lose the info later
+** returns a copy of ants per path, so that the original info isn't lost
 */
 int	*fill_pants(t_route *route, t_lem lem)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   distinction.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/17 11:31:53 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2021/09/19 20:14:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	paths_are_distinct(t_edge *path, t_edge *cmp, t_vertex *sink)
 ** for each route, mark compatibility with all other routes (i.e. do the paths
 ** share vertices (False) or not (True)) in the route's "compatible_with" array
 */
-static int	path_combinations(t_route *route, t_lem *lem)
+static int	path_compatibility(t_route *route, t_lem *lem)
 {
 	t_route	*next;
 
@@ -129,6 +129,6 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	route->i = 1;
 	remove_duplicate_paths(route, lem);
 	count_paths(route, lem);
-	lem->error = path_combinations(route, lem);
+	lem->error = path_compatibility(route, lem);
 	return (route);
 }
