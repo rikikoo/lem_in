@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/19 20:14:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/20 21:38:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ static int	path_compatibility(t_route *route, t_lem *lem)
 
 	if (lem->error)
 		return (-5);
-	while (route->is_valid)
+	while (route && route->is_valid)
 	{
 		route->compatible_with = (int *)ft_zeros(lem->n_paths);
 		if (!route->compatible_with)
 			return (-5);
 		next = route->next;
-		while (next->is_valid)
+		while (next && next->is_valid)
 		{
 			if (paths_are_distinct(route->path, next->path, lem->sink))
 				route->compatible_with[next->i - 1] = 1;
@@ -113,11 +113,11 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 
 	if (lem->error)
 		return (route);
+	head = route;
 	reversed = path_reverse(route);
 	rev_head = reversed;
-	head = route;
 	route = route->next;
-	while (route && reversed)
+	while (route && reversed && route->is_valid)
 	{
 		reversed->next = path_reverse(route);
 		reversed = reversed->next;
@@ -127,7 +127,7 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	flip_bw_route_edges(bw_route);
 	route = sort_paths(join_paths(rev_head, bw_route));
 	route->i = 1;
-	remove_duplicate_paths(route, lem);
+	discard_duplicate_paths(route, lem);
 	count_paths(route, lem);
 	lem->error = path_compatibility(route, lem);
 	return (route);

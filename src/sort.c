@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/17 14:07:33 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2021/09/20 23:13:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,20 @@ int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
 }
 
 /*
-** swaps places of two paths in the list of paths
+** swaps the path pointer and length values of two nodes in the list of paths
 */
-static void	swap(t_route *prev, t_route **current, t_route *next)
+static void	swap_contents(t_route *longer, t_route *shorter)
 {
+	int		tmp_len;
+	t_edge	*tmp_path;
+
+	tmp_len = longer->len;
+	tmp_path = longer->path;
+	longer->len = shorter->len;
+	longer->path = shorter->path;
+	shorter->len = tmp_len;
+	shorter->path = tmp_path;
+/*
 	t_route	*tmp;
 
 	tmp = *current;
@@ -118,6 +128,7 @@ static void	swap(t_route *prev, t_route **current, t_route *next)
 		prev->next = *current;
 		(*current)->next = tmp;
 	}
+*/
 }
 
 /*
@@ -128,11 +139,9 @@ static void	swap(t_route *prev, t_route **current, t_route *next)
 */
 t_route	*sort_paths(t_route *route)
 {
-	t_route	*prev;
 	t_route	*next;
 	t_route	*head;
 
-	prev = NULL;
 	head = route;
 	while (route)
 	{
@@ -140,10 +149,9 @@ t_route	*sort_paths(t_route *route)
 		while (next && next->is_valid)
 		{
 			if (route->len > next->len)
-				swap(prev, &route, next);
+				swap_contents(route, next);
 			next = next->next;
 		}
-		prev = route;
 		route = route->next;
 	}
 	return (head);

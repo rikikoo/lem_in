@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/19 19:51:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/19 21:56:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static void	update_compatitbility_arr(t_route *route, int n_paths, int k)
 {
 	int	j;
-	int	*new_cmp;
+	int	*new_compatible;
 
-	new_cmp = (int *)malloc(sizeof(int) * n_paths);
-	if (!new_cmp)
+	new_compatible = (int *)malloc(sizeof(int) * n_paths);
+	if (!new_compatible)
 	{
 		free(route->compatible_with);
 		route->compatible_with = NULL;
@@ -27,12 +27,12 @@ static void	update_compatitbility_arr(t_route *route, int n_paths, int k)
 	j = 0;
 	while (j < n_paths)
 	{
-		new_cmp[j] = route->compatible_with[k];
+		new_compatible[j] = route->compatible_with[k];
 		j++;
 		k++;
 	}
 	free(route->compatible_with);
-	route->compatible_with = new_cmp;
+	route->compatible_with = new_compatible;
 }
 
 static int	update_indexes(t_route *route, t_lem *lem)
@@ -44,7 +44,7 @@ static int	update_indexes(t_route *route, t_lem *lem)
 	head = route;
 	i = 0;
 	first_index = head->i - 1;
-	while (route->is_valid)
+	while (route && route->is_valid)
 	{
 		route = route->next;
 		i++;
@@ -52,7 +52,7 @@ static int	update_indexes(t_route *route, t_lem *lem)
 	lem->n_paths = i;
 	route = head;
 	i = 1;
-	while (route->is_valid)
+	while (route && route->is_valid)
 	{
 		route->i = i;
 		i++;
@@ -72,7 +72,7 @@ t_route	*find_path_combo(t_route *route, t_lem *lem)
 
 	head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
-	while (route->is_valid)
+	while (route && route->is_valid)
 	{
 		turns = sort_ants(route, lem, lem->ants, (int *)ft_zeros(lem->n_paths));
 		if (turns < 0)

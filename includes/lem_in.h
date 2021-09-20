@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lem_in.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/17 12:33:02 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2021/09/20 20:28:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ t_route		*find_distinct(t_route *route, t_route *bw_route, t_lem *lem);
 t_route		*path_reverse(t_route *route);
 t_route		*join_paths(t_route *r0, t_route *r1);
 t_route		*next_compatible(t_route *route);
-void		remove_duplicate_paths(t_route *route, t_lem *lem);
+void		discard_duplicate_paths(t_route *route, t_lem *lem);
 void		distribute_ants(t_route *route, int limit, int ants, int *pants);
 void		store_ant_count(t_route *route, int *pants, int limit, t_lem *lem);
 int			sort_ants(t_route *route, t_lem *lem, int ants, int *pants);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/15 23:24:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/20 21:17:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 /*
 ** since the breadth-first search is performed twice from two directions on the
 ** graph, identical paths may get stored. This function iterates over the joined
-** and sorted list of paths and removes potential duplicate paths.
+** and sorted list of paths and removes possible duplicate paths.
 */
-void	remove_duplicate_paths(t_route *route, t_lem *lem)
+void	discard_duplicate_paths(t_route *route, t_lem *lem)
 {
 	t_route	*next;
 	t_route	*tmp;
@@ -98,12 +98,15 @@ t_route	*join_paths(t_route *r0, t_route *r1)
 	head = r0;
 	while (r0->next && r0->next->is_valid)
 		r0 = r0->next;
-	while (r1 && r1->is_valid)
+	if (r0->next)
 	{
-		r0->next = r1;
-		r0 = r0->next;
-		r1 = r1->next;
+		free(r0->next);
+		r0->next = NULL;
 	}
+	if (r1 && r1->is_valid)
+		r0->next = r1;
+	if (r1 && !r1->is_valid)
+		free(r1);
 	return (head);
 }
 

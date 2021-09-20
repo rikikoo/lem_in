@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/19 20:03:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/20 22:27:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	print_compatibles(t_route *route, int n_paths)
 	while (++i <= n_paths)
 		ft_printf("%-3d", i);
 	ft_putchar('\n');
-	while (route->is_valid)
+	while (route && route->is_valid)
 	{
 		i = 0;
 		while (i < n_paths)
@@ -50,7 +50,7 @@ static void	print_paths(t_route *route, t_lem lem)
 	if (lem.error)
 		return ;
 	print_compatibles(route, lem.n_paths);
-	while (route->is_valid)
+	while (route && route->is_valid)
 	{
 		ft_printf("Path no. %d length: %i\n", route->i, route->len);
 		while (route->path->to != lem.sink)
@@ -69,7 +69,7 @@ static void	print_paths(t_route *route, t_lem lem)
 ** with the least amount of moves.
 ** The number of ants, vertex names and coordinates and their edges are given
 ** as input in a specific format (see README).
-** lem_in will exit and return an error if the format of the instructions is
+** lem_in will exit and return an error value and message if the input format is
 ** invalid or there isn't a connection between the source and the sink.
 **
 **	1. read instructions from STDIN
@@ -95,6 +95,23 @@ int	main(int argc, char **argv)
 	route = find_paths(&lem, lem.source, lem.sink);
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
+/*
+	// debug start
+	t_route *rhead = route;
+	while (route->is_valid) {
+		ft_printf("\nPath %d - (len %d)\n", route->i, route->len);
+		route = route->next;
+	}
+	route = rhead;
+	ft_printf("\n\nBW_ROUTES START\n\n");
+	rhead = bw_route;
+	while (bw_route->is_valid) {
+		ft_printf("\nPath %d - (len %d)\n", bw_route->i, bw_route->len);
+		bw_route = bw_route->next;
+	}
+	bw_route = rhead;
+	//debug end
+*/
 	route = find_distinct(route, bw_route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
