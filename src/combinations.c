@@ -6,7 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
+<<<<<<< HEAD:src/combinations.c
 /*   Updated: 2021/09/19 21:56:26 by rkyttala         ###   ########.fr       */
+=======
+/*   Updated: 2021/09/19 19:51:16 by rkyttala         ###   ########.fr       */
+>>>>>>> 617120c9b82db8bb588466b01c2b9f970d32ca8f:src/path_combinations.c
 /*                                                                            */
 /* ************************************************************************** */
 

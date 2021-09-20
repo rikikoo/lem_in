@@ -58,9 +58,24 @@ np=1
 5. maxcost = max(cost)       = 13      = 13
 
 
+<<<<<<< HEAD
 r1 -> r2 -> r3 -> r4 -> NULL
 R1 -> R2 -> R3 -> NULL 
 
 rh = r1
 Rh = R1
+=======
+
+new
+    ->path = 0xA
+    ->prev = 0x9
+    ->prev = 0x1
+    ->prev = NULL
+old
+    ->path = NULL
+    ->prev = NULL
+
+tmp = 0x9
+
+>>>>>>> 617120c9b82db8bb588466b01c2b9f970d32ca8f
 
