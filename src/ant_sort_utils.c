@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/19 19:49:00 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/21 21:57:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 /*
 ** returns a copy of ants per path, so that the original info isn't lost
 */
-int	*fill_pants(t_route *route, t_lem lem)
+void	fill_pants(t_route *route, t_lem lem, int *pants)
 {
-	int	*pants;
+	int	*compatible;
 
-	pants = (int *)ft_zeros(lem.max_flow);
-	if (!pants)
-		return (NULL);
-	while (route && route->i <= lem.max_flow)
+	compatible = route->compatible_with;
+	while (route && route->i <= lem.last_index)
 	{
-		pants[route->i - 1] = route->ants;
-		route = next_compatible(route);
+		if (route->i != 1 && !compatible[route->i - 1])
+			pants[route->i - 1] = -1;
+		else
+			pants[route->i - 1] = route->ants;
+		route = route->next;
 	}
-	return (pants);
 }
 
 /*
@@ -43,11 +43,16 @@ void	store_ant_count(t_route *route, int *pants, int limit, t_lem *lem)
 {
 	int	i;
 
+	lem->max_flow = 0;
 	while (route && route->i <= limit)
 	{
 		route->ants = pants[route->i - 1];
 		if (route->ants)
-			lem->max_flow = route->i;
+		{
+//			ft_printf("last index is now %d\n", route->i);
+			lem->last_index = route->i;
+			lem->max_flow++;
+		}
 		route = next_compatible(route);
 	}
 	i = 0;

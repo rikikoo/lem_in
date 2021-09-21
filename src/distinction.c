@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   distinction.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/20 23:53:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/21 14:13:16 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,14 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	route = sort_paths(join_paths(rev_head, bw_route));
 	route->i = 1;
 	discard_duplicate_paths(route, lem);
+
+	// t_route *rhead = route;
+	// while (route->is_valid) {
+	// 	ft_printf("route %d (length %d)\n", route->i, route->len);
+	// 	route = route->next;
+	// }
+	// route = rhead;
+
 	count_paths(route, lem);
 	lem->error = path_compatibility(route, lem);
 	return (route);

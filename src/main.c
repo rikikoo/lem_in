@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/20 23:53:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/21 20:10:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,16 @@ static void	print_paths(t_route *route, t_lem lem)
 	}
 }
 
+void	print_input(t_input *input)
+{
+	while (input->next)
+	{
+		ft_putendl(input->line);
+		input = input->next;
+	}
+	ft_putchar('\n');
+}
+
 /*
 ** lem_in is a program that finds all paths in an undirected graph for n ants
 ** to go through and prints out the moves the ants will take from source to sink
@@ -95,30 +105,13 @@ int	main(int argc, char **argv)
 	route = find_paths(&lem, lem.source, lem.sink);
 	die_if_error(lem.error, &input, &ht, &route);
 	bw_route = find_paths(&lem, lem.sink, lem.source);
-/*
-	// debug start
-	t_route *rhead = route;
-	while (route->is_valid) {
-		ft_printf("\nPath %d - (len %d)\n", route->i, route->len);
-		route = route->next;
-	}
-	route = rhead;
-	ft_printf("\n\nBW_ROUTES START\n\n");
-	rhead = bw_route;
-	while (bw_route->is_valid) {
-		ft_printf("\nPath %d - (len %d)\n", bw_route->i, bw_route->len);
-		bw_route = bw_route->next;
-	}
-	bw_route = rhead;
-	//debug end
-*/
 	route = find_distinct(route, bw_route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
 	else
 	{
 		route = find_path_combo(route, &lem);
-		lem.error = print_output(route, lem, input, fill_pants(route, lem));
+		lem.error = print_output(route, lem, input);
 	}
 	free_route(&route);
 	free_input(&input);

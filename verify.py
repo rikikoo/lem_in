@@ -30,6 +30,7 @@ for i, line in enumerate(lem_out):
         move_list = lem_out[i:]
         break
 
+err = False
 for turn in move_list:
     moves = turn.strip().split(' ')
     ants = []
@@ -41,10 +42,14 @@ for turn in move_list:
         for i, ant in enumerate(ants):
             if ant in ants[i + 1:]:
                 print(f"Same ant moved twice on a single turn ({ant})!\n{turn}\n")
+                err = True
                 break
     if sink not in rooms and len(rooms) != len(list(set(rooms))):
         for i, room in enumerate(rooms):
             if room in rooms[i + 1:]:
                 print(f"Multiple ants in same room ({room})!\n{turn}\n")
+                err = True
                 break
 
+if err == False:
+    print("Moves are valid!")

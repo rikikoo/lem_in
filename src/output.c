@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/16 00:04:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/21 22:55:33 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,73 +14,109 @@
 
 /*
 ** prints an ant's move if it's possible.
-** returns 0 if an ant was moved, 1 otherwise.
+** returns 1 if an ant reached the sink, 0 otherwise.
 **
 ** @move: one ant's move as a pre-formatted string
 ** @ant: current ant's index
-** @has_finished: a "boolean" array where the value is True for ants that have
+** @finished: a "boolean" array where the value is True for ants that have
 **	reached the sink
-** @turn_limit: the ant's index which is the last to be printed on this turn
+** @last_ant: the ant's index which is the last to be printed on this turn
 */
-static int	print_a_move(char *move, int ant, int *has_finished, int turn_limit)
+static int	move_ant(char *move, int ant, int *finished, int last_ant)
 {
 	if (!move)
 	{
-		if (has_finished[ant])
+		if (finished[ant])
 			return (0);
-		has_finished[ant] = 1;
+		finished[ant] = 1;
 		return (1);
 	}
 	ft_putstr(move);
-	if (ant < turn_limit - 1)
+	if (ant < last_ant - 1)
 		ft_putchar(' ');
 	return (0);
 }
 
 /*
-** iterates over all paths until all ants have moved to sink
+** moves each ant that can move and returns the amount of ants that reached the
+** sink on this turn
 **
-** @out: pointer to an array of paths
-** @lem: a general runtime info struct
-** @mov: int array where each value represents the respective ants' position on
-**	its path
-** @fin: a "boolean" array where the value is True for ants that have reached
+** @out: pointer to an array of paths that ants travel as strings
+** @limit: the number of ants to move on this turn
+** @moves: int array where each value represents the respective ants' position
+**	on its path
+** @finish: a "boolean" array where the value is True for ants that have reached
 **	the sink
 */
-static void	print_moves(char ***out, t_lem lem, int *mov, int *fin)
+static int	ant_dispenser(char ***out, int limit, int *moves, int *finished)
 {
 	int	ant;
-	int	turn;
-	int	ants_left;
-	int	turn_limit;
+	int	ret;
 
-	turn = 0;
-	ants_left = lem.ants;
-	while (ants_left)
+	ant = 0;
+	ret = 0;
+	while (ant < limit)
 	{
-		ant = -1;
-		turn_limit = ++turn * lem.max_flow;
-		if (turn_limit > lem.ants)
-			turn_limit = lem.ants;
-		while (++ant < turn_limit)
-		{
-			ants_left -= print_a_move(out[ant][mov[ant]], ant, fin, turn_limit);
-			if (out[ant][mov[ant]] != NULL)
-				mov[ant]++;
-		}
-		if (ants_left)
-			ft_putchar('\n');
-	}
-}
-
-static void	print_input(t_input *input)
-{
-	while (input->next)
-	{
-		ft_putendl(input->line);
-		input = input->next;
+		ret += move_ant(out[ant][moves[ant]], ant, finished, limit);
+		if (out[ant][moves[ant]] != NULL)
+			moves[ant]++;
+		ant++;
 	}
 	ft_putchar('\n');
+	return (ret);
+}
+
+/*
+** set_limit checks if a path has already sent out all ants using it, and lowers
+** the turn limit accordingly
+*/
+static int	set_limit(t_lem *lem, int turn, int *pants)
+{
+	int	limit;
+	int	i;
+
+	limit = turn * lem->last_index;
+	if (limit > lem->ants)
+		limit = lem->ants;
+	i = 0;
+	while (i < lem->last_index)
+	{
+		if (pants[i] == 0)
+			limit--;
+		else if (pants[i] > 0)
+			pants[i]--;
+		i++;
+	}
+	return (limit);
+}
+
+static void	print_moves(char ***out, t_lem *lem, int *pants)
+{
+	int	*moves;
+	int	*finished;
+	int	ants_left;
+	int	turn;
+	int	turn_limit;
+
+	moves = (int *)ft_zeros(lem->ants);
+	finished = (int *)ft_zeros(lem->ants);
+	ants_left = lem->ants;
+	turn = 0;
+	if (lem->error || !out || !moves || !finished)
+	{
+		lem->error = -5;
+		ants_left = 0;
+	}
+	while (ants_left)
+	{
+		turn++;
+		turn_limit = set_limit(lem, turn, pants);
+		ants_left -= ant_dispenser(out, turn_limit, moves, finished);
+	}
+	if (moves)
+		free(moves);
+	if (finished)
+		free(finished);
 }
 
 /*
@@ -90,31 +126,32 @@ static void	print_input(t_input *input)
 ** @lem: a general runtime info struct
 ** @input: pointer to a linked list containing the program input
 */
-int	print_output(t_route *route, t_lem lem, t_input *input, int *pants)
+int	print_output(t_route *route, t_lem lem, t_input *input)
 {
 	char	***out;
-	int		*move_index;
-	int		*finished_ants;
+	int		*pants;
 
-	out = prepare_output_arr(route, lem, pants);
-	out = fill_output_arr(route, lem, out);
-	free(pants);
-	move_index = (int *)ft_zeros(lem.ants);
-	finished_ants = (int *)ft_zeros(lem.ants);
-	if (!out || !move_index || !finished_ants)
-	{
-		if (out)
-			free_output(out);
-		if (move_index)
-			free(move_index);
-		if (finished_ants)
-			free(finished_ants);
+	pants = (int *)ft_zeros(lem.last_index);
+	if (!pants)
 		return (-5);
+	fill_pants(route, lem, pants);
+	out = prepare_output_arr(route, lem, pants);
+	fill_pants(route, lem, pants);
+	fill_output_arr(route, lem, out, pants);
+	if (!out)
+		lem.error = -5;
+	if (!lem.error)
+		print_input(input);
+	fill_pants(route, lem, pants);
+
+	for (int i = 0; i < lem.last_index; i++) {
+		ft_printf("%d ", pants[i]);
 	}
-	print_input(input);
-	print_moves(out, lem, move_index, finished_ants);
+	ft_printf("\n");
+	exit(0);
+
+	print_moves(out, &lem, pants);
 	free_output(out);
-	free(move_index);
-	free(finished_ants);
-	return (0);
+	free(pants);
+	return (lem.error);
 }

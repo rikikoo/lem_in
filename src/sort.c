@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/20 23:13:17 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/21 11:21:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,23 +112,6 @@ static void	swap_contents(t_route *longer, t_route *shorter)
 	longer->path = shorter->path;
 	shorter->len = tmp_len;
 	shorter->path = tmp_path;
-/*
-	t_route	*tmp;
-
-	tmp = *current;
-	tmp->next = next->next;
-	if (prev == NULL)
-	{
-		*current = next;
-		(*current)->next = tmp;
-	}
-	else
-	{
-		*current = next;
-		prev->next = *current;
-		(*current)->next = tmp;
-	}
-*/
 }
 
 /*

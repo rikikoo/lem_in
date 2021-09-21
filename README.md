@@ -3,9 +3,11 @@ a graph traversing algorithm implementation
 
 ## ABOUT
 *lem_in* is a program that directs "ants" through an "antfarm" (i.e. through a graph's nodes/vertices).
+The program takes the antfarm layout and the number of ants to pass through it as input from STDIN, finds different paths and determines which paths to use for transporting the ants.
+The program optimises ant distribution so that the minimum amount of _turns_ is used to get all ants through the antfarm. A turn is when any ant moves from one step forward. Multiple ants may move at once, within the constraints of the rules.
 
 ## RULES
-A node or an edge can be occupied by one ant at a time, excluding the source and sink nodes. In graph theory terms, all vertices and edges have a capacity of one. All of the ants must be transported through the graph using the least amount of turns. Ants on the graph need to move on each turn.
+A node or an edge can be occupied only by one ant at a time, excluding the source and sink nodes. In graph theory terms, all vertices and edges have a capacity of one. All of the ants must be transported through the graph using the least amount of turns. Ants on the graph need to move on each turn.
 
 For example, consider the graph below:
 
