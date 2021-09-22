@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/20 23:54:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/22 13:50:43 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ static void	update_compatitbility_arr(t_route *route, int n_paths, int k)
 	route->compatible_with = new_compatible;
 }
 
+/*
+** if the head of the final path combination isn't the shortest, we will
+** re-index from 1 to n_paths starting from the head.
+*/
 static int	update_indexes(t_route *route, t_lem *lem)
 {
 	int		i;
@@ -64,6 +68,13 @@ static int	update_indexes(t_route *route, t_lem *lem)
 	return (0);
 }
 
+/*
+** calculates turns for all path combinations, starting from shortest path and
+** finding the minimimum turns using the following paths, then the second
+** shortest and its following paths, and so on. the path combo that yields the
+** lowest amount of turns will be used.
+** returns the head of the combo with least turns.
+*/
 t_route	*find_path_combo(t_route *route, t_lem *lem)
 {
 	t_route	*head;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/21 13:49:48 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2021/09/22 12:51:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,6 @@ void	discard_duplicate_paths(t_route *route, t_lem *lem)
 		{
 			if (is_duplicate(route->path, tmp->path, lem->sink))
 			{
-/*
-				// debug
-				t_edge *phead = route->path;
-				while (route->path) {
-					ft_printf("%s - ", route->path->to->id);
-					route->path = route->path->prev_in_path;
-				}
-				route->path = phead;
-				ft_putstr("\n");
-				phead = tmp->path;
-				while (tmp->path) {
-					ft_printf("%s - ", tmp->path->to->id);
-					tmp->path = tmp->path->prev_in_path;
-				}
-				tmp->path = phead;
-				ft_printf("\nFound duplicate with path %d and %d\n", route->i, tmp->i);
-				ft_putstr("\n\n");
-				// debug
-*/
 				route->next = tmp->next;
 				free(tmp);
 				break ;

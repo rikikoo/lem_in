@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/21 22:55:33 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/22 11:59:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,15 @@ static int	ant_dispenser(char ***out, int limit, int *moves, int *finished)
 static int	set_limit(t_lem *lem, int turn, int *pants)
 {
 	int	limit;
+	int	tmp_limit;
 	int	i;
 
-	limit = turn * lem->last_index;
+	limit = turn * lem->max_flow;
 	if (limit > lem->ants)
 		limit = lem->ants;
 	i = 0;
-	while (i < lem->last_index)
+	tmp_limit = limit;
+	while (i < tmp_limit)
 	{
 		if (pants[i] == 0)
 			limit--;
@@ -144,6 +146,7 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 		print_input(input);
 	fill_pants(route, lem, pants);
 
+	ft_printf("max flow: %d\nlast path index: %d\n\n", lem.max_flow, lem.last_index);
 	for (int i = 0; i < lem.last_index; i++) {
 		ft_printf("%d ", pants[i]);
 	}

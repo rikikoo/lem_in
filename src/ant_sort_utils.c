@@ -6,14 +6,16 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/21 21:57:27 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/22 12:41:54 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** returns a copy of ants per path, so that the original info isn't lost
+** copies the ants per path to @pants, so the original info isn't lost.
+** intermediate routes that are not compatible with the path combo are allocated
+** -1 ants, so we know to not take those paths into consideration later.
 */
 void	fill_pants(t_route *route, t_lem lem, int *pants)
 {
@@ -47,9 +49,8 @@ void	store_ant_count(t_route *route, int *pants, int limit, t_lem *lem)
 	while (route && route->i <= limit)
 	{
 		route->ants = pants[route->i - 1];
-		if (route->ants)
+		if (route->ants > 0)
 		{
-//			ft_printf("last index is now %d\n", route->i);
 			lem->last_index = route->i;
 			lem->max_flow++;
 		}
