@@ -6,30 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/22 12:51:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/24 19:32:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** loops over the paths following @route until a path that doesn't intersect
-** with it is found.
-** returns the found path or NULL if none of the following paths are compatible.
-*/
-t_route	*next_compatible(t_route *route)
-{
-	t_route	*next;
-
-	next = route->next;
-	while (next && next->is_valid)
-	{
-		if (route->compatible_with[next->i - 1])
-			return (next);
-		next = next->next;
-	}
-	return (NULL);
-}
 
 static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 {

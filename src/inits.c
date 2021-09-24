@@ -6,7 +6,7 @@
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/21 14:10:22 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2021/09/22 16:44:50 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_lem	init_lem(void)
 	lem.n_paths = 0;
 	lem.max_flow = 0;
 	lem.last_index = 0;
+	lem.compmat = NULL;
 	return (lem);
 }
 

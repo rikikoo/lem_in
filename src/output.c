@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/22 11:59:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/24 19:23:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,20 @@
 **	reached the sink
 ** @last_ant: the ant's index which is the last to be printed on this turn
 */
-static int	move_ant(char *move, int ant, int *finished, int last_ant)
+static int	move_ant(char **path_of_ant, int ant, int *moves, int limit)
 {
+	char	*move;
+
+	move = path_of_ant[moves[ant]];
 	if (!move)
+		return (0);
+	ft_putstr(move);
+	if (ant < limit - 1)
+		ft_putchar(' ');
+	if (path_of_ant[moves[ant] + 1] == NULL)
 	{
-		if (finished[ant])
-			return (0);
-		finished[ant] = 1;
 		return (1);
 	}
-	ft_putstr(move);
-	if (ant < last_ant - 1)
-		ft_putchar(' ');
 	return (0);
 }
 
@@ -48,7 +50,7 @@ static int	move_ant(char *move, int ant, int *finished, int last_ant)
 ** @finish: a "boolean" array where the value is True for ants that have reached
 **	the sink
 */
-static int	ant_dispenser(char ***out, int limit, int *moves, int *finished)
+static int	ant_dispenser(char ***out, int limit, int *moves)
 {
 	int	ant;
 	int	ret;
@@ -57,7 +59,7 @@ static int	ant_dispenser(char ***out, int limit, int *moves, int *finished)
 	ret = 0;
 	while (ant < limit)
 	{
-		ret += move_ant(out[ant][moves[ant]], ant, finished, limit);
+		ret += move_ant(out[ant], ant, moves, limit);
 		if (out[ant][moves[ant]] != NULL)
 			moves[ant]++;
 		ant++;
@@ -83,10 +85,10 @@ static int	set_limit(t_lem *lem, int turn, int *pants)
 	tmp_limit = limit;
 	while (i < tmp_limit)
 	{
-		if (pants[i] == 0)
+		if (pants[i % lem->last_index] == 0)
 			limit--;
-		else if (pants[i] > 0)
-			pants[i]--;
+		else if (pants[i % lem->last_index] > 0)
+			pants[i % lem->last_index]--;
 		i++;
 	}
 	return (limit);
@@ -95,16 +97,14 @@ static int	set_limit(t_lem *lem, int turn, int *pants)
 static void	print_moves(char ***out, t_lem *lem, int *pants)
 {
 	int	*moves;
-	int	*finished;
 	int	ants_left;
 	int	turn;
 	int	turn_limit;
 
 	moves = (int *)ft_zeros(lem->ants);
-	finished = (int *)ft_zeros(lem->ants);
 	ants_left = lem->ants;
 	turn = 0;
-	if (lem->error || !out || !moves || !finished)
+	if (lem->error || !out || !moves)
 	{
 		lem->error = -5;
 		ants_left = 0;
@@ -113,12 +113,10 @@ static void	print_moves(char ***out, t_lem *lem, int *pants)
 	{
 		turn++;
 		turn_limit = set_limit(lem, turn, pants);
-		ants_left -= ant_dispenser(out, turn_limit, moves, finished);
+		ants_left -= ant_dispenser(out, turn_limit, moves);
 	}
 	if (moves)
 		free(moves);
-	if (finished)
-		free(finished);
 }
 
 /*
@@ -134,27 +132,41 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	int		*pants;
 
 	pants = (int *)ft_zeros(lem.last_index);
-	if (!pants)
+	if (!pants || lem.error)
 		return (-5);
 	fill_pants(route, lem, pants);
 	out = prepare_output_arr(route, lem, pants);
 	fill_pants(route, lem, pants);
 	fill_output_arr(route, lem, out, pants);
+
+	// debug start
+	for (int i = 0; out[i] != NULL; i++) {
+		ft_printf("Ant #%d's path:\n", i + 1);
+		for (int j = 0; out[i][j]; j++) {
+			ft_printf("%s ", out[i][j]);
+		}
+		ft_putstr("\n\n");
+	}
+	// debug end
+
 	if (!out)
 		lem.error = -5;
-	if (!lem.error)
+	if (lem.error)	// change to !lem.error when not debugging
 		print_input(input);
 	fill_pants(route, lem, pants);
 
-	ft_printf("max flow: %d\nlast path index: %d\n\n", lem.max_flow, lem.last_index);
+	// debug start
+	ft_printf("max flow: %d\nlast path's index: %d\n\n", lem.max_flow, lem.last_index);
 	for (int i = 0; i < lem.last_index; i++) {
 		ft_printf("%d ", pants[i]);
 	}
 	ft_printf("\n");
 	exit(0);
+	// debug end
 
 	print_moves(out, &lem, pants);
 	free_output(out);
+	free_compmat(&lem);
 	free(pants);
 	return (lem.error);
 }

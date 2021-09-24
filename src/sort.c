@@ -6,55 +6,22 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/21 11:21:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/24 19:35:46 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-/*
-** after distributing ants to all paths currently being tested, we find and
-** return the maximum amount of turns by adding the amount of ants distributed
-** to each path + that path's length.
-**
-** @limit: index of the longest path in this iteration of path combinations
-*/
-static int	calculate_turns(t_route *route, int limit, int *pants)
+static int	distributor(t_route *base, t_route *route, t_lem *lem, int *pants)
 {
-	int	turns;
-	int	turns_max;
+	int		ants;
+	int		turns;
 
-	turns_max = 0;
-	while (route && route->i <= limit)
-	{
-		turns = route->len + pants[route->i - 1] - 1;
-		if (turns > turns_max)
-			turns_max = turns;
-		route = next_compatible(route);
-	}
-	return (turns_max);
-}
-
-/*
-** calculates the difference of the current path's length (@route) and the paths
-** following it (@cmp). This difference is the amount of ants that can be passed
-** to the current path before using more paths is necessary.
-*/
-static int	calculate_diff(t_route *route, t_route *cmp, int ants, int *pants)
-{
-	int	diff;
-
-	while (cmp && cmp->i <= route->i && ants)
-	{
-		diff = route->len - cmp->len;
-		if (diff > ants)
-			pants[cmp->i - 1] = ants;
-		else
-			pants[cmp->i - 1] = diff;
-		ants -= pants[cmp->i - 1];
-		cmp = next_compatible(cmp);
-	}
-	return (ants);
+	set_compatibles(base, route->i, lem);
+	ants = calculate_diff(base, route, lem->ants, pants);
+	distribute_ants(base, route->i, ants, pants);
+	turns = calculate_turns(base, route->i, pants);
+	return (turns);
 }
 
 /*
@@ -64,37 +31,35 @@ static int	calculate_diff(t_route *route, t_route *cmp, int ants, int *pants)
 ** minimize turns after the calculated amount of turns starts eventually rising
 ** after first going down.
 **
-** @route: pointer to the head (shortest) of a list of paths
-** @lem: a general runtime info struct
-** @ants: total amount of ants
+** @route: pointer to a path in a list of paths
+** @lem: pointer to a general runtime info struct
 ** @pants: an int array where the amount of ants needed per path is stored
 */
-int	sort_ants(t_route *route, t_lem *lem, int ants, int *pants)
+int	sort_ants(t_route *route, t_lem *lem, int *pants)
 {
 	t_route	*head;
-	t_route	*cmp;
+	int		*orig_compatibles;
 	int		turns_least;
 	int		turns;
 
-	if (lem->error)
-		return (lem->error);
-	if (!pants)
+	orig_compatibles = clone_compatibles(route->compatible_with, lem->n_paths);
+	if (lem->error || !pants || !orig_compatibles)
 		return (-5);
 	head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
 	while (route && route->is_valid)
 	{
-		cmp = head;
-		ants = calculate_diff(route, cmp, lem->ants, pants);
-		distribute_ants(head, route->i, ants, pants);
-		turns = calculate_turns(head, route->i, pants);
+		turns = distributor(head, route, lem, pants);
 		if (turns > turns_least)
 			break ;
 		turns_least = turns;
 		store_ant_count(head, pants, route->i, lem);
-		route = next_compatible(route);
+		route = next_compatible(route, head->compatible_with);
 	}
 	free(pants);
+	free(head->compatible_with);
+	lem->compmat[head->i - 1] = orig_compatibles;
+	head->compatible_with = orig_compatibles;
 	return (turns_least);
 }
 
