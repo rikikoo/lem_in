@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:21:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 13:39:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ t_route		*find_path_combo(t_route *route, t_lem *lem);
 void		set_compatibles(t_route *base_route, int i_longest, t_lem *lem);
 int			*clone_compatibles(int *compatibles, int size);
 t_route		*next_compatible(t_route *route, int *comp);
-int			sort_ants(t_route *route, t_lem *lem, int *pants);
+int			sort_ants(t_route *route, t_lem *lem, int *pants, int final);
 int			calculate_diff(t_route *base, t_route *route, int ants, int *pants);
 int			calculate_turns(t_route *base, int limit, int *pants);
 void		distribute_ants(t_route *route, int limit, int ants, int *pants);

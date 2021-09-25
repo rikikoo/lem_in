@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:23:49 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 20:57:13 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@
 ** prints an ant's move if it's possible.
 ** returns 1 if an ant reached the sink, 0 otherwise.
 **
-** @move: one ant's move as a pre-formatted string
+** @path_of_ant: one ant's path as an array of strings
 ** @ant: current ant's index
-** @finished: a "boolean" array where the value is True for ants that have
-**	reached the sink
-** @last_ant: the ant's index which is the last to be printed on this turn
+** @moves: array of ints representing the current move's index of each ant
+** @limit: the ant's index which is the last to be printed on this turn
 */
 static int	move_ant(char **path_of_ant, int ant, int *moves, int limit)
 {
@@ -43,12 +42,10 @@ static int	move_ant(char **path_of_ant, int ant, int *moves, int limit)
 ** moves each ant that can move and returns the amount of ants that reached the
 ** sink on this turn
 **
-** @out: pointer to an array of paths that ants travel as strings
+** @out: pointer to an array of paths for each ant as strings
 ** @limit: the number of ants to move on this turn
 ** @moves: int array where each value represents the respective ants' position
 **	on its path
-** @finish: a "boolean" array where the value is True for ants that have reached
-**	the sink
 */
 static int	ant_dispenser(char ***out, int limit, int *moves)
 {
@@ -85,10 +82,10 @@ static int	set_limit(t_lem *lem, int turn, int *pants)
 	tmp_limit = limit;
 	while (i < tmp_limit)
 	{
-		if (pants[i % lem->last_index] == 0)
+		if (!pants[i % lem->max_flow])
 			limit--;
-		else if (pants[i % lem->last_index] > 0)
-			pants[i % lem->last_index]--;
+		else
+			pants[i % lem->max_flow]--;
 		i++;
 	}
 	return (limit);
@@ -114,6 +111,8 @@ static void	print_moves(char ***out, t_lem *lem, int *pants)
 		turn++;
 		turn_limit = set_limit(lem, turn, pants);
 		ants_left -= ant_dispenser(out, turn_limit, moves);
+		if (turn == 30)
+			break ;
 	}
 	if (moves)
 		free(moves);
@@ -131,7 +130,7 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	char	***out;
 	int		*pants;
 
-	pants = (int *)ft_zeros(lem.last_index);
+	pants = (int *)ft_zeros(lem.max_flow);
 	if (!pants || lem.error)
 		return (-5);
 	fill_pants(route, lem, pants);
@@ -142,7 +141,7 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	// debug start
 	for (int i = 0; out[i] != NULL; i++) {
 		ft_printf("Ant #%d's path:\n", i + 1);
-		for (int j = 0; out[i][j]; j++) {
+		for (int j = 0; out[i][j] != NULL; j++) {
 			ft_printf("%s ", out[i][j]);
 		}
 		ft_putstr("\n\n");
@@ -156,12 +155,12 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	fill_pants(route, lem, pants);
 
 	// debug start
-	ft_printf("max flow: %d\nlast path's index: %d\n\n", lem.max_flow, lem.last_index);
-	for (int i = 0; i < lem.last_index; i++) {
+	ft_printf("max flow: %d\n\n", lem.max_flow);
+	for (int i = 0; i < lem.max_flow; i++) {
 		ft_printf("%d ", pants[i]);
 	}
-	ft_printf("\n");
-	exit(0);
+	ft_printf("\n\n");
+//	exit(0);
 	// debug end
 
 	print_moves(out, &lem, pants);

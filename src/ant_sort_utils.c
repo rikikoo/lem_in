@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:32:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 20:36:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	fill_pants(t_route *route, t_lem lem, int *pants)
 	int	*compatible;
 
 	compatible = route->compatible_with;
-	while (route && route->i <= lem.last_index)
+	while (route && route->i <= lem.max_flow)
 	{
 		if (route->i != 1 && !compatible[route->i - 1])
 			pants[route->i - 1] = -1;

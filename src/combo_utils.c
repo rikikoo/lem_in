@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:48:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:49:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 10:49:00 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,11 @@ void	free_compmat(t_lem *lem)
 	while (i < lem->n_paths)
 	{
 		free(lem->compmat[i]);
+		lem->compmat[i] = NULL;
 		i++;
 	}
 	free(lem->compmat);
+	lem->compmat = NULL;
 }
 
 /*
@@ -118,7 +120,13 @@ void	store_compatibility_matrix(t_route *route, t_lem *lem)
 	{
 		while (route && route->is_valid)
 		{
-			compmat[route->i - 1] = route->compatible_with;
+			compmat[route->i - 1] = clone_compatibles(route->compatible_with, \
+			lem->n_paths);
+			if (!compmat[route->i - 1])
+			{
+				lem->error = -5;
+				return ;
+			}
 			route = route->next;
 		}
 		lem->compmat = compmat;

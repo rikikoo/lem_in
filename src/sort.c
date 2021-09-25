@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:35:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 13:39:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,14 @@ static int	distributor(t_route *base, t_route *route, t_lem *lem, int *pants)
 ** @lem: pointer to a general runtime info struct
 ** @pants: an int array where the amount of ants needed per path is stored
 */
-int	sort_ants(t_route *route, t_lem *lem, int *pants)
+int	sort_ants(t_route *route, t_lem *lem, int *pants, int final)
 {
 	t_route	*head;
-	int		*orig_compatibles;
 	int		turns_least;
 	int		turns;
+	int		i;
 
-	orig_compatibles = clone_compatibles(route->compatible_with, lem->n_paths);
-	if (lem->error || !pants || !orig_compatibles)
+	if (lem->error || !pants)
 		return (-5);
 	head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
@@ -57,9 +56,11 @@ int	sort_ants(t_route *route, t_lem *lem, int *pants)
 		route = next_compatible(route, head->compatible_with);
 	}
 	free(pants);
-	free(head->compatible_with);
-	lem->compmat[head->i - 1] = orig_compatibles;
-	head->compatible_with = orig_compatibles;
+	if (final)
+		return (turns_least);
+	i = -1;
+	while (++i < lem->n_paths)
+		head->compatible_with[i] = lem->compmat[head->i - 1][i];
 	return (turns_least);
 }
 

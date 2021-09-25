@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prep_output.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/22 15:16:59 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2021/09/25 20:59:46 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,13 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 		path_head = route->path;
 		while (route->path && ++move < route->len)
 		{
-			// ft_printf("route i: %d  ant: %d  move: %d\n", route->i, ant, move);
 			out[ant][move] = format_move(ft_itoa(ant + 1), route->path->to->id);
 			route->path = route->path->prev_in_path;
 		}
 		route->path = path_head;
 		pants[route->i - 1]--;
 		route = route->next;
-		while (pants[route->i - 1] < 0)
-			route = route->next;
-		if (!route || pants[route->i - 1] == 0 || route->i >= lem.last_index)
+		if (!route || pants[route->i - 1] <= 0 || route->i > lem.max_flow)
 			route = head;
 	}
 }
@@ -115,9 +112,7 @@ char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 			out[ant][move] = NULL;
 		pants[route->i - 1]--;
 		route = route->next;
-		while (route && pants[route->i - 1] < 0)
-			route = route->next;
-		if (!route || pants[route->i - 1] == 0 || route->i >= lem.last_index)
+		if (!route || pants[route->i - 1] <= 0 || route->i > lem.max_flow)
 			route = head;
 	}
 	out[ant] = NULL;

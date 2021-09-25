@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:27:18 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 20:42:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,40 +35,54 @@ static void	update_compatitbility_arr(t_route *route, int n_paths, int k)
 	free(route->compatible_with);
 	route->compatible_with = new_compatible;
 }
+*/
 
-*
-** if the head of the final path combination isn't the shortest, we will
-** re-index from 1 to n_paths starting from the head.
-*
-static int	update_indexes(t_route *route, t_lem *lem)
+static t_route	*clone_route(t_route *route, int i)
+{
+	t_route	*new;
+
+	new = new_route(i);
+	if (!new)
+		return (NULL);
+	new->is_valid = route->is_valid;
+	new->len = route->len;
+	new->ants = route->ants;
+	new->path = route->path;
+	return (new);
+}
+
+/*
+** discards incompatible paths from the final combo and re-indexes the paths
+** from 1 to n_paths starting from the head.
+*/
+static t_route	*assemble_final_combo(t_route *route, t_lem *lem)
 {
 	int		i;
-	int		first_index;
-	t_route	*head;
+	int		*comp;
+	t_route	*old_head;
+	t_route	*new_head;
+	t_route	*new_route;
 
-	head = route;
-	i = 0;
-	first_index = head->i - 1;
-	while (route && route->is_valid)
-	{
-		route = route->next;
-		i++;
-	}
-	lem->n_paths = i;
-	route = head;
 	i = 1;
-	while (route && route->is_valid)
+	comp = route->compatible_with;
+	old_head = route;
+	new_head = clone_route(route, i);
+	new_head->compatible_with = (int *)ft_zeros(lem->max_flow);
+	if (!new_head || !new_head->compatible_with)
+		return (NULL);
+	new_route = new_head;
+	route = next_compatible(route, comp);
+	while (route && route->is_valid && i <= lem->max_flow)
 	{
-		route->i = i;
+		new_head->compatible_with[i] = comp[route->i - 1];
 		i++;
-		update_compatitbility_arr(route, lem->n_paths, first_index);
-		if (!route->compatible_with)
-			return (-5);
-		route = route->next;
+		new_route->next = clone_route(route, i);
+		new_route = new_route->next;
+		route = next_compatible(route, comp);
 	}
-	return (0);
+	free_route(&old_head);
+	return (new_head);
 }
-*/
 
 /*
 ** calculates turns for all path combinations, starting from shortest path and
@@ -85,9 +99,10 @@ t_route	*find_path_combo(t_route *route, t_lem *lem)
 
 	head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
+	store_compatibility_matrix(route, lem);
 	while (route && route->is_valid)
 	{
-		turns = sort_ants(route, lem, (int *)ft_zeros(lem->n_paths));
+		turns = sort_ants(route, lem, (int *)ft_zeros(lem->n_paths), 0);
 		if (turns < 0)
 		{
 			lem->error = turns;
@@ -100,8 +115,7 @@ t_route	*find_path_combo(t_route *route, t_lem *lem)
 		}
 		route = route->next;
 	}
-//	lem->error = update_indexes(head, lem);
-	sort_ants(head, lem, (int *)ft_zeros(lem->n_paths));
-	set_compatibles(head, lem->last_index, lem);
-	return (head);
+	sort_ants(head, lem, (int *)ft_zeros(lem->n_paths), 1);
+	route = assemble_final_combo(head, lem);
+	return (route);
 }

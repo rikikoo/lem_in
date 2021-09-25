@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:32:17 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/25 20:42:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 {
-
 	if (p0->to == sink && p1->to == sink)
 		return (1);
 	while (p0 && p1 && p0->to != sink)

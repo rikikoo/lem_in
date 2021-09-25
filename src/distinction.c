@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/24 19:04:32 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/24 20:13:23 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,5 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	discard_duplicate_paths(route, lem);
 	count_paths(route, lem);
 	lem->error = path_compatibility(route, lem);
-	store_compatibility_matrix(route, lem);
 	return (route);
 }
