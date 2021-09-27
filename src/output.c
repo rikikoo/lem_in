@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 18:06:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 19:35:25 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,42 +133,20 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	int		*pants;
 	int		*moves;
 
-	pants = (int *)ft_zeros(lem.max_flow);
-	if (!pants || lem.error)
+	if (!route || lem.error)
 		return (-5);
+	pants = (int *)ft_zeros(lem.max_flow);
 	fill_pants(route, lem, pants);
 	out = prepare_output_arr(route, lem, pants);
 	fill_pants(route, lem, pants);
 	fill_output_arr(route, lem, out, pants);
-	if (!out)
+	if (!pants || !out)
 		lem.error = -5;
 	if (!lem.error)
 		print_input(input);
 	moves = (int *)ft_zeros(lem.ants);
 	if (!moves)
 		return (-5);
-
-/*
-	// debug start
-	t_route *head;
-	head = route;
-	ft_printf("ants: %d\tmax flow: %d\n", lem.ants, lem.max_flow);
-	for (int i = 0; i < lem.max_flow; i++) {
-		ft_printf("%d ", route->ants);
-		route = route->next;
-	}
-	ft_printf("\n\n");
-	route = head;
-
-	for (int i = 0; out[i] != NULL; i++) {
-		ft_printf("Ant #%d's path:\n", i + 1);
-		for (int j = 0; out[i][j] != NULL; j++) {
-			ft_printf("%s ", out[i][j]);
-		}
-		ft_putstr("\n\n");
-	}
-	// debug end
-*/
 	lem.error = print_moves(out, &lem, route, moves);
 	free_output(out);
 	free_compmat(&lem);
@@ -176,3 +154,25 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	free(moves);
 	return (lem.error);
 }
+
+/*
+**	// debug start
+**	t_route *head;
+**	head = route;
+**	ft_printf("ants: %d\tmax flow: %d\n", lem.ants, lem.max_flow);
+**	for (int i = 0; i < lem.max_flow; i++) {
+**		ft_printf("%d ", route->ants);
+**		route = route->next;
+**	}
+**	ft_printf("\n\n");
+**	route = head;
+**
+**	for (int i = 0; out[i] != NULL; i++) {
+**		ft_printf("Ant #%d's path:\n", i + 1);
+**		for (int j = 0; out[i][j] != NULL; j++) {
+**			ft_printf("%s ", out[i][j]);
+**		}
+**		ft_putstr("\n\n");
+**	}
+**	// debug end
+*/

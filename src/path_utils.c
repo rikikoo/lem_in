@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 20:42:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 19:04:01 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ void	discard_duplicate_paths(t_route *route, t_lem *lem)
 	next = route->next;
 	while (next && next->is_valid)
 	{
-		tmp = next;
 		while (tmp && route->len == tmp->len)
 		{
 			if (is_duplicate(route->path, tmp->path, lem->sink))
 			{
+				tmp = next;
 				route->next = tmp->next;
 				free(tmp);
 				break ;
@@ -75,7 +75,7 @@ t_route	*join_paths(t_route *r0, t_route *r1)
 	}
 	if (r1 && r1->is_valid)
 		r0->next = r1;
-	if (r1 && !r1->is_valid)
+	else if (r1 && !r1->is_valid)
 		free(r1);
 	return (head);
 }

@@ -6,36 +6,25 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 18:06:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 19:45:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-/*
-static void	update_compatitbility_arr(t_route *route, int n_paths, int k)
+static void	free_leftover_paths(t_route *route, int limit)
 {
-	int	j;
-	int	*new_compatible;
+	t_route	*tmp;
 
-	new_compatible = (int *)malloc(sizeof(int) * n_paths);
-	if (!new_compatible)
+	while (route->i < limit)
 	{
-		free(route->compatible_with);
-		route->compatible_with = NULL;
-		return ;
+		tmp = route;
+		route = route->next;
+		if (tmp->compatible_with)
+			free(tmp->compatible_with);
+		free(tmp);
 	}
-	j = 0;
-	while (j < n_paths)
-	{
-		new_compatible[j] = route->compatible_with[k];
-		j++;
-		k++;
-	}
-	free(route->compatible_with);
-	route->compatible_with = new_compatible;
 }
-*/
 
 static t_route	*clone_route(t_route *route, int i)
 {
@@ -93,30 +82,28 @@ static t_route	*assemble_final_combo(t_route *route, t_lem *lem)
 */
 t_route	*find_path_combo(t_route *route, t_lem *lem)
 {
-	t_route	*head;
+	t_route	*old_head;
+	t_route	*new_head;
 	int		turns;
 	int		turns_least;
 
-	head = route;
+	old_head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
 	store_compatibility_matrix(route, lem);
 	while (route && route->is_valid)
 	{
 		turns = sort_ants(route, lem, (int *)ft_zeros(lem->n_paths), 0);
 		if (turns < 0)
-		{
-			lem->error = turns;
 			return (NULL);
-		}
 		if (turns < turns_least)
 		{
 			turns_least = turns;
-			head = route;
+			new_head = route;
 		}
 		route = route->next;
 	}
-//	exit(0);
-	lem->turns = sort_ants(head, lem, (int *)ft_zeros(lem->n_paths), 1);
-	route = assemble_final_combo(head, lem);
+	free_leftover_paths(old_head, new_head->i);
+	lem->turns = sort_ants(new_head, lem, (int *)ft_zeros(lem->n_paths), 1);
+	route = assemble_final_combo(new_head, lem);
 	return (route);
 }
