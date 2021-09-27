@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 20:36:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 18:06:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ int	calculate_diff(t_route *base, t_route *route, int ants, int *pants)
 		else
 			pants[base->i - 1] = diff;
 		ants -= pants[base->i - 1];
+//		ft_printf("%d vs %d diff: %d => ants on %d: %d\n", \
+//		route->i, base->i, diff, base->i, pants[base->i - 1]);
 		base = next_compatible(base, comp);
 	}
 	return (ants);

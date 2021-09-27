@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 20:59:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 14:38:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,8 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 }
 
 /*
-** creates an empty path for each ant and each move per path.
-** every path is an array of strings.
-** returns a pointer to the array of strings.
+** creates an empty path for each ant and each move per path as strings.
+** returns a pointer to the array of char pointers.
 **
 ** @route: pointer to the head of a list of paths
 ** @lem: a general runtime info struct

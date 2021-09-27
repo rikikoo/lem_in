@@ -34,17 +34,78 @@ u1	x | x | x | x | x |   |   |   |		|   5	|  10	|
 u2	x | x | x | x | x | x | x | x |		|   8	|  11	|
 
 
-    •-->•-->•-->•-->•
+int turn = 1;
+int ants_highest = 0;
+int *limit = malloc(sizeof(int) * ants);
+
+while (route->i <= max_flow) {
+    if (route->i == max_flow) {
+        route->ants -= ants_highest;
+        ants_highest += route->ants;
+        while (route->ants) {
+            limit[turn - 1] = lem->max_flow * turn - ants_highest;
+            turn++;
+            route->ants--;
+        }
+        route = head;
+        max_flow--;
+    }
+    else
+        route = route->next;
+}
+
+routeA_ants: 5
+routeB_ants: 3
+routeC_ants: 2
+routeD_ants: 2
+
+
+trn 1   2   3   4   5   6   7
+lim 4   8   10  11  12  12  12
+    •-->•-->•-->•-->•-->•-->•
     •-->•-->•-->•-->•-->•
-    •-->•-->•-->•-->•-->•-->•
+    •-->•-->•-->•-->•
     •-->•-->•-->•
 
+    •-->•-->•-->•-->•-->•-->•
+    •-->•-->•-->•-->•-->•
+    •-->•-->•-->•-->•
+    •-->•-->•-->•
 
-    •-->•-->•-->•
-    •-->•-->•-->•
-    •-->•-->•-->•
     •-->•-->•-->•-->•-->•-->•
+    •-->•-->•-->•-->•-->•
+    X
+    X
+
     •-->•-->•-->•-->•-->•-->•
+    X
+    X
+    X
+
+    •-->•-->•-->•-->•-->•-->•
+    X
+    X
+    X
+
+
+turn = 1;
+shortest_path_ants = 5;
+while (turn <= shortest_path->ants) {
+    while (route->i <= max_flow) {
+        if (route->ants) {
+            route->ants--;
+            i++;
+        }
+        route = route->next;
+    }
+    if (i > 0)
+        limit[turn - 1] = i;
+    if (limit[turn - 1] > lem->ants)
+        limit[turn - 1] = lem->ants;
+    turn++;
+    route = head;
+}
+
 
 ants=9
 plen=4
@@ -56,26 +117,4 @@ np=1
 3. tants   = (ants-pants)/np = (9-1)/1 = 8
 4. cost    = plen+tants      = 4+5     = 9
 5. maxcost = max(cost)       = 13      = 13
-
-
-<<<<<<< HEAD
-r1 -> r2 -> r3 -> r4 -> NULL
-R1 -> R2 -> R3 -> NULL 
-
-rh = r1
-Rh = R1
-=======
-
-new
-    ->path = 0xA
-    ->prev = 0x9
-    ->prev = 0x1
-    ->prev = NULL
-old
-    ->path = NULL
-    ->prev = NULL
-
-tmp = 0x9
-
->>>>>>> 617120c9b82db8bb588466b01c2b9f970d32ca8f
 

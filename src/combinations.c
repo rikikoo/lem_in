@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 20:42:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 18:06:13 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ t_route	*find_path_combo(t_route *route, t_lem *lem)
 		}
 		route = route->next;
 	}
-	sort_ants(head, lem, (int *)ft_zeros(lem->n_paths), 1);
+//	exit(0);
+	lem->turns = sort_ants(head, lem, (int *)ft_zeros(lem->n_paths), 1);
 	route = assemble_final_combo(head, lem);
 	return (route);
 }

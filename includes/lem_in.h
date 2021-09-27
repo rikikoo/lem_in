@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 13:39:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/27 14:34:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_lem
 	struct s_vertex	*sink;
 	int				error;
 	int				n_paths;
+	int				turns;
 	int				max_flow;
 	int				last_index;
 	int				**compmat;

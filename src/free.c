@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 20:13:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/26 22:37:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	free_output(char ***out)
 
 	i_path = 0;
 	i_move = 0;
+	if (!out)
+		return ;
 	while (out[i_path] != NULL)
 	{
 		while (out[i_path][i_move] != NULL)
