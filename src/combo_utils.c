@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   combo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:48:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/25 10:49:00 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 14:32:42 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

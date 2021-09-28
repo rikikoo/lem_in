@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 13:44:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:12:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ t_route	*find_path_combo(t_route *route, t_lem *lem)
 		}
 		route = route->next;
 	}
-	ft_printf("final turns: %d\n", turns_least);
-	exit(0);
 	free_leftover_paths(old_head, new_head->i);
 	lem->turns = sort_ants(new_head, lem, (int *)ft_zeros(lem->n_paths), 1);
 	route = assemble_final_combo(new_head, lem);

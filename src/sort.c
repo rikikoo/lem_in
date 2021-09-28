@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 13:43:08 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:11:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	sort_ants(t_route *route, t_lem *lem, int *pants, int final)
 		return (-5);
 	head = route;
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
-	ft_printf("\nbase path %d\n\n", head->i);
 	while (route && route->is_valid)
 	{
 		turns = distributor(head, route, lem, pants);
@@ -54,7 +53,6 @@ int	sort_ants(t_route *route, t_lem *lem, int *pants, int final)
 			break ;
 		turns_least = turns;
 		store_ant_count(head, pants, route->i, lem);
-		ft_printf("turns with paths up to %d : %d\n", route->i, turns);
 		route = next_compatible(route, head->compatible_with);
 	}
 	free(pants);
