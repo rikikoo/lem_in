@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 14:38:09 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:02:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 		while (route->path && ++move < route->len)
 		{
 			out[ant][move] = format_move(ft_itoa(ant + 1), route->path->to->id);
-			route->path = route->path->prev_in_path;
+			route->path = route->path->fwd_in_path;
 		}
 		route->path = path_head;
 		pants[route->i - 1]--;

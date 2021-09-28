@@ -24,7 +24,7 @@ static t_edge	*send_flow(t_route *route)
 	{
 		route->len++;
 		route->path->cap = 0;
-		route->path = route->path->prev_in_path;
+		route->path = route->path->fwd_in_path;
 	}
 	return (head);
 }
@@ -41,15 +41,15 @@ static t_edge	*store_path(t_route *route, t_vertex *source, t_lem *lem)
 	head = route->path;
 	while (route->path->src != source)
 	{
-		prev = route->path->prev_in_path;
+		prev = route->path->fwd_in_path;
 		while (prev->to != route->path->src)
 		{
-			prev = prev->prev_in_path;
+			prev = prev->fwd_in_path;
 		}
-		route->path->prev_in_path = prev;
-		route->path = route->path->prev_in_path;
+		route->path->fwd_in_path = prev;
+		route->path = route->path->fwd_in_path;
 	}
-	route->path->prev_in_path = NULL;
+	route->path->fwd_in_path = NULL;
 	route->is_valid = 1;
 	lem->n_paths++;
 	return (head);

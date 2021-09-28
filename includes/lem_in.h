@@ -81,7 +81,7 @@ typedef struct s_vertex
 ** @dst: the edge's destination vertex
 ** @cap: capacity of the edge, 0 or 1
 ** @next_adjacent: a pointer to the next edge that has the same source vertex
-** @prev_in_path: a pointer to the edge before the current one on a found path
+** @fwd_in_path: a pointer to the edge before the current one on a found path
 **	(the path will be stored in reverse order, from sink to source)
 */
 typedef struct s_edge
@@ -90,7 +90,7 @@ typedef struct s_edge
 	struct s_vertex	*to;
 	int				cap;
 	struct s_edge	*next_adjacent;
-	struct s_edge	*prev_in_path;
+	struct s_edge	*fwd_in_path;
 }	t_edge;
 
 /*

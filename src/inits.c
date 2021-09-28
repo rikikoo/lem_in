@@ -95,7 +95,7 @@ t_edge	*new_edge(t_vertex *src, t_vertex *to)
 	edge->to = to;
 	edge->cap = 1;
 	edge->next_adjacent = NULL;
-	edge->prev_in_path = NULL;
+	edge->fwd_in_path = NULL;
 	return (edge);
 }
 

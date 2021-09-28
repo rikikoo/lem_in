@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 19:42:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:02:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	print_paths(t_route *route, t_lem lem)
 		while (route->path->to != lem.sink)
 		{
 			ft_printf("%s -> ", route->path->src->id);
-			route->path = route->path->prev_in_path;
+			route->path = route->path->fwd_in_path;
 		}
 		ft_printf("%s -> %s\n\n", route->path->src->id, route->path->to->id);
 		route = route->next;
@@ -86,7 +86,7 @@ void	print_input(t_input *input)
 **	2. validate and store graph information
 **	3. saturate graph by doing repeated searches, updating edge capacities after
 **		each run
-**	4. separate disjoint, non-overlapping paths from overlapping paths
+**	4. mark paths that use same rooms as incompatible if used together
 **	5. calculate how many paths are needed and prepare output strings
 **	6. print ant movements
 */

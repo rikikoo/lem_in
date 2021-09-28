@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 19:04:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:06:59 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 	{
 		if (p0->to == p1->to)
 		{
-			p0 = p0->prev_in_path;
-			p1 = p1->prev_in_path;
+			p0 = p0->fwd_in_path;
+			p1 = p1->fwd_in_path;
 		}
 		else
 			return (0);
@@ -42,6 +42,7 @@ void	discard_duplicate_paths(t_route *route, t_lem *lem)
 	next = route->next;
 	while (next && next->is_valid)
 	{
+		tmp = next;
 		while (tmp && route->len == tmp->len)
 		{
 			if (is_duplicate(route->path, tmp->path, lem->sink))
@@ -98,8 +99,8 @@ t_route	*path_reverse(t_route *route)
 	{
 		tmp = new->path;
 		new->path = route->path;
-		route->path = route->path->prev_in_path;
-		new->path->prev_in_path = tmp;
+		route->path = route->path->fwd_in_path;
+		new->path->fwd_in_path = tmp;
 	}
 	return (new);
 }

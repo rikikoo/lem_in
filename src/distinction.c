@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 19:07:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/09/28 12:13:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ static int	paths_are_distinct(t_edge *path, t_edge *cmp, t_vertex *sink)
 		{
 			if (cmp->to == path->to)
 				return (0);
-			cmp = cmp->prev_in_path;
+			cmp = cmp->fwd_in_path;
 		}
-		path = path->prev_in_path;
+		path = path->fwd_in_path;
 		cmp = cmp_head;
 	}
 	return (1);
@@ -91,7 +91,7 @@ static void	flip_bw_route_edges(t_route *route)
 			tmp = route->path->to;
 			route->path->to = route->path->src;
 			route->path->src = tmp;
-			route->path = route->path->prev_in_path;
+			route->path = route->path->fwd_in_path;
 		}
 		route->path = head;
 		route = route->next;
@@ -128,6 +128,20 @@ t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
 	route = sort_paths(join_paths(rev_head, bw_route));
 	route->i = 1;
 	discard_duplicate_paths(route, lem);
+/*
+	//debug start
+	while (route && route->is_valid) {
+		ft_printf("route %d:\n\n", route->i);
+		while (route->path) {
+			ft_printf("%s - ", route->path->src->id);
+			route->path = route->path->fwd_in_path;
+		}
+		ft_printf("%s\n\n", lem->sink->id);
+		route = route->next;
+	}
+	exit(0);
+	// debug end
+*/
 	count_paths(route, lem);
 	lem->error = path_compatibility(route, lem);
 	return (route);

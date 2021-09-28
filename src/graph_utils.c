@@ -71,5 +71,5 @@ void	path_prepend(t_edge **path, t_edge *edge)
 
 	tmp = *path;
 	*path = edge;
-	(*path)->prev_in_path = tmp;
+	(*path)->fwd_in_path = tmp;
 }
