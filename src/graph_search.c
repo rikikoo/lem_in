@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   graph.c                                            :+:      :+:    :+:   */
+/*   graph_search.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 12:05:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/26 14:35:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ static void	store_paths(t_route *route, t_lem *lem)
 	while (sink_edges)
 	{
 		go_with_the_flow(lem, route, sink_edges);
+
+		ft_printf("route %d:\n", route->i);
+		for (t_edge *e = route->path; e; e = e->next_on_path) {
+			ft_printf("%s -- %s\n", e->src->id, e->to->id);
+		}
+
 		if (route->is_valid)
 		{
 			route->next = new_route(route->i + 1);
@@ -133,12 +139,8 @@ t_route	*saturate_graph(t_lem *lem)
 		queue = wipe_queue(queue, lem->source, lem->vertices);
 		if (!bfs(queue, &search_edges, lem->sink, iteration))
 			break ;
+		ft_printf("\niteration %d\n", iteration);
 		send_flow(search_edges, lem);
-		// ft_printf("\niteration %d:\n", iteration);
-		// for (t_edge *edge = search_edges; edge; edge = edge->next_on_path) {
-		// 	ft_printf("%s - %s\t", edge->src->id, edge->to->id);
-		// 	ft_printf("flow: %d, capacity %d\n", edge->flow, edge->cap);
-		// }
 		store_paths(route, lem);
 		iteration++;
 	}
