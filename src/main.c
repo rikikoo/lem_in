@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 12:02:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/26 12:10:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	print_paths(t_route *route, t_lem lem)
 		while (route->path->to != lem.sink)
 		{
 			ft_printf("%s -> ", route->path->src->id);
-			route->path = route->path->fwd_in_path;
+			route->path = route->path->next_on_path;
 		}
 		ft_printf("%s -> %s\n\n", route->path->src->id, route->path->to->id);
 		route = route->next;
@@ -96,16 +96,14 @@ int	main(int argc, char **argv)
 	t_hashtab	*ht;
 	t_input		*input;
 	t_route		*route;
-	t_route		*bw_route;
 
 	lem = init_lem();
 	ht = init_ht();
 	input = read_input();
 	lem.error = parse_input(input, ht, &lem);
-	route = find_paths(&lem, lem.source, lem.sink);
+	route = saturate_graph(&lem);
 	die_if_error(lem.error, &input, &ht, &route);
-	bw_route = find_paths(&lem, lem.sink, lem.source);
-	route = find_distinct(route, bw_route, &lem);
+	route = find_distinct(route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
 	else

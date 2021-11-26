@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/25 17:55:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/26 12:25:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,39 @@ t_vertex	*pop_first(t_vertex ***queue)
 }
 
 /*
-** if not already in @queue, appends @vertex to the end of it
+** if not already in @queue, places @vertex to @pos.
+** if @pos < 0 or @pos > number of queued items, appends to the end of @queue.
 */
-void	queue_append(t_vertex ***queue, t_vertex *vertex)
+void	enqueue(t_vertex **queue, t_vertex *vertex, int pos)
 {
-	int	i;
+	int			i;
+	t_vertex	*tmp;
+	t_vertex	*tmp2;
 
 	i = 0;
-	while ((*queue)[i] != NULL)
+	while (queue[i] != NULL)
 	{
-		if ((*queue)[i] == vertex)
+		if (queue[i] == vertex)
 			return ;
 		i++;
 	}
-	(*queue)[i] = vertex;
+	tmp = queue[i];
+	queue[i] = vertex;
+	if (pos >= 0 && pos < i)
+	{
+		i = pos;
+		while (queue[++i] != NULL)
+		{
+			tmp2 = queue[i];
+			queue[i] = tmp;
+			tmp = tmp2;
+		}
+		queue[i] = tmp;
+	}
 }
 
 /*
-** sets @edge to the front of @path
+** prepends @edge to the front of @path
 */
 void	path_prepend(t_edge **path, t_edge *edge)
 {
@@ -71,5 +86,5 @@ void	path_prepend(t_edge **path, t_edge *edge)
 
 	tmp = *path;
 	*path = edge;
-	(*path)->fwd_in_path = tmp;
+	(*path)->next_on_path = tmp;
 }
