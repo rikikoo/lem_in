@@ -71,7 +71,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 		while (route->path && ++move < route->len)
 		{
 			out[ant][move] = format_move(ft_itoa(ant + 1), route->path->to->id);
-			route->path = route->path->fwd_in_path;
+			route->path = route->path->next_on_path;
 		}
 		route->path = path_head;
 		pants[route->i - 1]--;

@@ -6,11 +6,43 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 12:06:59 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/26 12:25:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
+
+void	go_with_the_flow(t_lem *lem, t_route *route, t_edge *edge)
+{
+	while (edge && edge->src != lem->source)
+	{
+		if (edge->flow < 0)
+		{
+			path_prepend(&(route->path), get_rev_edge(edge));
+			route->len++;
+			edge = edge->to->edge;
+		}
+		else
+			edge = edge->next_adjacent;
+	}
+	if (route->path)
+		route->is_valid = (route->path->src == lem->source);
+}
+
+t_edge	*get_rev_edge(t_edge *edge)
+{
+	t_edge	*rev;
+
+	if (edge)
+	{
+		rev = edge->to->edge;
+		while (rev && rev->to != edge->src)
+			rev = rev->next_adjacent;
+		if (rev->to == edge->src)
+			return (rev);
+	}
+	return (NULL);
+}
 
 static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 {
@@ -20,8 +52,8 @@ static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 	{
 		if (p0->to == p1->to)
 		{
-			p0 = p0->fwd_in_path;
-			p1 = p1->fwd_in_path;
+			p0 = p0->next_on_path;
+			p1 = p1->next_on_path;
 		}
 		else
 			return (0);
@@ -30,9 +62,7 @@ static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
 }
 
 /*
-** since the breadth-first search is performed twice from two directions on the
-** graph, identical paths may get stored. This function iterates over the joined
-** and sorted list of paths and removes possible duplicate paths.
+** discards identical paths that were stored during bfs
 */
 void	discard_duplicate_paths(t_route *route, t_lem *lem)
 {
@@ -58,49 +88,4 @@ void	discard_duplicate_paths(t_route *route, t_lem *lem)
 		route = route->next;
 		next = route->next;
 	}
-}
-
-t_route	*join_paths(t_route *r0, t_route *r1)
-{
-	t_route	*head;
-
-	if (!r0)
-		return (NULL);
-	head = r0;
-	while (r0->next && r0->next->is_valid)
-		r0 = r0->next;
-	if (r0->next)
-	{
-		free(r0->next);
-		r0->next = NULL;
-	}
-	if (r1 && r1->is_valid)
-		r0->next = r1;
-	else if (r1 && !r1->is_valid)
-		free(r1);
-	return (head);
-}
-
-/*
-** forward-bfs's edges are the right way around (src -> sink), but in the
-** reverse order. Hence the function below.
-*/
-t_route	*path_reverse(t_route *route)
-{
-	t_route	*new;
-	t_edge	*tmp;
-
-	new = new_route(route->i);
-	if (!new)
-		return (NULL);
-	new->is_valid = route->is_valid;
-	new->len = route->len;
-	while (route->path)
-	{
-		tmp = new->path;
-		new->path = route->path;
-		route->path = route->path->fwd_in_path;
-		new->path->fwd_in_path = tmp;
-	}
-	return (new);
 }

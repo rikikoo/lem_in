@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 15:31:47 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 18:22:33 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/26 14:27:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ static int	paths_are_distinct(t_edge *path, t_edge *cmp, t_vertex *sink)
 		{
 			if (cmp->to == path->to)
 				return (0);
-			cmp = cmp->fwd_in_path;
+			cmp = cmp->next_on_path;
 		}
-		path = path->fwd_in_path;
+		path = path->next_on_path;
 		cmp = cmp_head;
 	}
 	return (1);
@@ -74,58 +74,15 @@ static int	path_compatibility(t_route *route, t_lem *lem)
 }
 
 /*
-** because the breadth-first search was performed backwards (sink to source)
-** on the 2nd run, the edges are reversed, which is why all found paths' edges
-** need to be flipped before joining all paths.
-*/
-static void	flip_bw_route_edges(t_route *route)
-{
-	t_vertex	*tmp;
-	t_edge		*head;
-
-	while (route && route->is_valid)
-	{
-		head = route->path;
-		while (route->path)
-		{
-			tmp = route->path->to;
-			route->path->to = route->path->src;
-			route->path->src = tmp;
-			route->path = route->path->fwd_in_path;
-		}
-		route->path = head;
-		route = route->next;
-	}
-}
-
-/*
-** reverses all paths found by the forward-bfs, flips edges of the backward-bfs,
-** joins the two sets of paths together, removes possible duplicate paths and
-** marks down intersecting paths.
+** removes possible duplicate paths and marks down intersecting paths.
 ** returns the joined and sorted list of paths. sets an error value to
 ** @lem->error in case a malloc failed.
 */
-t_route	*find_distinct(t_route *route, t_route *bw_route, t_lem *lem)
+t_route	*find_distinct(t_route *route, t_lem *lem)
 {
-	t_route	*reversed;
-	t_route	*rev_head;
-	t_route	*head;
-
 	if (lem->error)
 		return (route);
-	head = route;
-	reversed = path_reverse(route);
-	rev_head = reversed;
-	route = route->next;
-	while (route && reversed && route->is_valid)
-	{
-		reversed->next = path_reverse(route);
-		reversed = reversed->next;
-		route = route->next;
-	}
-	free_route(&head);
-	flip_bw_route_edges(bw_route);
-	route = sort_paths(join_paths(rev_head, bw_route));
+	route = sort_paths(route);
 	route->i = 1;
 	discard_duplicate_paths(route, lem);
 	count_paths(route, lem);
