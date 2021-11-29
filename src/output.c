@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 19:35:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 15:01:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,10 +135,9 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 
 	if (!route || lem.error)
 		return (-5);
-	pants = (int *)ft_zeros(lem.max_flow);
-	fill_pants(route, lem, pants);
+	pants = (int *)ft_zeros(route->path->set);
+	fill_pants(route, pants);
 	out = prepare_output_arr(route, lem, pants);
-	fill_pants(route, lem, pants);
 	fill_output_arr(route, lem, out, pants);
 	if (!pants || !out)
 		lem.error = -5;
@@ -149,7 +148,6 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 		return (-5);
 	lem.error = print_moves(out, &lem, route, moves);
 	free_output(out);
-	free_compmat(&lem);
 	free(pants);
 	free(moves);
 	return (lem.error);

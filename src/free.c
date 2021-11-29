@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 18:58:34 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/24 18:28:45 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:10:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,20 @@ void	free_ht(t_hashtab **ht)
 
 void	free_route(t_route **route)
 {
-	t_route	*tmp;
+	t_route	*tmp_route;
+	t_path	*tmp_path;
 
 	while (*route != NULL)
 	{
-		if ((*route)->compatible_with)
-			free((*route)->compatible_with);
-		tmp = *route;
+		while ((*route)->path)
+		{
+			tmp_path = (*route)->path;
+			(*route)->path = (*route)->path->next;
+			free(tmp_path);
+		}
+		tmp_route = *route;
 		*route = (*route)->next;
-		free(tmp);
+		free(tmp_route);
 	}
 }
 
@@ -110,7 +115,7 @@ int	die_if_error(int errno, t_input **input, t_hashtab **ht, t_route **route)
 			ft_printf("ERROR: Out of memory\n");
 	}
 	free_input(input);
-	free_ht(ht);
 	free_route(route);
+	free_ht(ht);
 	exit(errno);
 }

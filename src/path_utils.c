@@ -6,27 +6,55 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 12:25:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 11:13:43 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	go_with_the_flow(t_lem *lem, t_route *route, t_edge *edge)
+/*
+** removes possible duplicate paths and marks down intersecting paths.
+** returns the joined and sorted list of paths. sets an error value to
+** @lem->error in case a malloc failed.
+*/
+void	count_sets(t_route *route, t_lem *lem)
 {
-	while (edge && edge->src != lem->source)
+	int	i;
+	int	set_len;
+
+	if (lem->error)
+		return ;
+	i = 1;
+	while (i <= lem->path_sets)
 	{
-		if (edge->flow < 0)
+		set_len = 0;
+		while (route && route->path && route->path->set == i)
 		{
-			path_prepend(&(route->path), get_rev_edge(edge));
-			route->len++;
-			edge = edge->to->edge;
+			set_len++;
+			route = route->next;
 		}
-		else
-			edge = edge->next_adjacent;
+		if (set_len > lem->max_flow)
+			lem->max_flow = set_len;
+		i++;
 	}
-	if (route->path)
-		route->is_valid = (route->path->src == lem->source);
+}
+
+/*
+** prepends a new path element that contains @edge & @set to the front of @path
+*/
+t_path	*path_prepend(t_path *path, t_edge *edge, int set)
+{
+	t_path	*new;
+
+	if (!edge)
+		return (NULL);
+	new = (t_path *)malloc(sizeof(t_path));
+	if (!new)
+		return (NULL);
+	new->edge = edge;
+	new->set = set;
+	new->next = path;
+	return (new);
 }
 
 t_edge	*get_rev_edge(t_edge *edge)
@@ -44,48 +72,25 @@ t_edge	*get_rev_edge(t_edge *edge)
 	return (NULL);
 }
 
-static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
+t_route	*go_with_the_flow(
+		t_lem *lem,
+		t_route *route,
+		t_edge *edge,
+		const int iter
+		)
 {
-	if (p0->to == sink && p1->to == sink)
-		return (1);
-	while (p0 && p1 && p0->to != sink)
+	while (edge && edge->src != lem->source)
 	{
-		if (p0->to == p1->to)
+		if (edge->flow < 0)
 		{
-			p0 = p0->next_on_path;
-			p1 = p1->next_on_path;
+			route->path = path_prepend(route->path, get_rev_edge(edge), iter);
+			route->len++;
+			edge = edge->to->edge;
 		}
 		else
-			return (0);
+			edge = edge->next_adjacent;
 	}
-	return (1);
-}
-
-/*
-** discards identical paths that were stored during bfs
-*/
-void	discard_duplicate_paths(t_route *route, t_lem *lem)
-{
-	t_route	*next;
-	t_route	*tmp;
-
-	next = route->next;
-	while (next && next->is_valid)
-	{
-		tmp = next;
-		while (tmp && route->len == tmp->len)
-		{
-			if (is_duplicate(route->path, tmp->path, lem->sink))
-			{
-				tmp = next;
-				route->next = tmp->next;
-				free(tmp);
-				break ;
-			}
-			tmp = tmp->next;
-		}
-		route->next->i = route->i + 1;
-		route = route->next;
-		next = route->next;
-	}
+	if (route->path)
+		route->is_valid = (route->path->edge->src == lem->source);
+	return (route);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 12:02:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 17:23:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 	int		ant;
 	int		move;
 	t_route	*head;
-	t_edge	*path_head;
+	t_path	*path;
 
 	if (!out)
 		return ;
@@ -67,16 +67,15 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 	while (++ant < lem.ants)
 	{
 		move = -1;
-		path_head = route->path;
-		while (route->path && ++move < route->len)
+		path = route->path;
+		while (path && ++move < route->len)
 		{
-			out[ant][move] = format_move(ft_itoa(ant + 1), route->path->to->id);
-			route->path = route->path->next_on_path;
+			out[ant][move] = format_move(ft_itoa(ant + 1), path->edge->to->id);
+			path = path->next;
 		}
-		route->path = path_head;
-		pants[route->i - 1]--;
+		pants[route->i]--;
 		route = route->next;
-		if (!route || pants[route->i - 1] <= 0 || route->i > lem.max_flow)
+		if (!route || route->i >= lem.max_flow || pants[route->i] <= 0)
 			route = head;
 	}
 }
@@ -109,9 +108,9 @@ char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 		move = -1;
 		while (++move <= route->len)
 			out[ant][move] = NULL;
-		pants[route->i - 1]--;
+		pants[route->i]--;
 		route = route->next;
-		if (!route || pants[route->i - 1] <= 0 || route->i > lem.max_flow)
+		if (!route || route->i >= lem.max_flow || pants[route->i] <= 0)
 			route = head;
 	}
 	out[ant] = NULL;

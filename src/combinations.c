@@ -6,104 +6,103 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/28 18:12:17 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:59:01 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static void	free_leftover_paths(t_route *route, int limit)
-{
-	t_route	*tmp;
-
-	while (route->i < limit)
-	{
-		tmp = route;
-		route = route->next;
-		if (tmp->compatible_with)
-			free(tmp->compatible_with);
-		free(tmp);
-	}
-}
-
-static t_route	*clone_route(t_route *route, int i)
-{
-	t_route	*new;
-
-	new = new_route(i);
-	if (!new)
-		return (NULL);
-	new->is_valid = route->is_valid;
-	new->len = route->len;
-	new->ants = route->ants;
-	new->path = route->path;
-	return (new);
-}
-
 /*
-** discards incompatible paths from the final combo and re-indexes the paths
-** from 1 to n_paths starting from the head.
+** copies the ants per path to @pants, so the original info isn't lost.
 */
-static t_route	*assemble_final_combo(t_route *route, t_lem *lem)
+void	fill_pants(t_route *route, int *pants)
 {
-	int		i;
-	int		*comp;
-	t_route	*old_head;
-	t_route	*new_head;
-	t_route	*new_route;
+	int	set;
 
-	i = 1;
-	comp = route->compatible_with;
-	old_head = route;
-	new_head = clone_route(route, i);
-	new_head->compatible_with = (int *)ft_zeros(lem->max_flow);
-	if (!new_head || !new_head->compatible_with)
-		return (NULL);
-	new_route = new_head;
-	route = next_compatible(route, comp);
-	while (route && route->is_valid && i <= lem->max_flow)
+	if (!pants)
+		return ;
+	set = route->path->set;
+	while (route && route->is_valid && route->path->set == set)
 	{
-		new_head->compatible_with[i] = comp[route->i - 1];
-		i++;
-		new_route->next = clone_route(route, i);
-		new_route = new_route->next;
-		route = next_compatible(route, comp);
+		pants[route->i] = route->ants;
+		route = route->next;
 	}
-	free_route(&old_head);
-	return (new_head);
 }
 
 /*
-** calculates turns for all path combinations, starting from shortest path and
-** finding the minimimum turns using the following paths, then the second
-** shortest and its following paths, and so on. the path combo that yields the
-** lowest amount of turns will be used.
-** returns the head of the combo with least turns.
+**
+** the path combo that yields the lowest amount of turns will be used.
+** returns the head of the path set with least turns.
 */
 t_route	*find_path_combo(t_route *route, t_lem *lem)
 {
-	t_route	*old_head;
-	t_route	*new_head;
-	int		turns;
 	int		turns_least;
+	int		turns;
+	int		set;
+	t_route	*best_set;
 
-	old_head = route;
+	count_sets(route, lem);
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
-	store_compatibility_matrix(route, lem);
-	while (route && route->is_valid)
+	while (route && route->is_valid && route->path->set <= lem->path_sets)
 	{
-		turns = sort_ants(route, lem, (int *)ft_zeros(lem->n_paths), 0);
+		set = route->path->set;
+		turns = sort_ants(route, lem, (int *)ft_zeros(lem->max_flow));
 		if (turns < 0)
 			return (NULL);
 		if (turns < turns_least)
 		{
 			turns_least = turns;
-			new_head = route;
+			best_set = route;
 		}
-		route = route->next;
+		while (route && route->path && route->path->set == set)
+			route = route->next;
 	}
-	free_leftover_paths(old_head, new_head->i);
-	lem->turns = sort_ants(new_head, lem, (int *)ft_zeros(lem->n_paths), 1);
-	route = assemble_final_combo(new_head, lem);
-	return (route);
+	lem->turns = sort_ants(best_set, lem, (int *)ft_zeros(lem->max_flow));
+	return (best_set);
+}
+
+/*
+** swaps the path pointer and length values of two nodes in the list of paths
+*/
+static void	swap_contents(t_route *longer, t_route *shorter)
+{
+	int		tmp_len;
+	t_path	*tmp_path;
+
+	tmp_len = longer->len;
+	tmp_path = longer->path;
+	longer->len = shorter->len;
+	longer->path = shorter->path;
+	shorter->len = tmp_len;
+	shorter->path = tmp_path;
+}
+
+/*
+** sorts all paths in each set to ascending order relative to path length.
+*/
+void	sort_sets(t_route *route, t_lem *lem)
+{
+	t_route	*next;
+	int		set;
+	int		i;
+
+	set = 1;
+	while (set <= lem->path_sets)
+	{
+		i = 0;
+		while (route && route->is_valid && route->path->set == set)
+		{
+			route->i = i;
+			next = route->next;
+			while (next && next->is_valid && next->path->set == set)
+			{
+				if (route->len > next->len)
+					swap_contents(route, next);
+				next = next->next;
+			}
+			route = route->next;
+			i++;
+		}
+		set++;
+	}
 }

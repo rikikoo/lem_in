@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/25 17:59:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 15:03:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@
 ** @vertices: nbr of vertices in the graph
 ** @edges: nbr of edges in the graph
 ** @error: stores an error code (negative integer) in case an error occurs
-** @n_paths: the total number of paths found
-** @max_flow: the number of paths used to achieve minimum amount of turns
+** @path_sets: the number of path combinations/sets found
+** @max_flow: the number of paths in the "largest" path combo
 ** @last_index: index number of the last (longest) path in the final path combo
-** @compmat: compatibility matrix, i.e. every route's compatible_with array
 */
 typedef struct s_lem
 {
@@ -41,11 +40,10 @@ typedef struct s_lem
 	int				vertices;
 	int				edges;
 	int				error;
-	int				n_paths;
+	int				path_sets;
 	int				turns;
 	int				max_flow;
 	int				last_index;
-	int				**compmat;
 }	t_lem;
 
 /*
@@ -101,7 +99,7 @@ typedef struct s_edge
 ** @ants: number of ants allocated for this path
 ** @compatible_with: boolean array representing other paths' compatibility with
 **	this path
-** @path: pointer to the first edge of the path
+** @path: pointer to the first path (a list of edges from source to sink)
 ** @next: next route/path
 */
 typedef struct s_route
@@ -110,10 +108,16 @@ typedef struct s_route
 	int				is_valid;
 	int				len;
 	int				ants;
-	int				*compatible_with;
-	struct s_edge	*path;
+	struct s_path	*path;
 	struct s_route	*next;
 }	t_route;
+
+typedef struct s_path
+{
+	struct s_edge	*edge;
+	int				set;
+	struct s_path	*next;
+}	t_path;
 
 /*
 ** "hash table", aka an array of pointers to vertices
@@ -146,34 +150,28 @@ void		set(t_hashtab *ht, const char *key, const int x, const int y);
 */
 t_route		*saturate_graph(t_lem *lem);
 t_route		*new_route(int iteration);
-t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size);
+t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size, \
+			const int iter);
 t_vertex	*pop_first(t_vertex ***queue);
 void		enqueue(t_vertex **queue, t_vertex *vertex, int pos);
-void		path_prepend(t_edge **path, t_edge *edge);
-t_edge		*get_rev_edge(t_edge *edge);
-void		go_with_the_flow(t_lem *lem, t_route *route, t_edge *edge);
+void		search_edge_prepend(t_edge **search_edges, t_edge *edge);
 
 /*
-** PATH SORT
+** PATH STORING
 */
-t_route		*sort_paths(t_route *route);
-t_route		*find_distinct(t_route *route, t_lem *lem);
-void		discard_duplicate_paths(t_route *route, t_lem *lem);
-void		store_compatibility_matrix(t_route *route, t_lem *lem);
+t_path		*path_prepend(t_path *path, t_edge *edge, int set);
+t_edge		*get_rev_edge(t_edge *edge);
+t_route		*go_with_the_flow(t_lem *lem, t_route *route, t_edge *edge, \
+			const int iter);
+void		sort_sets(t_route *route, t_lem *lem);
+void		count_sets(t_route *route, t_lem *lem);
 
 /*
 ** ANT DISTRIBUTION
 */
 t_route		*find_path_combo(t_route *route, t_lem *lem);
-void		set_compatibles(t_route *base_route, int i_longest, t_lem *lem);
-int			*clone_compatibles(int *compatibles, int size);
-t_route		*next_compatible(t_route *route, int *comp);
-int			sort_ants(t_route *route, t_lem *lem, int *pants, int final);
-int			calculate_diff(t_route *base, t_route *route, int ants, int *pants);
-int			calculate_turns(t_route *base, int limit, int *pants);
-void		distribute_ants(t_route *route, int limit, int ants, int *pants);
-void		store_ant_count(t_route *route, int *pants, int limit, t_lem *lem);
-void		fill_pants(t_route *route, t_lem lem, int *pants);
+int			sort_ants(t_route *route, t_lem *lem, int *pants);
+void		fill_pants(t_route *route, int *pants);
 
 /*
 ** OUTPUT

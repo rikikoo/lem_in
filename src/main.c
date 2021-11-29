@@ -6,60 +6,37 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 12:10:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 17:28:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
 /*
-** prints a boolean matrix of compatible paths
-*/
-static void	print_compatibles(t_route *route, int n_paths)
-{
-	int	i;
-
-	i = 0;
-	while (++i <= n_paths)
-		ft_printf("%-3d", i);
-	ft_putchar('\n');
-	while (route && route->is_valid)
-	{
-		i = 0;
-		while (i < n_paths)
-		{
-			if (route->compatible_with[i] == 1)
-				ft_printf("\033[0;32m%-3d\033[0m", route->compatible_with[i]);
-			else if (route->i == i + 1)
-				ft_printf("\033[0;33m%-3d\033[0m", route->compatible_with[i]);
-			else
-				ft_printf("%-3d", route->compatible_with[i]);
-			i++;
-		}
-		ft_putchar('\n');
-		route = route->next;
-	}
-	ft_putchar('\n');
-}
-
-/*
 ** prints all paths if program got "--paths" as an argument
 */
 static void	print_paths(t_route *route, t_lem lem)
 {
+	int	set;
+
 	if (lem.error)
 		return ;
-	print_compatibles(route, lem.n_paths);
-	while (route && route->is_valid)
+	set = 0;
+	while (route && route->is_valid && ++set)
 	{
-		ft_printf("Path no. %d length: %i\n", route->i, route->len);
-		while (route->path->to != lem.sink)
+		ft_printf("\n\033[0;35mSET %d\033[0m\n\n", set);
+		while (route && route->path && route->path->set == set)
 		{
-			ft_printf("%s -> ", route->path->src->id);
-			route->path = route->path->next_on_path;
+			ft_printf("Path (index %d) length: %i\n", route->i, route->len);
+			while (route->path->edge->to != lem.sink)
+			{
+				ft_printf("%s -> ", route->path->edge->src->id);
+				route->path = route->path->next;
+			}
+			ft_printf("%s -> %s\n\n", route->path->edge->src->id, \
+			route->path->edge->to->id);
+			route = route->next;
 		}
-		ft_printf("%s -> %s\n\n", route->path->src->id, route->path->to->id);
-		route = route->next;
 	}
 }
 
@@ -86,9 +63,8 @@ void	print_input(t_input *input)
 **	2. validate and store graph information
 **	3. saturate graph by doing repeated searches, updating edge capacities after
 **		each run
-**	4. mark paths that use same rooms as incompatible if used together
-**	5. calculate how many paths are needed and prepare output strings
-**	6. print ant movements
+**	4. calculate how many paths are needed and prepare output strings
+**	5. print ant movements
 */
 int	main(int argc, char **argv)
 {
@@ -103,12 +79,17 @@ int	main(int argc, char **argv)
 	lem.error = parse_input(input, ht, &lem);
 	route = saturate_graph(&lem);
 	die_if_error(lem.error, &input, &ht, &route);
-	route = find_distinct(route, &lem);
+	sort_sets(route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
 	else
 	{
 		route = find_path_combo(route, &lem);
+
+		ft_printf("max flow: %d\ntotal sets: %d\namount of turns: %d\n", \
+		lem.max_flow, lem.path_sets, lem.turns);
+		exit(0);
+
 		lem.error = print_output(route, lem, input);
 	}
 	free_route(&route);
