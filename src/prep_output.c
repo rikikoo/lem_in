@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 17:23:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 21:54:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 		}
 		pants[route->i]--;
 		route = route->next;
-		if (!route || route->i >= lem.max_flow || pants[route->i] <= 0)
+		if (!route || route->path->set != lem.max_flow || pants[route->i] <= 0)
 			route = head;
 	}
 }
@@ -110,7 +110,7 @@ char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 			out[ant][move] = NULL;
 		pants[route->i]--;
 		route = route->next;
-		if (!route || route->i >= lem.max_flow || pants[route->i] <= 0)
+		if (!route || route->path->set != lem.max_flow || pants[route->i] <= 0)
 			route = head;
 	}
 	out[ant] = NULL;

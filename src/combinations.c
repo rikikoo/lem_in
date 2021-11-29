@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 16:59:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 17:44:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ t_route	*find_path_combo(t_route *route, t_lem *lem)
 		while (route && route->path && route->path->set == set)
 			route = route->next;
 	}
+	lem->max_flow = best_set->path->set;
 	lem->turns = sort_ants(best_set, lem, (int *)ft_zeros(lem->max_flow));
 	return (best_set);
 }

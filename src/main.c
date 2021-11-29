@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 17:28:24 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 17:42:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,6 @@ int	main(int argc, char **argv)
 	else
 	{
 		route = find_path_combo(route, &lem);
-
-		ft_printf("max flow: %d\ntotal sets: %d\namount of turns: %d\n", \
-		lem.max_flow, lem.path_sets, lem.turns);
-		exit(0);
-
 		lem.error = print_output(route, lem, input);
 	}
 	free_route(&route);

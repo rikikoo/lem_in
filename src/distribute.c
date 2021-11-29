@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 21:24:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 17:20:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/29 22:09:43 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	calculate_turns(t_route *route, int *pants)
 
 	turns_max = 0;
 	set = route->path->set;
-	while (route && route->path &&  route->path->set == set)
+	while (route && route->path && route->path->set == set)
 	{
 		turns = route->len + pants[route->i] - 1;
 		if (turns > turns_max)
@@ -77,10 +77,12 @@ static int	calculate_diff(t_route *route, int ants, int *pants)
 	t_route	*cmp;
 
 	set = route->path->set;
-	cmp = route->next;
-	while (cmp && cmp->path && cmp->path->set == set && ants)
+	cmp = route;
+	while (route->next && route->next->path && route->next->path->set == set)
+		route = route->next;
+	while (cmp->i != route->i && ants)
 	{
-		diff = cmp->len - route->len;
+		diff = route->len - cmp->len;
 		if (diff > ants)
 			pants[cmp->i] = ants;
 		else
