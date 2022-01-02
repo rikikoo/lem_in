@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 17:42:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/02 20:47:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,17 @@ int	main(int argc, char **argv)
 	lem.error = parse_input(input, ht, &lem);
 	route = saturate_graph(&lem);
 	die_if_error(lem.error, &input, &ht, &route);
+
+	for (t_route *r = route; r->is_valid; r = r->next) {
+		ft_printf("ROUTE %d, SET %d\n", r->i, r->path->set);
+		ft_printf("%s", r->path->edge->src->id);
+		for (t_path *p = r->path; p; p = p->next) {
+			ft_printf(" -> %s", p->edge->to->id);
+		}
+		ft_printf("\n\n");
+	}
+	exit(0);
+
 	sort_sets(route, &lem);
 	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);

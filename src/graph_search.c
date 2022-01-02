@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/28 19:46:46 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/02 20:48:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@
 static void	store_paths(t_route *route, t_lem *lem, int iteration)
 {
 	t_edge	*sink_edge;
-	t_route	*head;
 
-	head = route;
 	while (route->next != NULL)
 		route = route->next;
 	sink_edge = lem->sink->edge;
@@ -64,13 +62,14 @@ static void	update_edge(t_edge *edge)
 /*
 ** traces back the edges from sink to source, updating the edges as it does so
 */
-static void	send_flow(t_edge *search_edges, t_lem *lem)
+static void	send_flow(t_edge *curr, t_lem *lem, t_route *route, int iter)
 {
-	t_edge	*curr;
 	t_edge	*prev;
 
-	curr = search_edges;
+	while (route->next != NULL)
+		route = route->next;
 	update_edge(curr);
+	route->path = path_prepend(route->path, curr, iter);
 	while (curr->src != lem->source)
 	{
 		prev = curr->next_on_path;
@@ -80,7 +79,13 @@ static void	send_flow(t_edge *search_edges, t_lem *lem)
 		}
 		update_edge(prev);
 		curr = prev;
+		route->path = path_prepend(route->path, curr, iter);
 	}
+	if (route->path)
+		route->is_valid = (route->path->edge->src == lem->source);
+	route->next = new_route(route->i + 1);
+	if (!route->next)
+		lem->error = -5;
 }
 
 /*
@@ -141,7 +146,7 @@ t_route	*saturate_graph(t_lem *lem)
 		queue = wipe_queue(queue, lem->source, lem->vertices, iteration);
 		if (!bfs(queue, &search_edges, lem->sink, iteration))
 			break ;
-		send_flow(search_edges, lem);
+		send_flow(search_edges, lem, route, iteration);
 		store_paths(route, lem, iteration);
 		iteration++;
 	}
