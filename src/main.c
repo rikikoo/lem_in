@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/02 20:47:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 17:09:01 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,23 @@
 */
 static void	print_paths(t_route *route, t_lem lem)
 {
-	int	set;
-
 	if (lem.error)
 		return ;
-	set = 0;
-	while (route && route->is_valid && ++set)
+	while (route)
 	{
-		ft_printf("\n\033[0;35mSET %d\033[0m\n\n", set);
-		while (route && route->path && route->path->set == set)
+		if (route->is_valid)
 		{
-			ft_printf("Path (index %d) length: %i\n", route->i, route->len);
+			ft_printf("Path %d in set %d length: %i\n", \
+			route->id, route->set, route->len);
 			while (route->path->edge->to != lem.sink)
 			{
 				ft_printf("%s -> ", route->path->edge->src->id);
 				route->path = route->path->next;
 			}
 			ft_printf("%s -> %s\n\n", route->path->edge->src->id, \
-			route->path->edge->to->id);
-			route = route->next;
+				route->path->edge->to->id);
 		}
+		route = route->next;
 	}
 }
 
@@ -48,6 +45,80 @@ void	print_input(t_input *input)
 		input = input->next;
 	}
 	ft_putchar('\n');
+}
+
+/*
+** checks @path's each vertex against @cmp's all vertices. if a match is
+** encountered, @cmp cannot be used simultaneously with @path and 0 is returned,
+** otherwise 1.
+*/
+static int	paths_are_distinct(t_path *path, t_path *cmp, t_vertex *sink)
+{
+	t_path	*cmp_head;
+
+	cmp_head = cmp;
+	while (path && path->edge->to != sink)
+	{
+		while (cmp && cmp->edge->to != sink)
+		{
+			if (cmp->edge->to == path->edge->to)
+				return (0);
+			cmp = cmp->next;
+		}
+		path = path->next;
+		cmp = cmp_head;
+	}
+	return (1);
+}
+
+static int overlaps(t_route *route, t_lem lem)
+{
+	int		set;
+	int		ret;
+	t_route	*next;
+
+	ret = 0;
+	while (route && route->is_valid)
+	{
+		set = route->set;
+		next = route->next;
+		while (next && next->is_valid && next->set == set)
+		{
+			if (!paths_are_distinct(route->path, next->path, lem.sink))
+			{
+				ft_printf("overlapping paths within set %d: %d & %d\n", \
+				set, route->id, next->id);
+				ret = 1;
+			}
+			next = next->next;
+		}
+		route = route->next;
+	}
+	return (ret);
+}
+
+static void	remove_invalids(t_route *route)
+{
+	t_route	*tmp;
+	t_route	*prev;
+
+	prev = route;
+	route = route->next;
+	while (route)
+	{
+		while (route && !route->is_valid)
+		{
+			tmp = route;
+			route = route->next;
+			prev->next = route;
+			free(tmp);
+		}
+		if (route)
+		{
+			prev = route;
+			route = route->next;
+		}
+	}
 }
 
 /*
@@ -79,25 +150,12 @@ int	main(int argc, char **argv)
 	lem.error = parse_input(input, ht, &lem);
 	route = saturate_graph(&lem);
 	die_if_error(lem.error, &input, &ht, &route);
-
-	for (t_route *r = route; r->is_valid; r = r->next) {
-		ft_printf("ROUTE %d, SET %d\n", r->i, r->path->set);
-		ft_printf("%s", r->path->edge->src->id);
-		for (t_path *p = r->path; p; p = p->next) {
-			ft_printf(" -> %s", p->edge->to->id);
-		}
-		ft_printf("\n\n");
-	}
-	exit(0);
-
-	sort_sets(route, &lem);
-	if (argc > 1 && ft_strequ(argv[1], "--paths"))
+	remove_invalids(route);
+	sort_paths(route, &lem);
+	if ((argc > 1 && ft_strequ(argv[1], "--paths")) || overlaps(route, lem))
 		print_paths(route, lem);
 	else
-	{
-		route = find_path_combo(route, &lem);
-		lem.error = print_output(route, lem, input);
-	}
+		lem.error = print_output(find_best_set(route, &lem), lem, input);
 	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/28 18:30:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/09 14:24:23 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,7 @@
 ** adds the @source vertex pointer to the start of @queue and returns an
 ** otherwise NULL'd array of t_vertex pointers of the size @size
 */
-t_vertex	**wipe_queue(
-			t_vertex **queue,
-			t_vertex *source,
-			const int size,
-			const int iter
-			)
+t_vertex	**wipe_queue(t_vertex **queue, t_vertex *src, int size, int iter)
 {
 	int	i;
 
@@ -31,7 +26,7 @@ t_vertex	**wipe_queue(
 		queue[i] = NULL;
 		i++;
 	}
-	queue[0] = source;
+	queue[0] = src;
 	queue[0]->visited = iter;
 	return (queue);
 }

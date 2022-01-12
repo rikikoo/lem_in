@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 09:13:10 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/10 19:51:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_lem	init_lem(void)
 	lem.path_sets = 0;
 	lem.turns = 0;
 	lem.max_flow = 0;
-	lem.last_index = 0;
 	return (lem);
 }
 
@@ -72,6 +71,7 @@ t_vertex	*new_vertex(const char *key, const int x, const int y)
 	vertex->x = x;
 	vertex->y = y;
 	vertex->visited = 0;
+	vertex->valid = 0;
 	vertex->edge = NULL;
 	vertex->next = NULL;
 	return (vertex);
@@ -92,7 +92,7 @@ t_edge	*new_edge(t_vertex *src, t_vertex *to)
 		return (NULL);
 	edge->src = src;
 	edge->to = to;
-	edge->cap = 1;
+	edge->has_cap = 1;
 	edge->flow = 0;
 	edge->next_adjacent = NULL;
 	edge->next_on_path = NULL;
@@ -101,19 +101,18 @@ t_edge	*new_edge(t_vertex *src, t_vertex *to)
 
 /*
 ** allocates memory for a new struct that'll contain a path + info about it
-**
-** @iteration: the number of the current path (starts initially from 1)
 */
-t_route	*new_route(int iteration)
+t_route	*new_route(int id)
 {
 	t_route	*route;
 
 	route = (t_route *)malloc(sizeof(t_route));
 	if (!route)
 		return (NULL);
-	route->i = iteration;
+	route->id = id;
 	route->is_valid = 0;
 	route->len = 0;
+	route->set = 0;
 	route->ants = 0;
 	route->path = NULL;
 	route->next = NULL;

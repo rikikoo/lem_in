@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/29 21:54:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/10 20:38:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 {
 	int		ant;
 	int		move;
+	int		set;
 	t_route	*head;
 	t_path	*path;
 
 	if (!out)
 		return ;
 	ant = -1;
+	set = route->set;
 	head = route;
 	while (++ant < lem.ants)
 	{
@@ -73,9 +75,9 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 			out[ant][move] = format_move(ft_itoa(ant + 1), path->edge->to->id);
 			path = path->next;
 		}
-		pants[route->i]--;
+		pants[route->id - 1]--;
 		route = route->next;
-		if (!route || route->path->set != lem.max_flow || pants[route->i] <= 0)
+		if (!route || !route->is_valid || !pants[route->id] || route->set != set)
 			route = head;
 	}
 }
@@ -88,7 +90,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 ** @lem: a general runtime info struct
 ** @pants: int array storing the number of ants per path
 */
-char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
+char	***prepare_output(t_route *route, t_lem lem, int *pants, int set)
 {
 	t_route	*head;
 	char	***out;
@@ -108,9 +110,9 @@ char	***prepare_output_arr(t_route *route, t_lem lem, int *pants)
 		move = -1;
 		while (++move <= route->len)
 			out[ant][move] = NULL;
-		pants[route->i]--;
+		pants[route->id - 1]--;
 		route = route->next;
-		if (!route || route->path->set != lem.max_flow || pants[route->i] <= 0)
+		if (!route || !route->is_valid || !pants[route->id] || route->set != set)
 			route = head;
 	}
 	out[ant] = NULL;

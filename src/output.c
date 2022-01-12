@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/02 16:39:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 17:28:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,13 @@ static void	set_limits(t_lem *lem, t_route *route, int turn, int *limits)
 	t_route	*head;
 	int		ants;
 	int		ants_most;
-	int		set;
 
 	head = route;
 	ants = 0;
 	ants_most = head->ants;
-	set = route->path->set;
 	while (turn < ants_most)
 	{
-		while (route && route->path->set == set)
+		while (route && route->id <= lem->max_flow)
 		{
 			if (route->ants)
 			{
@@ -137,16 +135,17 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 
 	if (!route || lem.error)
 		return (-5);
-	pants = (int *)ft_zeros(route->path->set);
-	fill_pants(route, pants);
-	out = prepare_output_arr(route, lem, pants);
-	fill_pants(route, pants);
+	pants = (int *)ft_zeros(route->set);
+	fill_pants(route, route->set, pants, &lem);
+	out = prepare_output(route, lem, pants, route->set);
+	fill_pants(route, route->set, pants, &lem);
 	fill_output_arr(route, lem, out, pants);
+
 
 	// debug start
 	t_route *head;
 	head = route;
-	ft_printf("ants: %d\tmax flow: %d\n", lem.ants, lem.max_flow);
+	ft_printf("ants: %d\tmax flow: %d\tbest set: %d\n", lem.ants, lem.max_flow, route->set);
 	for (int i = 0; i < lem.max_flow; i++) {
 		ft_printf("%d ", route->ants);
 		route = route->next;
@@ -163,6 +162,7 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	}
 	exit(0);
 	// debug end
+
 
 	if (!pants || !out)
 		lem.error = -5;
