@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/10 20:19:10 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:52:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_lem
 	int				error;
 	int				path_sets;
 	int				turns;
+	int				best_set;
 	int				max_flow;
 }	t_lem;
 
@@ -180,8 +181,8 @@ int			calculate_turns(t_route *route, int set);
 /*
 ** OUTPUT
 */
-void		fill_pants(t_route *route, int set, int *pants, t_lem *lem);
-char		***prepare_output(t_route *route, t_lem lem, int *pants, int set);
+void		fill_pants(t_route *route, int *pants, t_lem *lem);
+char		***prepare_output(t_route *route, t_lem lem, int *pants);
 void		fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants);
 void		print_input(t_input *input);
 int			print_output(t_route *route, t_lem lem, t_input *input);

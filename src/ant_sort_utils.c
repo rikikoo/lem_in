@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/10 19:55:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:51:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 /*
 ** copies the ants per path to @pants, so the original info isn't lost.
 */
-void	fill_pants(t_route *route, int set, int *pants, t_lem *lem)
+void	fill_pants(t_route *route, int *pants, t_lem *lem)
 {
 	int	paths;
 
 	if (!pants)
 		return ;
 	paths = 0;
-	while (route && route->is_valid && route->set == set)
+	while (route && route->is_valid && route->set == lem->best_set)
 	{
 		paths++;
 		pants[route->id - 1] = route->ants;

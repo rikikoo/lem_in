@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 17:01:52 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/10 20:38:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:50:42 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,12 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 {
 	int		ant;
 	int		move;
-	int		set;
 	t_route	*head;
 	t_path	*path;
 
 	if (!out)
 		return ;
 	ant = -1;
-	set = route->set;
 	head = route;
 	while (++ant < lem.ants)
 	{
@@ -77,7 +75,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 		}
 		pants[route->id - 1]--;
 		route = route->next;
-		if (!route || !route->is_valid || !pants[route->id] || route->set != set)
+		if (!route || !pants[route->id - 1] || route->set != lem.best_set)
 			route = head;
 	}
 }
@@ -90,7 +88,7 @@ void	fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants)
 ** @lem: a general runtime info struct
 ** @pants: int array storing the number of ants per path
 */
-char	***prepare_output(t_route *route, t_lem lem, int *pants, int set)
+char	***prepare_output(t_route *route, t_lem lem, int *pants)
 {
 	t_route	*head;
 	char	***out;
@@ -112,7 +110,7 @@ char	***prepare_output(t_route *route, t_lem lem, int *pants, int set)
 			out[ant][move] = NULL;
 		pants[route->id - 1]--;
 		route = route->next;
-		if (!route || !route->is_valid || !pants[route->id] || route->set != set)
+		if (!route || !pants[route->id - 1] || route->set != lem.best_set)
 			route = head;
 	}
 	out[ant] = NULL;

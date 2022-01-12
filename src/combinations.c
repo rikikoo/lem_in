@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/10 20:28:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:49:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ t_route	*find_best_set(t_route *route, t_lem *lem)
 			route = route->next;
 	}
 	lem->turns = turns_least;
+	lem->best_set = best_set_head->set;
 	return (best_set_head);
 }
