@@ -101,7 +101,7 @@ In a nutshell, the EK algo performs a breadth-first search repeatedly on the gra
 
 After each BFS iteration, we attempt to traverse any and all outgoing edges from the sink that have a negative flow (meaning that in the "correct" direction, the edge's flow must be positive, i.e. the edge is traversable). If the traversal along the edges with negative flow reaches the source, we have a path.
 
-All paths found after a BFS flow-update belong to a *set* of paths. All paths are wrapped with a struct containing metadata about the path, such as the length of the path and indeed the set it belongs to.
+All paths found after a BFS flow-update belong to a *set* of paths. Every path is wrapped with a struct containing metadata about the path, such as the length of the path and indeed the set it belongs to.
 During these backtracking sessions every visited node is also marked, just like in the breadth-first search algorithm, so we won't include any paths that would overlap in a set.
 
 ### Ant distribution
