@@ -154,8 +154,7 @@ The project familiarizes the student with graph-theory and invites them to explo
 At first I misunderstood the goal of this project and I tried to implement a max flow graph search algorithm. Eventually I figured out that we are not trying to find the max flow, but something more.
 
 I wasted a ton of time trying to figure out why the supposedly best choice algo (Edmonds-Karp) didn't yield results that worked, until I started to really think what's going on and what we're actually trying to achieve here.
-It turned out that the EK algo assumes some graph attributes that don't apply to this project, such as vertices having an infinite capacity.
-Also EK implementations usually have the edges having a reverse edge and that they are used to update the residual graph, which all over-complicated the problem; in lem_in, we can only have 1 ant occupy an edge or a vertex at a time. We do not need reverse edges or residual graphs. Once an ant has passed through an edge, it's no longer usable in that direction.
+It turned out that the EK algo assumes some graph attributes (e.g. vertices have infinite capacity) that don't apply to this project.
 
 More than anything else, I learned that I should not trust blindly on suggestions like "the EK algo is the way to go here". Yeah, it eventually turned out to be a variation of EK, but before I had thought through the problem myself and tried to implement it without understanding what it produces or what we are even trying to produce, a lot of time and motivation was wasted.
 
