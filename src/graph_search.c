@@ -6,36 +6,40 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 14:35:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 16:57:50 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static void	store_paths(t_route *route, t_lem *lem)
+/*
+** stores paths by backtracking from sink to source along the edges that have a
+** negative flow, which means its reverse edge must have positive flow. appends
+** every new path to the end of a list of paths.
+*/
+static void	store_paths(t_route *route, t_lem *lem, int iteration)
 {
-	t_edge	*sink_edges;
+	t_edge	*sink_edge;
 
 	while (route->next != NULL)
 		route = route->next;
-	sink_edges = lem->sink->edge;
-	while (sink_edges)
+	sink_edge = lem->sink->edge;
+	route->id = 1;
+	while (sink_edge)
 	{
-		go_with_the_flow(lem, route, sink_edges);
-
-		ft_printf("route %d:\n", route->i);
-		for (t_edge *e = route->path; e; e = e->next_on_path) {
-			ft_printf("%s -- %s\n", e->src->id, e->to->id);
-		}
-
+		route->set = iteration;
+		route->len = 1;
+		route->path = NULL;
+		if (sink_edge->flow < 0)
+			route = follow_flow(lem, route, sink_edge, iteration);
 		if (route->is_valid)
 		{
-			route->next = new_route(route->i + 1);
+			route->next = new_route(route->id + 1);
 			route = route->next;
 		}
 		if (!route)
 			break ;
-		sink_edges = sink_edges->next_adjacent;
+		sink_edge = sink_edge->next_adjacent;
 	}
 	lem->error = (route == NULL) * -5;
 }
@@ -53,20 +57,18 @@ static void	update_edge(t_edge *edge)
 	{
 		edge->flow++;
 		rev->flow--;
-		edge->cap = (edge->flow < edge->cap);
-		rev->cap = (rev->flow < rev->cap);
+		edge->has_cap = (edge->flow < edge->has_cap);
+		rev->has_cap = (rev->flow < rev->has_cap);
 	}
 }
 
 /*
 ** traces back the edges from sink to source, updating the edges as it does so
 */
-static void	send_flow(t_edge *search_edges, t_lem *lem)
+static void	send_flow(t_edge *curr, t_lem *lem)
 {
-	t_edge	*curr;
 	t_edge	*prev;
 
-	curr = search_edges;
 	update_edge(curr);
 	while (curr->src != lem->source)
 	{
@@ -78,16 +80,15 @@ static void	send_flow(t_edge *search_edges, t_lem *lem)
 		update_edge(prev);
 		curr = prev;
 	}
-	lem->n_paths++;
 }
 
 /*
 ** performs a breadth-first search on the graph starting from the source vertex,
 ** which is contained in @queue. queues visited nodes and adds the found edges
-** to a path list, whose head is stored in @route.
+** to a path list, @bfs_edges.
 ** returns 1 if @sink was found, 0 otherwise.
 */
-static int	bfs(t_vertex **queue, t_edge **sea_edges, t_vertex *sink, int iter)
+static int	bfs(t_vertex **queue, t_edge **bfs_edges, t_vertex *sink, int iter)
 {
 	t_vertex	*vertex;
 	t_edge		*edge;
@@ -99,11 +100,11 @@ static int	bfs(t_vertex **queue, t_edge **sea_edges, t_vertex *sink, int iter)
 		edge = vertex->edge;
 		while (edge != NULL)
 		{
-			if (edge->to->visited < iter && edge->flow < 1)
+			if (edge->to->visited < iter && edge->flow < 1 && edge->has_cap)
 			{
 				edge->to->visited = iter;
 				enqueue(queue, edge->to, -1);
-				path_prepend(sea_edges, edge);
+				search_edge_prepend(bfs_edges, edge);
 				if (edge->to == sink)
 					return (1);
 			}
@@ -124,27 +125,27 @@ static int	bfs(t_vertex **queue, t_edge **sea_edges, t_vertex *sink, int iter)
 t_route	*saturate_graph(t_lem *lem)
 {
 	t_vertex	**queue;
-	t_edge		*search_edges;
+	t_edge		*bfs_edges;
 	t_route		*route;
 	int			iteration;
 
 	iteration = 1;
 	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
-	route = new_route(iteration);
+	route = new_route(1);
 	if (lem->error || !queue || !route)
 		return (NULL);
 	while (!lem->error)
 	{
-		search_edges = NULL;
-		queue = wipe_queue(queue, lem->source, lem->vertices);
-		if (!bfs(queue, &search_edges, lem->sink, iteration))
+		bfs_edges = NULL;
+		queue = wipe_queue(queue, lem->source, lem->vertices, iteration);
+		if (!bfs(queue, &bfs_edges, lem->sink, iteration))
 			break ;
-		ft_printf("\niteration %d\n", iteration);
-		send_flow(search_edges, lem);
-		store_paths(route, lem);
+		send_flow(bfs_edges, lem);
+		store_paths(route, lem, iteration);
 		iteration++;
 	}
-	free(queue);
+	lem->path_sets = iteration - 1;
 	lem->error += (iteration < 2) * -4;
+	free(queue);
 	return (route);
 }

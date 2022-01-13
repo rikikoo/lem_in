@@ -6,41 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 12:10:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 17:09:01 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
-
-/*
-** prints a boolean matrix of compatible paths
-*/
-static void	print_compatibles(t_route *route, int n_paths)
-{
-	int	i;
-
-	i = 0;
-	while (++i <= n_paths)
-		ft_printf("%-3d", i);
-	ft_putchar('\n');
-	while (route && route->is_valid)
-	{
-		i = 0;
-		while (i < n_paths)
-		{
-			if (route->compatible_with[i] == 1)
-				ft_printf("\033[0;32m%-3d\033[0m", route->compatible_with[i]);
-			else if (route->i == i + 1)
-				ft_printf("\033[0;33m%-3d\033[0m", route->compatible_with[i]);
-			else
-				ft_printf("%-3d", route->compatible_with[i]);
-			i++;
-		}
-		ft_putchar('\n');
-		route = route->next;
-	}
-	ft_putchar('\n');
-}
 
 /*
 ** prints all paths if program got "--paths" as an argument
@@ -49,16 +19,20 @@ static void	print_paths(t_route *route, t_lem lem)
 {
 	if (lem.error)
 		return ;
-	print_compatibles(route, lem.n_paths);
-	while (route && route->is_valid)
+	while (route)
 	{
-		ft_printf("Path no. %d length: %i\n", route->i, route->len);
-		while (route->path->to != lem.sink)
+		if (route->is_valid)
 		{
-			ft_printf("%s -> ", route->path->src->id);
-			route->path = route->path->next_on_path;
+			ft_printf("Path %d in set %d length: %i\n", \
+			route->id, route->set, route->len);
+			while (route->path->edge->to != lem.sink)
+			{
+				ft_printf("%s -> ", route->path->edge->src->id);
+				route->path = route->path->next;
+			}
+			ft_printf("%s -> %s\n\n", route->path->edge->src->id, \
+				route->path->edge->to->id);
 		}
-		ft_printf("%s -> %s\n\n", route->path->src->id, route->path->to->id);
 		route = route->next;
 	}
 }
@@ -74,6 +48,80 @@ void	print_input(t_input *input)
 }
 
 /*
+** checks @path's each vertex against @cmp's all vertices. if a match is
+** encountered, @cmp cannot be used simultaneously with @path and 0 is returned,
+** otherwise 1.
+*/
+static int	paths_are_distinct(t_path *path, t_path *cmp, t_vertex *sink)
+{
+	t_path	*cmp_head;
+
+	cmp_head = cmp;
+	while (path && path->edge->to != sink)
+	{
+		while (cmp && cmp->edge->to != sink)
+		{
+			if (cmp->edge->to == path->edge->to)
+				return (0);
+			cmp = cmp->next;
+		}
+		path = path->next;
+		cmp = cmp_head;
+	}
+	return (1);
+}
+
+static int overlaps(t_route *route, t_lem lem)
+{
+	int		set;
+	int		ret;
+	t_route	*next;
+
+	ret = 0;
+	while (route && route->is_valid)
+	{
+		set = route->set;
+		next = route->next;
+		while (next && next->is_valid && next->set == set)
+		{
+			if (!paths_are_distinct(route->path, next->path, lem.sink))
+			{
+				ft_printf("overlapping paths within set %d: %d & %d\n", \
+				set, route->id, next->id);
+				ret = 1;
+			}
+			next = next->next;
+		}
+		route = route->next;
+	}
+	return (ret);
+}
+
+static void	remove_invalids(t_route *route)
+{
+	t_route	*tmp;
+	t_route	*prev;
+
+	prev = route;
+	route = route->next;
+	while (route)
+	{
+		while (route && !route->is_valid)
+		{
+			tmp = route;
+			route = route->next;
+			prev->next = route;
+			free(tmp);
+		}
+		if (route)
+		{
+			prev = route;
+			route = route->next;
+		}
+	}
+}
+
+/*
 ** lem_in is a program that finds all paths in an undirected graph for n ants
 ** to go through and prints out the moves the ants will take from source to sink
 ** with the least amount of moves.
@@ -86,9 +134,8 @@ void	print_input(t_input *input)
 **	2. validate and store graph information
 **	3. saturate graph by doing repeated searches, updating edge capacities after
 **		each run
-**	4. mark paths that use same rooms as incompatible if used together
-**	5. calculate how many paths are needed and prepare output strings
-**	6. print ant movements
+**	4. calculate how many paths are needed and prepare output strings
+**	5. print ant movements
 */
 int	main(int argc, char **argv)
 {
@@ -103,14 +150,12 @@ int	main(int argc, char **argv)
 	lem.error = parse_input(input, ht, &lem);
 	route = saturate_graph(&lem);
 	die_if_error(lem.error, &input, &ht, &route);
-	route = find_distinct(route, &lem);
-	if (argc > 1 && ft_strequ(argv[1], "--paths"))
+	remove_invalids(route);
+	sort_paths(route, &lem);
+	if ((argc > 1 && ft_strequ(argv[1], "--paths")) || overlaps(route, lem))
 		print_paths(route, lem);
 	else
-	{
-		route = find_path_combo(route, &lem);
-		lem.error = print_output(route, lem, input);
-	}
+		lem.error = print_output(find_best_set(route, &lem), lem, input);
 	free_route(&route);
 	free_input(&input);
 	free_ht(&ht);

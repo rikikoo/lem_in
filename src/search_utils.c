@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   graph_utils.c                                      :+:      :+:    :+:   */
+/*   search_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/30 12:04:25 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 12:25:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/09 14:24:23 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** adds the @source vertex pointer to the start of @queue and returns an
 ** otherwise NULL'd array of t_vertex pointers of the size @size
 */
-t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
+t_vertex	**wipe_queue(t_vertex **queue, t_vertex *src, int size, int iter)
 {
 	int	i;
 
@@ -26,8 +26,8 @@ t_vertex	**wipe_queue(t_vertex **queue, t_vertex *source, const int size)
 		queue[i] = NULL;
 		i++;
 	}
-	queue[0] = source;
-	queue[0]->visited = 1;
+	queue[0] = src;
+	queue[0]->visited = iter;
 	return (queue);
 }
 
@@ -80,11 +80,14 @@ void	enqueue(t_vertex **queue, t_vertex *vertex, int pos)
 /*
 ** prepends @edge to the front of @path
 */
-void	path_prepend(t_edge **path, t_edge *edge)
+void	search_edge_prepend(t_edge **search_edges, t_edge *edge)
 {
 	t_edge	*tmp;
 
-	tmp = *path;
-	*path = edge;
-	(*path)->next_on_path = tmp;
+	if (edge)
+	{
+		tmp = *search_edges;
+		*search_edges = edge;
+		(*search_edges)->next_on_path = tmp;
+	}
 }

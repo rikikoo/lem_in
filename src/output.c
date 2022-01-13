@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 19:35:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:52:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	set_limits(t_lem *lem, t_route *route, int turn, int *limits)
 	ants_most = head->ants;
 	while (turn < ants_most)
 	{
-		while (route && route->i <= lem->max_flow)
+		while (route && route->set == lem->best_set)
 		{
 			if (route->ants)
 			{
@@ -135,11 +135,35 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 
 	if (!route || lem.error)
 		return (-5);
-	pants = (int *)ft_zeros(lem.max_flow);
-	fill_pants(route, lem, pants);
-	out = prepare_output_arr(route, lem, pants);
-	fill_pants(route, lem, pants);
+	pants = (int *)ft_zeros(route->set);
+	fill_pants(route, pants, &lem);
+	out = prepare_output(route, lem, pants);
+	fill_pants(route, pants, &lem);
 	fill_output_arr(route, lem, out, pants);
+
+
+	// debug start
+	// t_route *head;
+	// head = route;
+	// ft_printf("ants: %d\tmax flow: %d\tbest set: %d\n", lem.ants, lem.max_flow, route->set);
+	// for (int i = 0; i < lem.max_flow; i++) {
+	// 	ft_printf("%d ", route->ants);
+	// 	route = route->next;
+	// }
+	// ft_printf("\n\n");
+	// route = head;
+	//
+	// for (int i = 0; out[i] != NULL; i++) {
+	// 	ft_printf("Ant #%d's path:\n", i + 1);
+	// 	for (int j = 0; out[i][j] != NULL; j++) {
+	// 		ft_printf("%s ", out[i][j]);
+	// 	}
+	// 	ft_putstr("\n\n");
+	// }
+	// exit(0);
+	// debug end
+
+
 	if (!pants || !out)
 		lem.error = -5;
 	if (!lem.error)
@@ -149,30 +173,7 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 		return (-5);
 	lem.error = print_moves(out, &lem, route, moves);
 	free_output(out);
-	free_compmat(&lem);
 	free(pants);
 	free(moves);
 	return (lem.error);
 }
-
-/*
-**	// debug start
-**	t_route *head;
-**	head = route;
-**	ft_printf("ants: %d\tmax flow: %d\n", lem.ants, lem.max_flow);
-**	for (int i = 0; i < lem.max_flow; i++) {
-**		ft_printf("%d ", route->ants);
-**		route = route->next;
-**	}
-**	ft_printf("\n\n");
-**	route = head;
-**
-**	for (int i = 0; out[i] != NULL; i++) {
-**		ft_printf("Ant #%d's path:\n", i + 1);
-**		for (int j = 0; out[i][j] != NULL; j++) {
-**			ft_printf("%s ", out[i][j]);
-**		}
-**		ft_putstr("\n\n");
-**	}
-**	// debug end
-*/

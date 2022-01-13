@@ -6,27 +6,27 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/26 12:25:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 17:26:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	go_with_the_flow(t_lem *lem, t_route *route, t_edge *edge)
+/*
+** prepends a new path element that contains @edge & @set to the front of @path
+*/
+t_path	*path_prepend(t_path *path, t_edge *edge)
 {
-	while (edge && edge->src != lem->source)
-	{
-		if (edge->flow < 0)
-		{
-			path_prepend(&(route->path), get_rev_edge(edge));
-			route->len++;
-			edge = edge->to->edge;
-		}
-		else
-			edge = edge->next_adjacent;
-	}
-	if (route->path)
-		route->is_valid = (route->path->src == lem->source);
+	t_path	*new;
+
+	if (!edge)
+		return (NULL);
+	new = (t_path *)malloc(sizeof(t_path));
+	if (!new)
+		return (NULL);
+	new->edge = edge;
+	new->next = path;
+	return (new);
 }
 
 t_edge	*get_rev_edge(t_edge *edge)
@@ -44,48 +44,40 @@ t_edge	*get_rev_edge(t_edge *edge)
 	return (NULL);
 }
 
-static int	is_duplicate(t_edge *p0, t_edge *p1, t_vertex *sink)
+void	free_path(t_path *path)
 {
-	if (p0->to == sink && p1->to == sink)
-		return (1);
-	while (p0 && p1 && p0->to != sink)
+	t_path	*tmp;
+
+	while (path)
 	{
-		if (p0->to == p1->to)
-		{
-			p0 = p0->next_on_path;
-			p1 = p1->next_on_path;
-		}
-		else
-			return (0);
+		tmp = path;
+		path = path->next;
+		free(tmp);
 	}
-	return (1);
 }
 
-/*
-** discards identical paths that were stored during bfs
-*/
-void	discard_duplicate_paths(t_route *route, t_lem *lem)
+t_route	*follow_flow(t_lem *lem, t_route *route, t_edge *edge, int iter)
 {
-	t_route	*next;
-	t_route	*tmp;
-
-	next = route->next;
-	while (next && next->is_valid)
+	while (edge && edge->src != lem->source)
 	{
-		tmp = next;
-		while (tmp && route->len == tmp->len)
+		if (edge->flow < 0 && edge->to->valid != iter)
 		{
-			if (is_duplicate(route->path, tmp->path, lem->sink))
-			{
-				tmp = next;
-				route->next = tmp->next;
-				free(tmp);
-				break ;
-			}
-			tmp = tmp->next;
+			if (edge->to != lem->source)
+				edge->to->valid = iter;
+			route->path = path_prepend(route->path, get_rev_edge(edge));
+			if (!route->path)
+				return (NULL);
+			route->len++;
+			edge = edge->to->edge;
 		}
-		route->next->i = route->i + 1;
-		route = route->next;
-		next = route->next;
+		else if (edge->src != lem->sink)
+			edge = edge->next_adjacent;
+		else
+			break ;
 	}
+	if (route->path && route->path->edge->src == lem->source)
+		route->is_valid = 1;
+	else
+		free_path(route->path);
+	return (route);
 }

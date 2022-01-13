@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:27:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/09/27 19:35:07 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 18:51:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,58 +14,42 @@
 
 /*
 ** copies the ants per path to @pants, so the original info isn't lost.
-** intermediate routes that are not compatible with the path combo are given
-** -1 ants, so we know to not take those paths into consideration later.
 */
-void	fill_pants(t_route *route, t_lem lem, int *pants)
+void	fill_pants(t_route *route, int *pants, t_lem *lem)
 {
-	int	*compatible;
+	int	paths;
 
 	if (!pants)
 		return ;
-	compatible = route->compatible_with;
-	while (route && route->i <= lem.max_flow)
+	paths = 0;
+	while (route && route->is_valid && route->set == lem->best_set)
 	{
-		if (route->i != 1 && !compatible[route->i - 1])
-			pants[route->i - 1] = -1;
-		else
-			pants[route->i - 1] = route->ants;
+		paths++;
+		pants[route->id - 1] = route->ants;
 		route = route->next;
 	}
+	lem->max_flow = paths;
 }
 
 /*
-** after each iteration of ant distribution, store ants per path to the path
-** structs.
-**
-** @route: pointer to the head of a list of paths in length-wise ascending order
-** @pants: int array storing the number of ants per path
-** @limit: index of the longest path used in the current combination of paths
-** @lem: pointer to a general runtime info struct
+** after distributing ants to all paths currently being tested, we find and
+** return the maximum amount of turns by adding the amount of ants distributed
+** to each path + that path's length.
 */
-void	store_ant_count(t_route *route, int *pants, int limit, t_lem *lem)
+int	calculate_turns(t_route *route, int set)
 {
-	int	i;
-	int	*comp;
+	int	turns;
+	int	turns_max;
 
-	lem->max_flow = 0;
-	comp = route->compatible_with;
-	while (route && route->i <= limit)
+	turns_max = 0;
+	while (route && route->is_valid && route->set == set)
 	{
-		route->ants = pants[route->i - 1];
-		if (route->ants > 0)
-		{
-			lem->last_index = route->i;
-			lem->max_flow++;
-		}
-		route = next_compatible(route, comp);
+		turns = route->len + route->ants - 1;
+		if (turns > turns_max)
+			turns_max = turns;
+		route = route->next;
 	}
-	i = 0;
-	while (i < lem->n_paths)
-	{
-		pants[i] = 0;
-		i++;
-	}
+	return (turns_max);
 }
 
 /*
@@ -78,72 +62,47 @@ void	store_ant_count(t_route *route, int *pants, int limit, t_lem *lem)
 ** @ants: remaining amount of ants
 ** @pants: int array storing the number of ants per path
 */
-void	distribute_ants(t_route *route, int limit, int ants, int *pants)
+void	distribute_ants(t_route *route, int ants, int set)
 {
 	t_route	*head;
-	int		*comp;
 
 	if (!ants)
 		return ;
 	head = route;
-	comp = route->compatible_with;
 	while (ants)
 	{
-		while (route && route->i <= limit && ants)
+		while (route && route->is_valid && route->set == set && ants)
 		{
-			pants[route->i - 1] += 1;
+			route->ants += 1;
 			ants -= 1;
-			route = next_compatible(route, comp);
+			route = route->next;
 		}
 		route = head;
 	}
 }
 
 /*
-** after distributing ants to all paths currently being tested, we find and
-** return the maximum amount of turns by adding the amount of ants distributed
-** to each path + that path's length.
-**
-** @limit: index of the longest path in this iteration of path combinations
+** calculates the difference between the length of the longest path in the set
+** and the paths before it. each difference is the amount of ants that can be
+** passed to the shorter path before using the following paths.
 */
-int	calculate_turns(t_route *base, int limit, int *pants)
+int	calculate_diff(t_route *route, int ants, int set)
 {
-	int	turns;
-	int	turns_max;
-	int	*comp;
+	int		diff;
+	t_route	*last;
 
-	turns_max = 0;
-	comp = base->compatible_with;
-	while (base && base->i <= limit)
+	last = route;
+	while (last->next && last->next->is_valid && last->next->set == set)
+		last = last->next;
+	while (route->id < last->id && ants)
 	{
-		turns = base->len + pants[base->i - 1] - 1;
-		if (turns > turns_max)
-			turns_max = turns;
-		base = next_compatible(base, comp);
-	}
-	return (turns_max);
-}
-
-/*
-** calculates the difference of the current path's length (@route) and the paths
-** following it (@base). This difference is the amount of ants that can be passed
-** to the current path before using more paths is necessary.
-*/
-int	calculate_diff(t_route *base, t_route *route, int ants, int *pants)
-{
-	int	diff;
-	int	*comp;
-
-	comp = base->compatible_with;
-	while (base && base->i <= route->i && ants)
-	{
-		diff = route->len - base->len;
+		diff = last->len - route->len;
 		if (diff > ants)
-			pants[base->i - 1] = ants;
+			route->ants = ants;
 		else
-			pants[base->i - 1] = diff;
-		ants -= pants[base->i - 1];
-		base = next_compatible(base, comp);
+			route->ants = diff;
+		ants -= route->ants;
+		route = route->next;
 	}
 	return (ants);
 }
