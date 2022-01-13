@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 18:49:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:45:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int	distributor(t_route *route, t_lem *lem, int set)
 }
 
 /*
-** calculates turns for all path sets until turns start increasing.
-** returns a pointer to the first route of the best set.
+** calculates turns for all path sets.
+** returns a pointer to the first route of the set with least turns.
 */
 t_route	*find_best_set(t_route *route, t_lem *lem)
 {

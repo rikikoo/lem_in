@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 18:52:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:51:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,25 @@ static int	print_moves(char ***out, t_lem *lem, t_route *route, int *moves)
 }
 
 /*
+** copies the ants per path to @pants, so the original info isn't lost.
+*/
+static void	fill_pants(t_route *route, int *pants, t_lem *lem)
+{
+	int	paths;
+
+	if (!pants)
+		return ;
+	paths = 0;
+	while (route && route->is_valid && route->set == lem->best_set)
+	{
+		paths++;
+		pants[route->id - 1] = route->ants;
+		route = route->next;
+	}
+	lem->max_flow = paths;
+}
+
+/*
 ** outputs the input and then the ants' moves to STDOUT
 **
 ** @route: pointer to the head of a list of paths
@@ -140,30 +159,6 @@ int	print_output(t_route *route, t_lem lem, t_input *input)
 	out = prepare_output(route, lem, pants);
 	fill_pants(route, pants, &lem);
 	fill_output_arr(route, lem, out, pants);
-
-
-	// debug start
-	// t_route *head;
-	// head = route;
-	// ft_printf("ants: %d\tmax flow: %d\tbest set: %d\n", lem.ants, lem.max_flow, route->set);
-	// for (int i = 0; i < lem.max_flow; i++) {
-	// 	ft_printf("%d ", route->ants);
-	// 	route = route->next;
-	// }
-	// ft_printf("\n\n");
-	// route = head;
-	//
-	// for (int i = 0; out[i] != NULL; i++) {
-	// 	ft_printf("Ant #%d's path:\n", i + 1);
-	// 	for (int j = 0; out[i][j] != NULL; j++) {
-	// 		ft_printf("%s ", out[i][j]);
-	// 	}
-	// 	ft_putstr("\n\n");
-	// }
-	// exit(0);
-	// debug end
-
-
 	if (!pants || !out)
 		lem.error = -5;
 	if (!lem.error)

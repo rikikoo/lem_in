@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   edges.c                                            :+:      :+:    :+:   */
+/*   process_edges.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 21:13:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 16:52:58 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:23:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** @src: pointer to the edge's source vertex
 ** @to: pointer to the edge's sink vertex
 */
-static void	edge_append(t_vertex *src, t_vertex *to)
+static int	edge_append(t_vertex *src, t_vertex *to)
 {
 	t_edge	*edge;
 
@@ -30,15 +30,23 @@ static void	edge_append(t_vertex *src, t_vertex *to)
 			edge = edge->next_adjacent;
 		}
 		edge->next_adjacent = new_edge(src, to);
+		if (!edge->next_adjacent)
+			return (-5);
 	}
 	else
+	{
 		src->edge = new_edge(src, to);
+		if (!src->edge)
+			return (-5);
+	}
+	return (0);
 }
 
 /*
-** splits input line containing the two vertex ids into a string array,
-** checks that the vertices exist. if yes, append an edge to both directions.
+** splits input line containing the two vertex ids into an array of strings and
+** checks that those vertices exist. if yes, append an edge to both directions.
 **
+** @ht: pointer to the vertex hash table
 ** @line: raw line of program input
 */
 static int	check_edge(t_hashtab *ht, char *line)
@@ -46,39 +54,49 @@ static int	check_edge(t_hashtab *ht, char *line)
 	char		**arr;
 	t_vertex	*src;
 	t_vertex	*to;
+	int			error;
+	int			i;
 
+	error = 0;
 	arr = ft_strsplit(line, '-');
 	if (ft_arrlen((void **)arr) != 2)
-		return (0);
-	src = get(ht, arr[0]);
-	to = get(ht, arr[1]);
-	if (!src || !to)
-		return (0);
-	edge_append(src, to);
-	edge_append(to, src);
-	ft_liberator(2, &arr[0], &arr[1]);
+		error = -1;
+	if (!error)
+	{
+		src = get(ht, arr[0]);
+		to = get(ht, arr[1]);
+		if (!src || !to)
+			error = -3;
+		else if (edge_append(src, to) < 0 || edge_append(to, src) < 0)
+			error = -5;
+	}
+	i = -1;
+	while (arr[++i])
+		free(arr[i]);
 	free(arr);
-	return (1);
+	return (error);
 }
 
 /*
 ** parses raw input for graph edges. Skips comment lines (that start with '#').
 ** returns number of edges on success, -1 otherwise.
 **
-** @input: list of input lines, starting from the point where the edges begin
-** @ht: pointer to hash table t_hashtab
+** @input: list of input lines, starting from the line where edge data begins
+** @ht: pointer to the vertex hash table
 */
 int	get_edges(t_input *input, t_hashtab *ht)
 {
 	int	edges;
+	int	ret;
 
 	edges = 0;
 	while (input->line != NULL)
 	{
 		if (input->line[0] != '#')
 		{
-			if (!check_edge(ht, input->line))
-				return (-1);
+			ret = check_edge(ht, input->line);
+			if (ret < 0)
+				return (ret);
 			edges++;
 		}
 		input = input->next;

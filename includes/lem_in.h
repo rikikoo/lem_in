@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 15:29:14 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 18:52:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:51:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 ** @error: stores an error code (negative integer) in case an error occurs
 ** @path_sets: the number of path combinations/sets found
 ** @turns: number of turns calculated for the set that the ants eventually use
-** @max_flow: the number of paths in the "largest" path combo
+** @best_set: id number of the set of paths that the ants will use
+** @max_flow: the number of paths in the best set
 */
 typedef struct s_lem
 {
@@ -95,9 +96,9 @@ typedef struct s_edge
 }	t_edge;
 
 /*
-** t_route is a wrapper struct around each path that contains metadata about the
-** path. a.k.a. a list of paths (which in turn are lists, so a list of lists).
+** t_route is a wrapper struct for each path and contains metadata about it
 **
+** @id: ordinal number of the path in a set
 ** @is_valid: true (1) if the path goes from source to sink, otherwise false (0)
 ** @len: length of the path (number of vertices on this path - 1)
 ** @set: number of the BFS iteration during which this route was found
@@ -168,6 +169,7 @@ void		search_edge_prepend(t_edge **search_edges, t_edge *edge);
 t_path		*path_prepend(t_path *path, t_edge *edge);
 t_edge		*get_rev_edge(t_edge *edge);
 t_route		*follow_flow(t_lem *lem, t_route *route, t_edge *edge, int iter);
+void		remove_invalids(t_route *route);
 void		sort_paths(t_route *route, t_lem *lem);
 
 /*
@@ -181,7 +183,6 @@ int			calculate_turns(t_route *route, int set);
 /*
 ** OUTPUT
 */
-void		fill_pants(t_route *route, int *pants, t_lem *lem);
 char		***prepare_output(t_route *route, t_lem lem, int *pants);
 void		fill_output_arr(t_route *route, t_lem lem, char ***out, int *pants);
 void		print_input(t_input *input);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 14:28:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 16:57:50 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:33:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	store_paths(t_route *route, t_lem *lem, int iteration)
 }
 
 /*
-** updates directional flow of an edge along found path. removes edge capacity
+** updates directional flows of an edge along found path. removes edge capacity
 ** if edge->flow > 0.
 */
 static void	update_edge(t_edge *edge)
@@ -63,7 +63,8 @@ static void	update_edge(t_edge *edge)
 }
 
 /*
-** traces back the edges from sink to source, updating the edges as it does so
+** traces back the edges from sink to source, updating the flow of each edge as
+** it goes
 */
 static void	send_flow(t_edge *curr, t_lem *lem)
 {
@@ -84,8 +85,8 @@ static void	send_flow(t_edge *curr, t_lem *lem)
 
 /*
 ** performs a breadth-first search on the graph starting from the source vertex,
-** which is contained in @queue. queues visited nodes and adds the found edges
-** to a path list, @bfs_edges.
+** which is contained in @queue. marks every vertex as visited with @iter,
+** enqueues visited nodes and adds the found edges to the path list @bfs_edges.
 ** returns 1 if @sink was found, 0 otherwise.
 */
 static int	bfs(t_vertex **queue, t_edge **bfs_edges, t_vertex *sink, int iter)
@@ -129,12 +130,12 @@ t_route	*saturate_graph(t_lem *lem)
 	t_route		*route;
 	int			iteration;
 
-	iteration = 1;
-	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
-	route = new_route(1);
-	if (lem->error || !queue || !route)
+	if (lem->error)
 		return (NULL);
-	while (!lem->error)
+	iteration = 1;
+	route = new_route(iteration);
+	queue = (t_vertex **)malloc(sizeof(t_vertex *) * (lem->vertices + 1));
+	while (!lem->error && queue && route)
 	{
 		bfs_edges = NULL;
 		queue = wipe_queue(queue, lem->source, lem->vertices, iteration);

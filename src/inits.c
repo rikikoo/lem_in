@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/23 13:11:49 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 18:49:43 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 21:47:54 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_lem	init_lem(void)
 }
 
 /*
-** returns a pointer to hashtab, all vertex pointers initialized to NULL
+** returns a pointer to the hash table, all vertex pointers initialized to NULL
 */
 t_hashtab	*init_ht(void)
 {
@@ -79,7 +79,7 @@ t_vertex	*new_vertex(const char *key, const int x, const int y)
 }
 
 /*
-** allocates memory for it and returns a pointer to a new edge
+** allocates memory for a new edge and returns a pointer to it
 **
 ** @src: the edge's source vertex
 ** @to: the edge's sink vertex
@@ -102,6 +102,8 @@ t_edge	*new_edge(t_vertex *src, t_vertex *to)
 
 /*
 ** allocates memory for a new struct that'll contain a path + info about it
+**
+** @id: the path's ordinal number within a set
 */
 t_route	*new_route(int id)
 {

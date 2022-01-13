@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 17:53:41 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 17:26:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:39:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ t_path	*path_prepend(t_path *path, t_edge *edge)
 	return (new);
 }
 
+/*
+** returns the reverse of @edge
+*/
 t_edge	*get_rev_edge(t_edge *edge)
 {
 	t_edge	*rev;
@@ -56,6 +59,11 @@ void	free_path(t_path *path)
 	}
 }
 
+/*
+** starting from the sink, traverses towards the source via edges that have a
+** negative flow. because we want to store the path the right way around (from
+** source to sink), we prepend the reverse of a traversable edge to the path.
+*/
 t_route	*follow_flow(t_lem *lem, t_route *route, t_edge *edge, int iter)
 {
 	while (edge && edge->src != lem->source)

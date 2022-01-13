@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 17:28:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 17:09:01 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/13 18:24:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 /*
 ** prints all paths if program got "--paths" as an argument
+**
+** TODO:
+**	- separate sets with colorful headers
+**	- remove route validity check
 */
 static void	print_paths(t_route *route, t_lem lem)
 {
@@ -48,85 +52,9 @@ void	print_input(t_input *input)
 }
 
 /*
-** checks @path's each vertex against @cmp's all vertices. if a match is
-** encountered, @cmp cannot be used simultaneously with @path and 0 is returned,
-** otherwise 1.
-*/
-static int	paths_are_distinct(t_path *path, t_path *cmp, t_vertex *sink)
-{
-	t_path	*cmp_head;
-
-	cmp_head = cmp;
-	while (path && path->edge->to != sink)
-	{
-		while (cmp && cmp->edge->to != sink)
-		{
-			if (cmp->edge->to == path->edge->to)
-				return (0);
-			cmp = cmp->next;
-		}
-		path = path->next;
-		cmp = cmp_head;
-	}
-	return (1);
-}
-
-static int overlaps(t_route *route, t_lem lem)
-{
-	int		set;
-	int		ret;
-	t_route	*next;
-
-	ret = 0;
-	while (route && route->is_valid)
-	{
-		set = route->set;
-		next = route->next;
-		while (next && next->is_valid && next->set == set)
-		{
-			if (!paths_are_distinct(route->path, next->path, lem.sink))
-			{
-				ft_printf("overlapping paths within set %d: %d & %d\n", \
-				set, route->id, next->id);
-				ret = 1;
-			}
-			next = next->next;
-		}
-		route = route->next;
-	}
-	return (ret);
-}
-
-static void	remove_invalids(t_route *route)
-{
-	t_route	*tmp;
-	t_route	*prev;
-
-	prev = route;
-	route = route->next;
-	while (route)
-	{
-		while (route && !route->is_valid)
-		{
-			tmp = route;
-			route = route->next;
-			prev->next = route;
-			free(tmp);
-		}
-		if (route)
-		{
-			prev = route;
-			route = route->next;
-		}
-	}
-}
-
-/*
 ** lem_in is a program that finds all paths in an undirected graph for n ants
 ** to go through and prints out the moves the ants will take from source to sink
 ** with the least amount of moves.
-** The number of ants, vertex names and coordinates and their edges are given
-** as input in a specific format (see README).
 ** lem_in will exit and return an error value and message if the input format is
 ** invalid or there isn't a connection between the source and the sink.
 **
@@ -152,7 +80,7 @@ int	main(int argc, char **argv)
 	die_if_error(lem.error, &input, &ht, &route);
 	remove_invalids(route);
 	sort_paths(route, &lem);
-	if ((argc > 1 && ft_strequ(argv[1], "--paths")) || overlaps(route, lem))
+	if (argc > 1 && ft_strequ(argv[1], "--paths"))
 		print_paths(route, lem);
 	else
 		lem.error = print_output(find_best_set(route, &lem), lem, input);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:41:11 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/20 16:55:33 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:11:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_vertex	*get(t_hashtab *ht, const char *key)
 /*
 ** inserts a new entry to the hash table @ht
 **
-** @ht: a pointer to t_hashtab
+** @ht: a pointer to the vertex hash table
 ** @key: name/id of the vertex to insert
 ** @x, @y: coordinates of the vertex
 */

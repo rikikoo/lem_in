@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 08:37:04 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/10 18:39:39 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/12 23:41:00 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	swap_contents(t_route *longer, t_route *shorter)
 }
 
 /*
-** sorts all found paths in ascending order in regards to path length.
+** sorts the paths of each set in ascending order in regards to path length.
 ** returns sorted path.
 **
 ** @route: pointer to the head of a list of paths
@@ -54,5 +54,34 @@ void	sort_paths(t_route *route, t_lem *lem)
 			route = route->next;
 		}
 		set++;
+	}
+}
+
+/*
+** removes paths that didn't reach the sink from the list of all paths
+**
+** @route: head of the list of paths
+*/
+void	remove_invalids(t_route *route)
+{
+	t_route	*tmp;
+	t_route	*prev;
+
+	prev = route;
+	route = route->next;
+	while (route)
+	{
+		while (route && !route->is_valid)
+		{
+			tmp = route;
+			route = route->next;
+			prev->next = route;
+			free(tmp);
+		}
+		if (route)
+		{
+			prev = route;
+			route = route->next;
+		}
 	}
 }
