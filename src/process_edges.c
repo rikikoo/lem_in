@@ -59,8 +59,8 @@ static int	check_edge(t_hashtab *ht, char *line)
 
 	error = 0;
 	arr = ft_strsplit(line, '-');
-	if (ft_arrlen((void **)arr) != 2)
-		error = -1;
+	if (ft_arrlen((void **)arr) != 2 || ft_strequ(arr[0], arr[1]))
+		error = -3;
 	if (!error)
 	{
 		src = get(ht, arr[0]);

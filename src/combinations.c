@@ -6,11 +6,19 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 15:19:58 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 23:45:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/27 08:10:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
+
+static t_route	*direct_path(t_route *route, t_lem *lem)
+{
+	lem->turns = 1;
+	lem->best_set = 1;
+	route->ants = lem->ants;
+	return (route);
+}
 
 static int	distributor(t_route *route, t_lem *lem, int set)
 {
@@ -34,6 +42,8 @@ t_route	*find_best_set(t_route *route, t_lem *lem)
 	int		turns;
 	int		set;
 
+	if (route->path->edge->to == lem->sink)
+		return (direct_path(route, lem));
 	turns_least = ~(1 << ((sizeof(int) * 8) - 1));
 	while (route && route->is_valid)
 	{

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/04 19:47:06 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 23:51:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/28 21:40:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,10 @@ static int	print_moves(char ***out, t_lem *lem, t_route *route, int *moves)
 	turn_limits = (int *)ft_zeros(lem->turns);
 	if (!turn_limits)
 		return (-5);
-	set_limits(lem, route, turn, turn_limits);
+	if (lem->turns <= 1)
+		turn_limits[0] = 0;
+	else
+		set_limits(lem, route, turn, turn_limits);
 	while (ants_left)
 	{
 		ants_left = ant_dispenser(out, turn_limits[turn], moves, lem->ants);
@@ -121,7 +124,7 @@ static int	print_moves(char ***out, t_lem *lem, t_route *route, int *moves)
 }
 
 /*
-** copies the ants per path to @pants, so the original info isn't lost.
+** copies the ants per path to @pants in order to preserve the original info.
 */
 static void	fill_pants(t_route *route, int *pants, t_lem *lem)
 {

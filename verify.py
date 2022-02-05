@@ -46,24 +46,45 @@ def verify_moves(total_ants, sink, move_list):
             print(f"Multiple ants in same room!\nTurn #{n}\n{turn}\n")
             err = True
 
-    if not err:
-        # after going through all turns, check that all ants were moved
-        if len(list(set(moved_ants))) != total_ants:
-            print(f"All ants not moved! {len(list(set(moved_ants)))} < {total_ants}")
-        else:
-            print("Moves are valid!")
+    # after going through all turns, check that all ants were moved
+    if len(list(set(moved_ants))) != total_ants:
+        print(f"Incorrect amount of ants moved! {len(list(set(moved_ants)))} != {total_ants}")
 
-    return used_rooms
+    return used_rooms, err
 
 
-def verify_paths(g, rooms_used):
-    # TODO: check individual ants' paths and make sure that
-    #   - all ants start from rooms linked to g.source
-    #   - all ants end up in g.sink
-    #   - the rooms they travel are linked as per g.edges
-
+def verify_paths(g, rooms_used, err):
     if len(rooms_used) == 0:
-        print("There should have been at least one error message by now...")
+        print("There should have been at least one error message by now. Quitting...")
+        quit()
+    for room in rooms_used:
+        if room not in g.nodes:
+            print(f"Room '{room}' doesn't exist in input!")
+            quit()
+    finished_ants = []
+    for ant in g.ant_moves.keys():
+        path = g.ant_moves[ant]
+        if path[-1] != g.sink:
+            print(f"Ant {ant} doesn't reach the sink! Last room it enters is {path[-1]}")
+            err = True
+        for i, room in enumerate(path):
+            if i == 0:
+                if (room, g.source) not in g.edges and (g.source, room) not in g.edges:
+                    print(f"There isn't a connection between {g.source} and {room}")
+                    err = True
+            elif (room, path[i - 1]) not in g.edges and (path[i - 1], room) not in g.edges:
+                print(f"There isn't a connection between {path[i - 1]} and {room}. (culprit ant: {ant})")
+                err = True
+            elif room == g.sink:
+                if ant not in finished_ants:
+                    finished_ants.append(ant)
+                else:
+                    print(f"Ant {ant} moved after reaching sink!")
+                    err = True
+    if len(finished_ants) != g.ants:
+        print(f"All ants didn't reach sink! {len(finished_ants)} != g.ants")
+        err = True
+    return err
 
 
 def main():
@@ -72,8 +93,10 @@ def main():
         quit()
 
     g = Antfarm(sys.argv[1])
-    rooms_used = verify_moves(g.ants, g.sink, g.move_list)
-    verify_paths(g, rooms_used)
+    rooms_used, err = verify_moves(g.ants, g.sink, g.move_list)
+    err = verify_paths(g, rooms_used, err)
+    if not err:
+        print("Moves are valid!")
 
 
 if __name__ == "__main__":

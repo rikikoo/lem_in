@@ -56,10 +56,8 @@ static int	vertex_parse(t_hashtab *ht, char *str, t_lem *lem, int v)
 static t_input	*check_comment(t_input *input, t_hashtab *ht, t_lem *lem)
 {
 	char	*str;
-	int		i;
 
 	str = input->line;
-	i = 0;
 	if (ft_strequ(str, "##start") && lem->source == NULL)
 	{
 		input = input->next;

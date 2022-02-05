@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 16:49:16 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/12 23:19:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/22 14:44:51 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	parse_input(t_input *input, t_hashtab *ht, t_lem *lem)
 	if (!input || !ht || !lem)
 		return (-5);
 	lem->ants = ft_atoi(input->line);
-	if (!lem->ants)
+	if (lem->ants <= 0)
 		return (-1);
 	input = get_vertices(input->next, ht, lem);
 	if (!input)
